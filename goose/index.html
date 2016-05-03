@@ -1,0 +1,107 @@
+<!doctype html
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>GOOSE: a framework for DNA sequence manipulation and analysis</title>
+    
+    <link rel="stylesheet" href="../stylesheets/stylesOrange.css">
+    <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+    <script src="../javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+       <a href="https://github.com/pratas/goose"><img src="https://raw.githubusercontent.com/pratas/goose/master/imgs/logo.png" alt="GOOSE" width="142"></a>
+        <p class="header">A framework for DNA sequence manipulation and analysis</p>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/pratas/goose/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/pratas/goose/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="http://github.com/pratas/goose">View On GitHub</a></li>
+        </ul>
+      </header>
+      <section>
+      <h1>Introduction</h1>
+      <h3>What is GOOSE ?</h3>
+      <p align="justify"><a href="https://github.com/pratas/goose">GOOSE</a> is a framework for DNA sequence manipulation and analysis.</p>
+It answers the following questions:
+<ul>
+<li>Can GOOSE manipulate any genomic sequence? (yes)</li>
+<li>Can GOOSE filter, simulate, transform, compact, shuffle genomic sequences? (yes)</li>
+<li>Can GOOSE process FASTA, Multi-FASTA, FASTA, FASTQ files? (yes)</li>
+</ul>
+<h3>How do I get GOOSE ?</h3>
+Clone our repository and run CMake command:
+<pre>
+git clone https://github.com/pratas/goose.git
+cd goose/src/
+make
+</pre>
+
+<h1>Usage</h1>
+
+To see the programs available type:
+<pre>
+./goose
+</pre>
+
+It includes the following programs:
+<pre>
+  [+] goose-char2line
+  [+] goose-extract
+  [+] goose-fasta2seq
+  [+] goose-fastaextract
+  [+] goose-fastq2fasta
+  [+] goose-fastq2mfasta
+  [+] goose-fastqclustreads
+  [+] goose-fastqpack
+  [+] goose-fastqunpack
+  [+] goose-filter
+  [+] goose-findnpos
+  [+] goose-genrandomdna
+  [+] goose-info
+  [+] goose-max
+  [+] goose-min
+  [+] goose-minus
+  [+] goose-mutatedna
+  [+] goose-mutatefasta
+  [+] goose-mutatefastq
+  [+] goose-period
+  [+] goose-permuteseqbyblocks
+  [+] goose-randfastaextrachars
+  [+] goose-randfastqextrachars
+  [+] goose-randseqextrachars
+  [+] goose-reverse
+  [+] goose-reverselm
+  [+] goose-searchphash
+  [+] goose-seq2fasta
+  [+] goose-seq2fastq
+  [+] goose-sum
+  [+] goose-splitreads
+  [+] goose-splitReads
+  [+] goose-wsearch
+</pre>
+Moreover, there are many scripts to download sequences, shuffle, etc.
+
+<h1>License</h1>
+
+GPL v3.
+
+For more information see LICENSE file or visit
+<pre>http://www.gnu.org/licenses/gpl-3.0.html</pre>
+
+</section>
+
+<!--      <footer>
+        <sub>&copy; 2014&ndash;2016 <a href="http://wiki.ieeta.pt/wiki/index.php/Information_Systems_and_Processing">Lab for Information Systems and Processing</a> at <a href="http://www.ieeta.pt">IEETA</a>, <a href="http://www.ua.pt"> University of Aveiro</a>.-->
+<!--<br /> Hosted on <a href="http://pages.github.com/">GitHub Pages</a>. Design based upon Dinky theme.-->
+        </sub>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
