@@ -1,0 +1,128 @@
+<!doctype html
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>GeCo: an efficient compressor for genomic sequences</title>
+    
+    <link rel="stylesheet" href="../stylesheets/stylesBlue.css">
+    <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+    <script src="../javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+       <a href="https://github.com/pratas/geco"><img src="https://raw.githubusercontent.com/pratas/geco/master/imgs/logo.png" alt="GECO" width="142"></a>
+        <p class="header">An efficient compressor for genomic sequences</p>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/pratas/geco/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/pratas/geco/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="http://github.com/pratas/geco">View On GitHub</a></li>
+        </ul>
+      </header>
+      <section>
+      <h1>Introduction</h1>
+      <h3>What is GECO ?</h3>
+      <p align="justify"><a href="https://github.com/pratas/geco">GeCo</a> is an <b>an efficient compressor for genomic sequences</b>. GECO has been published in <a href="http://sweet.ua.pt/pratas/papers/Pratas-2016b.pdf">DCC Conference in March 2016</a>.</p>
+It answers the following questions:
+<ul>
+      <li>Can GeCo efficiently compress a genomic sequence? (yes)</li>
+      <li>Can GeCo compress a genomic sequence using other as reference? (yes)</li>
+      <li>Can GeCo estimate the local complexity for analysis purposes? (yes)</li>
+</ul>
+<h3>How do I get GeCo ?</h3>
+Clone our repository and run CMake command:
+<pre>
+git clone https://github.com/pratas/geco.git
+cd geco/src/
+cmake .
+make
+</pre>
+Alternatively to CMake, run:
+<pre>
+git clone https://github.com/pratas/geco.git
+cd geco/src/
+cp Makefile.nix Makefile
+make
+</pre>
+
+<h1>Usage</h1>
+
+To see the possible options type
+<pre>
+./GeCo
+</pre>
+or
+<pre>
+./GeCo -h
+</pre>
+These will print the following options:
+<pre>
+Usage: GeCo [OPTION]... -r [FILE]  [FILE]:[...]
+Compress and analyze a genomic sequence (by default, compress).
+
+Non-mandatory arguments:
+
+  -h                     give this help,
+  -x                     show several running examples,
+  -s                     show GeCo compression levels,
+  -v                     verbose mode (more information),
+  -V                     display version number,
+  -f                     force overwrite of output,
+  -l &#60level&#62             level of compression [1;9] (lazy -tm setup),
+  -g &#60gamma&#62             mixture decayment forgetting factor. It is
+                         a real value in the interval [0;1),
+  -c &#60cache&#62             maximum collisions for hash cache. Memory
+                         values are higly dependent of the parameter
+                         specification,
+  -e                     it creates a file with the extension ".iae"
+                         with the respective information content. If
+                         the file is FASTA or FASTQ it will only use
+                         the "ACGT" (genomic) data,
+
+  -r &#60FILE&#62              reference file ("-rm" are loaded here),
+
+  -rm &#60c&#62:&#60d&#62:&#60i&#62:&#60m/e&#62  reference context model (ex:-rm 13:100:0:0/0),
+  -rm &#60c&#62:&#60d&#62:&#60i&#62:&#60m/e&#62  reference context model (ex:-rm 18:1000:0:1/1000),
+  ...
+  -tm &#60c&#62:&#60d&#62:&#60i&#62:&#60m/e&#62  target context model (ex:-tm 4:1:0:0/0),
+  -tm &#60c&#62:&#60d&#62:&#60i&#62:&#60m/e&#62  target context model (ex:-tm 18:20:1:2/10),
+  ...
+                         target and reference templates use &#60c&#62 for
+                         context-order size, &#60d&#62 for alpha (1/&#60d&#62),
+                         &#60i&#62 (0 or 1) to set the usage of inverted
+                         repeats (1 to use) and &#60m&#62 to the maximum
+                         allowed mutation on the context without
+                         being discarded (usefull in deep contexts),
+                         under the estimator &#60e&#62,
+
+Mandatory arguments:
+
+  &#60FILE&#62                 file to compress (last argument). For more
+                         files use splitting ":" characters.
+
+Report bugs to &#60{pratas,ap,pjf}@ua.pt&#62.
+</pre>
+
+<h1>License</h1>
+
+GPL v3.
+
+For more information see LICENSE file or visit
+<pre>http://www.gnu.org/licenses/gpl-3.0.html</pre>
+
+</section>
+
+<!--      <footer>
+        <sub>&copy; 2014&ndash;2016 <a href="http://wiki.ieeta.pt/wiki/index.php/Information_Systems_and_Processing">Lab for Information Systems and Processing</a> at <a href="http://www.ieeta.pt">IEETA</a>, <a href="http://www.ua.pt"> University of Aveiro</a>.-->
+<!--<br /> Hosted on <a href="http://pages.github.com/">GitHub Pages</a>. Design based upon Dinky theme.-->
+        </sub>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
