@@ -34,7 +34,7 @@ It answers the following questions:
 <li>Where are they similar to my FASTQ samples?</li>
 <li>Are those regions complex or repetitive?</li>
 </ul>
-<h3>How do I get FALCON ?</h3>
+<h3>How to get FALCON ?</h3>
 Clone our repository and run CMake command:
 <pre>
 git clone https://github.com/pratas/falcon.git
@@ -48,6 +48,12 @@ git clone https://github.com/pratas/falcon.git
 cd falcon/src/
 cp Makefile.linux Makefile
 make
+</pre>
+
+<h3>How to run FALCON ?</h3>
+Assuming that you have already a FASTQ sample (such as human) and a Viruses database (there are scripts to simply download it), type: 
+<pre>
+./FALCON -v -l 19 -t 50 human.fq Viruses.fa
 </pre>
 
 <h1>Usage</h1>
