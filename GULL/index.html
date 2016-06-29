@@ -1,0 +1,150 @@
+<!doctype html
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>SMASH-GLOBAL: an alignment-free tool to compute and visualize global relative similarity between genomic sequences</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/pratas/smash-global/master/imgs/logo.png"> 
+    <link rel="stylesheet" href="../stylesheets/stylesRed.css">
+    <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
+    <script src="../javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+       <a href="https://github.com/pratas/smash-global"><img src="https://raw.githubusercontent.com/pratas/smash-global/master/imgs/logo.png" alt="SMASH-GLOBAL" width="142"></a>
+        <p class="header">An alignment-free tool to compute and visualize global relative similarity between genomic sequences</p>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/pratas/smash-global/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/pratas/smash-global/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="http://github.com/pratas/smash-global">View On GitHub</a></li>
+        </ul>
+      </header>
+      <section>
+      <h1>Introduction</h1>
+      <h3>What is SMASH-GLOBAL ?</h3>
+      <p align="justify"><a href="https://github.com/pratas/smash-global">SMASH-GLOBAL</a> is an <b>alignment-free tool to compute and visualize global relative similarity between genomic sequences</b>. The method is based on the relative information contained across the sequences, estimated by compression technology. All the sequences migth not be aligned or assembled! <!--SMASH-GLOBAL has been published in <a href=""></a>.--></p>
+It answers the following questions:
+<ul>
+      <li>What is the relative similarity between sequences?</li>
+      <li>Can it run on very dissimilar sequences? (yes)</li>
+      <li>Does it run with all non-assembled sequences with very different sizes? (yes)</li>
+      <li>Can we visualize in a compact map the output? (yes)</li>
+</ul>
+<h3>How do I get SMASH-GLOBAL ?</h3>
+Clone our repository and run CMake command:
+<pre>
+git clone https://github.com/pratas/smash-global.git
+cd smash-global/src/
+cmake .
+make
+</pre>
+Alternatively to CMake, run:
+<pre>
+git clone https://github.com/pratas/smash-global.git
+cd smash-global/src/
+cp Makefile.nix Makefile
+make
+</pre>
+
+<h1>Usage</h1>
+
+To see the possible options type
+<pre>
+./smash-global-map
+./smash-global-visual
+</pre>
+or
+<pre>
+./smash-global-map -h
+./smash-global-visual -h
+</pre>
+These will print the parameters that are needed to run both tools.
+
+For smash-global-map:
+<pre>
+Usage: smash-global-map [OPTION]... [FILE1]:[FILE2]:...
+A similarity matrix builder using relative information.
+
+Non-mandatory arguments:
+
+  -h                       give this help,
+  -V                       display version number,
+  -v                       verbose mode (more information),
+  -s                       how compression levels,
+  -l &#60level&#62               compression level [1;30],
+  -n &#60nThreads&#62            number of threads,
+  -x &#60FILE&#62                similarity matrix filename,
+  -o &#60FILE&#62                labels filename,
+
+Mandatory arguments:
+
+  &#60FILE&#62:&#60FILE&#62:&#60...&#62      input files (last arguments).
+                           Use ":" for file splitting.
+
+Report bugs to &#60{pratas,ap,pjf}@ua.pt&#62.
+</pre>
+
+To see the possible options type
+<pre>
+./smash-global-map
+./smash-global-visual
+</pre>
+or
+<pre>
+./smash-global-map -h
+./smash-global-visual -h
+</pre>
+These will print the parameters that are needed to run both tools.
+
+For smash-global-map:
+<pre>
+Usage: smash-global-map [OPTION]... [FILE1]:[FILE2]:...
+A similarity matrix builder using relative information.
+
+Non-mandatory arguments:
+
+  -h                       give this help,
+  -V                       display version number,
+  -v                       verbose mode (more information),
+  -s                       how compression levels,
+  -l &#60level&#62               compression level [1;30],
+  -n &#60nThreads&#62            number of threads,
+  -x &#60FILE&#62                similarity matrix filename,
+  -o &#60FILE&#62                labels filename,
+
+Mandatory arguments:
+
+  &#60FILE&#62:&#60FILE&#62:&#60...&#62      input files (last arguments).
+                           Use ":" for file splitting.
+
+Report bugs to &#60{pratas,ap,pjf}@ua.pt&#62.
+</pre>
+
+<h1>Example</h1>
+
+<p align="justify">The following map shows and example while measuring relative similarity between human (HS), chimpanzee (PT) and gorilla (GG) chromosome sequences, including the unplaced (UP), the unlocalized (UL) and the mitocondrial (MT) sequences.<p>
+<p align="center"><a href="https://raw.githubusercontent.com/pratas/smash-global/master/imgs/mapHSPTGG.png"><img src="https://raw.githubusercontent.com/pratas/smash-global/master/imgs/mapHSPTGG.png" alt="SMASH-GLOBAL-EXAMPLE" width=650"></a></p>
+
+<h1>License</h1>
+
+GPL v3.
+
+For more information see LICENSE file or visit
+<pre>http://www.gnu.org/licenses/gpl-3.0.html</pre>
+
+</section>
+
+<!--      <footer>
+        <sub>&copy; 2014&ndash;2016 <a href="http://wiki.ieeta.pt/wiki/index.php/Information_Systems_and_Processing">Lab for Information Systems and Processing</a> at <a href="http://www.ieeta.pt">IEETA</a>, <a href="http://www.ua.pt"> University of Aveiro</a>.-->
+<!--<br /> Hosted on <a href="http://pages.github.com/">GitHub Pages</a>. Design based upon Dinky theme.-->
+        </sub>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
