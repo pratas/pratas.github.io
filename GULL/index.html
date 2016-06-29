@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>SMASH-GLOBAL: an alignment-free tool to compute and visualize global relative similarity between genomic sequences</title>
-    <link rel="icon" href="https://raw.githubusercontent.com/pratas/smash-global/master/imgs/logo.png"> 
+    <title>GULL: an alignment-free tool to compute and visualize global relative similarity between genomic sequences</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/pratas/GULL/master/imgs/logo.png"> 
     <link rel="stylesheet" href="../stylesheets/stylesRed.css">
     <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
     <script src="../javascripts/scale.fix.js"></script>
@@ -16,18 +16,18 @@
   <body>
     <div class="wrapper">
       <header>
-       <a href="https://github.com/pratas/smash-global"><img src="https://raw.githubusercontent.com/pratas/smash-global/master/imgs/logo.png" alt="SMASH-GLOBAL" width="142"></a>
-        <p class="header">An alignment-free tool to compute and visualize global relative similarity between genomic sequences</p>
+       <a href="https://github.com/pratas/GULL"><img src="https://raw.githubusercontent.com/pratas/GULL/master/imgs/logo.png" alt="GULL" width="142"></a>
+        <p class="header">GULL: a tool for measuring relative similarity between non-assembled genomic sequences without supervision</p>
         <ul>
-          <li class="download"><a class="buttons" href="https://github.com/pratas/smash-global/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/pratas/smash-global/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="http://github.com/pratas/smash-global">View On GitHub</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/pratas/GULL/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/pratas/GULL/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="http://github.com/pratas/GULL">View On GitHub</a></li>
         </ul>
       </header>
       <section>
       <h1>Introduction</h1>
-      <h3>What is SMASH-GLOBAL ?</h3>
-      <p align="justify"><a href="https://github.com/pratas/smash-global">SMASH-GLOBAL</a> is an <b>alignment-free tool to compute and visualize global relative similarity between genomic sequences</b>. The method is based on the relative information contained across the sequences, estimated by compression technology. All the sequences migth not be aligned or assembled! <!--SMASH-GLOBAL has been published in <a href=""></a>.--></p>
+      <h3>What is GULL ?</h3>
+      <p align="justify"><a href="https://github.com/pratas/GULL">GULL</a> is a <b>A tool for measuring relative similarity between non-assembled genomic sequences without supervision</b>. The method is based on the relative information contained across the sequences, estimated by compression technology. All the sequences migth not be aligned or assembled! <!--GULL has been published in <a href=""></a>.--></p>
 It answers the following questions:
 <ul>
       <li>What is the relative similarity between sequences?</li>
@@ -35,18 +35,18 @@ It answers the following questions:
       <li>Does it run with all non-assembled sequences with very different sizes? (yes)</li>
       <li>Can we visualize in a compact map the output? (yes)</li>
 </ul>
-<h3>How do I get SMASH-GLOBAL ?</h3>
+<h3>How do I get GULL ?</h3>
 Clone our repository and run CMake command:
 <pre>
-git clone https://github.com/pratas/smash-global.git
-cd smash-global/src/
+git clone https://github.com/pratas/GULL.git
+cd GULL/src/
 cmake .
 make
 </pre>
 Alternatively to CMake, run:
 <pre>
-git clone https://github.com/pratas/smash-global.git
-cd smash-global/src/
+git clone https://github.com/pratas/GULL.git
+cd GULL/src/
 cp Makefile.nix Makefile
 make
 </pre>
@@ -55,20 +55,21 @@ make
 
 To see the possible options type
 <pre>
-./smash-global-map
-./smash-global-visual
+./GULL-map
+./GULL-visual
 </pre>
 or
 <pre>
-./smash-global-map -h
-./smash-global-visual -h
+./GULL-map -h
+./GULL-visual -h
 </pre>
 These will print the parameters that are needed to run both tools.
 
-For smash-global-map:
+For GULL-map:
 <pre>
-Usage: smash-global-map [OPTION]... [FILE1]:[FILE2]:...
-A similarity matrix builder using relative information.
+Usage: GULL-map [OPTION]... [FILE1]:[FILE2]:...
+A tool for measuring relative similarity between 
+non-assembled genomic sequences without supervision.  
 
 Non-mandatory arguments:
 
@@ -86,49 +87,40 @@ Mandatory arguments:
   &#60FILE&#62:&#60FILE&#62:&#60...&#62      input files (last arguments).
                            Use ":" for file splitting.
 
-Report bugs to &#60{pratas,ap,pjf}@ua.pt&#62.
+Report bugs to &#60{pratas,raquelsilva,ap,pjf}@ua.pt&#62.
 </pre>
 
-To see the possible options type
+For GULL-visual:
 <pre>
-./smash-global-map
-./smash-global-visual
-</pre>
-or
-<pre>
-./smash-global-map -h
-./smash-global-visual -h
-</pre>
-These will print the parameters that are needed to run both tools.
-
-For smash-global-map:
-<pre>
-Usage: smash-global-map [OPTION]... [FILE1]:[FILE2]:...
-A similarity matrix builder using relative information.
+Usage: GULL-visual [OPTION]... [FILE]
+A visual heatmap builder for any similarity matrix.
 
 Non-mandatory arguments:
 
   -h                       give this help,
   -V                       display version number,
   -v                       verbose mode (more information),
-  -s                       how compression levels,
-  -l &#60level&#62               compression level [1;30],
-  -n &#60nThreads&#62            number of threads,
-  -x &#60FILE&#62                similarity matrix filename,
-  -o &#60FILE&#62                labels filename,
+  -w                       square width (for each value),
+  -a                       square inter-space (between each value),
+  -s                       index color start,
+  -r                       index color rotations,
+  -u                       color hue,
+  -g                       color gamma,
+  -l &#60FILE&#62                labels filename,
+  -x &#60FILE&#62                heatmap filename,
 
 Mandatory arguments:
 
-  &#60FILE&#62:&#60FILE&#62:&#60...&#62      input files (last arguments).
-                           Use ":" for file splitting.
+  &#60FILE&#62                   input matrix file (last argument).
 
-Report bugs to &#60{pratas,ap,pjf}@ua.pt&#62.
+Report bugs to &#60{pratas,raquelsilva,ap,pjf}@ua.pt&#62.
 </pre>
+
 
 <h1>Example</h1>
 
 <p align="justify">The following map shows and example while measuring relative similarity between human (HS), chimpanzee (PT) and gorilla (GG) chromosome sequences, including the unplaced (UP), the unlocalized (UL) and the mitocondrial (MT) sequences.<p>
-<p align="center"><a href="https://raw.githubusercontent.com/pratas/smash-global/master/imgs/mapHSPTGG.png"><img src="https://raw.githubusercontent.com/pratas/smash-global/master/imgs/mapHSPTGG.png" alt="SMASH-GLOBAL-EXAMPLE" width=650"></a></p>
+<p align="center"><a href="https://raw.githubusercontent.com/pratas/GULL/master/imgs/mapHSPTGG.png"><img src="https://raw.githubusercontent.com/pratas/GULL/master/imgs/mapHSPTGG.png" alt="GULL-EXAMPLE" width=650"></a></p>
 
 <h1>License</h1>
 
