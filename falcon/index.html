@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>FALCON: a machine learning tool to detect pathogens in metagenomic samples</title>
+    <title>FALCON: a compression-based method to infer metagenomic sample composition</title>
     <link rel="icon" href="https://raw.githubusercontent.com/pratas/falcon/master/imgs/logoTrans.png"> 
     <link rel="stylesheet" href="../stylesheets/styles.css">
     <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
@@ -17,7 +17,7 @@
     <div class="wrapper">
       <header>
         <h1 class="header"><a href="https://github.com/pratas/falcon"><img src="https://raw.githubusercontent.com/pratas/falcon/master/imgs/logoTrans.png" alt="FALCON" width="145"></a>&nbsp;FALCON</h1>
-        <p class="header">A computational tool for detecting pathogens in metagenomic samples</p>
+        <p class="header">A compression-based method to infer metagenomic sample composition</p>
         <ul>
           <li class="download"><a class="buttons" href="https://github.com/pratas/falcon/zipball/master">Download ZIP</a></li>
           <li class="download"><a class="buttons" href="https://github.com/pratas/falcon/tarball/master">Download TAR</a></li>
@@ -27,7 +27,7 @@
       <section>
       <h1>Introduction</h1>
       <h3>What is FALCON ?</h3>
-      <p align="justify"><a href="https://github.com/pratas/falcon">FALCON</a> is an <b>alignment-free unsupervised machine learning system to detect pathogens in genomic and metagenomic samples</b>. FALCON looks for similarity between any genomic sequence (ACGTN), FASTA or FASTQ file, independently from the size, against any multi-FASTA database, such as the entire viral and bacterial <i>NCBI database</i> (scripts are available for multiple database downloads).</p>
+      <p align="justify"><a href="https://github.com/pratas/falcon">FALCON</a> is <b>a compression-based method to infer metagenomic sample composition</b>. FALCON looks for similarity between any genomic sequence (ACGTN), FASTA or FASTQ file, independently from the size, against any multi-FASTA database, such as the entire viral and bacterial <i>NCBI database</i> (scripts are available for multiple database downloads).</p>
 It answers the following questions:
 <ul>
 <li>Whose genomes do I also have in my FASTQ samples? (contamination, integration, etc)</li>
@@ -69,7 +69,7 @@ or
 These will print the following options:
 <pre>
 Usage: FALCON [OPTION]... [FILE1] [FILE2]
-Machine learning system to detect pathogens in metagenomic samples.
+A compression-based method to infer metagenomic sample composition.
 
 Non-mandatory arguments:
 
