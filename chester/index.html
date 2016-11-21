@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>CHESTER: an alignment-free tool to find and visualize relative singularity regions</title>
+    <title>CHESTER: a probabilistic tool to find and visualize relative singularity regions</title>
     <link rel="icon" href="https://raw.githubusercontent.com/pratas/chester/master/imgs/logo.png"> 
     <link rel="stylesheet" href="../stylesheets/stylesBlue.css">
     <link rel="stylesheet" href="../stylesheets/pygment_trac.css">
@@ -17,7 +17,7 @@
     <div class="wrapper">
       <header>
        <a href="https://github.com/pratas/chester"><img src="https://raw.githubusercontent.com/pratas/chester/master/imgs/logo.png" alt="CHESTER" width="142"></a>
-        <p class="header">An alignment-free method to find and visualize relative singularity regions</p>
+        <p class="header">A probabilistic tool to find and visualize relative singularity regions</p>
         <ul>
           <li class="download"><a class="buttons" href="https://github.com/pratas/chester/zipball/master">Download ZIP</a></li>
           <li class="download"><a class="buttons" href="https://github.com/pratas/chester/tarball/master">Download TAR</a></li>
@@ -27,7 +27,7 @@
       <section>
       <h1>Introduction</h1>
       <h3>What is CHESTER ?</h3>
-      <p align="justify"><a href="https://github.com/pratas/chester">CHESTER</a> is <b>an alignment-free method to find and visualize relative singularity regions</b>. CHESTER has been published in <a href="http://sweet.ua.pt/pratas/papers/Pratas-2015a.pdf">RECPAD Conference in October 2015</a>, winning the best poster/paper.</p>
+      <p align="justify"><a href="https://github.com/pratas/chester">CHESTER</a> is <b>a probabilistic tool to find and visualize relative singularity regions</b>. The version 1 of CHESTER has been published in <a href="http://sweet.ua.pt/pratas/papers/Pratas-2015a.pdf">RECPAD Conference in October 2015</a>, winning the best poster/paper.</p>
 It answers the following questions:
 <ul>
       <li>Whose regions are present in multiple sequences but absent from others?</li>
@@ -64,17 +64,17 @@ or
 These will print the following options:
 <pre>
 Usage: CHESTER &#60OPTIONS&#62... [FILE]:&#60...&#62 [FILE]:&#60...&#62
-CHESTER is a fast tool to compute uniqueness maps.
+CHESTER is a probabilistic tool to map and visualize relative 
+singularity regions. The Bloom filter is automatically set.
 
   -v                       verbose mode,
   -a                       about CHESTER,
   -t &#60value&#62               threshold [0.0;1.0],
   -w &#60value&#62               window size,
   -u &#60value&#62               sub-sampling,
-  -x                       use hash instead bloom,
-  -n &#60value&#62               bloom hashes number,
   -s &#60value&#62               bloom size,
   -i                       use inversions,
+  -e &#60value&#62               enlarge painted regions,
   -p                       show positions/words,
   -k &#60value&#62               k-mer size (up to 30),
 
