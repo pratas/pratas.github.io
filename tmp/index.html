@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<body>
+<style>
+#wrapper {
+  margin-left: 200px;
+  padding:10px;
+}
+#wrapperc {
+  margin-left: 200px;
+  padding:10px;
+  background-color: #CCE5FF;
+}
+#content {
+  float: right;
+  width: 100%;
+  background-color: white;
+  vertical-align: middle;
+}
+#sidebar {
+  float: left;
+  width: 200px;
+  margin-left: -200px;
+  background-color: white;
+  vertical-align: middle;
+}
+#contentc {
+  float: right;
+  width: 100%;
+  background-color: #CCE5FF;
+  vertical-align: middle;
+}
+#sidebarc {
+  float: left;
+  width: 200px;
+  margin-left: -200px;
+  background-color: #CCE5FF;
+  vertical-align: middle;
+}
+#cleared {
+  clear: both;
+}
+</style>
+<div id="wrapper">
+  <div id="sidebar"><p align="center"><a href="https://github.com/pratas/falcon"><img src="https://raw.githubusercontent.com/pratas/falcon/master/imgs/logoTrans.png" alt="FALCON" width="160" height="160" border="0"/></a></p></div>
+  <div id="content">FALCON is a compression-based method to infer metagenomic sample composition<br><br>
+  It answers:
+    <ul>
+      <li>Whose genomes do I also have in my FASTQ samples? (contamination, integration, etc)</li>
+      <li>Where are they similar to my FASTQ samples?</li>
+      <li>Are those regions complex or repetitive?</li>
+    </ul>
+  <a href="falcon/index.html">Site</a> | <a href="#">Paper</a> | <a href="https://github.com/pratas/falcon">Program</a>
+  </div>
+  <div id="cleared"></div>
+</div>
+<div id="wrapperc">
+  <div id="sidebarc"><p align="center"><a href="https://github.com/pratas/smash"><img src="https://raw.githubusercontent.com/pratas/smash/master/imgs/logo.png" alt="SMASH" width="140" height="140" border="0"/></a></p></div>
+  <div id="contentc">SMASH: an alignment-free method to find and visualise rearrangements between pairs of DNA sequences.<br>The method is based on the relative information contained in across the sequences.<br><br>
+  It answers:
+    <ul>
+      <li>Where do rearrangements occur between two sequences?</li>
+      <li>Can SMASH run when one of the sequences is shuffled/permuted? (yes)</li>
+    </ul>
+  <a href="smash/index.html">Site</a> | <a href="http://www.nature.com/articles/srep10203.pdf">Paper</a> | <a href="https://github.com/pratas/smash">Program</a>
+  </div>
+  <div id="cleared"></div>
+</div>
+
+<div id="wrapper">
+  <div id="sidebar"><br><br><p align="center"><a href="https://github.com/pratas/eagle"><img src="https://raw.githubusercontent.com/pratas/eagle/master/imgs/logo.png" alt="EAGLE" width="160" border="0"/></a></p><br></div>
+  <div id="content">EAGLE: alignment-free method to find relative absent words (RAWs) in genomic sequences using a reference sequence.<br><br>
+    It answers:
+    <ul>
+      <li>Whose words of size-k are present in a sequence but absent from another?</li>
+      <li>Where do they appear?</li>
+    </ul>
+  <a href="eagle/index.html">Site</a> | <a href="bioinformatics.oxfordjournals.org/content/early/2015/04/17/bioinformatics.btv189.full.pdf">Paper</a> | <a href="https://github.com/pratas/eagle">Program</a>
+  </div>
+  <div id="cleared"></div>
+</div>
+
+<div id="wrapperc">
+  <div id="sidebarc"><p align="center"><a href="https://github.com/pratas/chester"><img src="https://raw.githubusercontent.com/pratas/chester/master/imgs/logo.png" alt="CHESTER" width="140" height="140" border="0"/></a></p></div>
+  <div id="contentc">CHESTER: an alignment-free method to find and visualize relative singularity regions.<br><br>
+  It answers:
+    <ul>
+      <li>Whose regions are present in multiple sequences but absent from others?</li>
+      <li>How to visualize it?</li>
+      <li>Can CHESTER use BLOOM filters (trading space by precision)? (yes)</li>
+    </ul>
+    <a href="chester/index.html">Site</a> | <a href="https://github.com/pratas/chester/blob/master/paper.pdf">Paper</a> | <a href="https://github.com/pratas/chester">Program</a>
+  </div>
+  <div id="cleared"></div>
+</div>
+
+<div id="wrapper">
+  <div id="sidebar"><p align="center"><a href="https://github.com/pratas/geco"><img src="https://raw.githubusercontent.com/pratas/geco/master/imgs/logo.png" alt="GECO" width="140" height="140" border="0"/></a></p></div>
+  <div id="content">GeCo: an efficient compressor for genomic sequences.<br><br>
+  It answers:
+    <ul>
+      <li>Can GeCo efficiently compress a genomic sequence? (yes)</li>
+      <li>Can GeCo compress a genomic sequence using other as reference? (yes)</li>
+      <li>Can GeCo estimate the local complexity for analysis purposes? (yes)</li>
+    </ul>
+    <a href="geco/index.html">Site</a> | <a href="http://sweet.ua.pt/pratas/papers/Pratas-2016b.pdf">Paper</a> | <a href="https://github.com/pratas/geco">Program</a>
+  </div>
+  <div id="cleared"></div>
+</div>
+
+<div id="wrapperc">
+  <div id="sidebarc"><p align="center"><a href="https://github.com/pratas/GULL"><img src="https://raw.githubusercontent.com/pratas/GULL/master/imgs/logo.png" alt="GULL" width="140" height="140" border="0"/></a></p></div>
+  <div id="contentc">GULL: a tool for measuring relative similarity between non-assembled genomic sequences without supervision.<br>
+  It answers:
+    <ul>
+      <li>What is the relative similarity between sequences?</li>
+      <li>Can it run on very dissimilar sequences? (yes)</li>
+      <li>Does it run with all non-assembled sequences with very different sizes? (yes)</li>
+      <li>Can we visualize in a compact map the output? (yes)</li>
+    </ul>
+    <a href="GULL/index.html">Site</a> | <a href="#">Paper</a> | <a href="https://github.com/pratas/GULL">Program</a>
+  </div>
+
+  <div id="cleared"></div>
+</div>
+
+<div id="wrapper">
+  <div id="sidebar"><p align="center"><a href="https://github.com/pratas/goose"><img src="https://raw.githubusercontent.com/pratas/goose/master/imgs/logo.png" alt="GOOSE" height="140" border="0"/></a></p></div>
+  <div id="content">GOOSE: a framework for DNA sequence manipulation and analysis.<br>
+  It answers:
+    <ul>
+      <li>Can GOOSE manipulate any genomic sequence? (yes)</li>
+      <li>Can GOOSE filter, simulate, transform, compact, shuffle genomic sequences? (yes)</li>
+      <li>Can GOOSE process SEQ (ACGTN), FASTA, Multi-FASTA, and FASTQ files? (yes)</li>
+    </ul>
+    <a href="goose/index.html">Site</a> | <a href="#">Paper</a> | <a href="https://github.com/pratas/goose">Program</a>
+  </div>
+  <div id="cleared"></div>
+</div>
+
+</body>
+</html>
+
+

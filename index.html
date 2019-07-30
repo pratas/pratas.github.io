@@ -1,144 +1,245 @@
 <!DOCTYPE html>
-<html>
-<body>
-<style>
-#wrapper {
-  margin-left: 200px;
-  padding:10px;
-}
-#wrapperc {
-  margin-left: 200px;
-  padding:10px;
-  background-color: #CCE5FF;
-}
-#content {
-  float: right;
-  width: 100%;
-  background-color: white;
-  vertical-align: middle;
-}
-#sidebar {
-  float: left;
-  width: 200px;
-  margin-left: -200px;
-  background-color: white;
-  vertical-align: middle;
-}
-#contentc {
-  float: right;
-  width: 100%;
-  background-color: #CCE5FF;
-  vertical-align: middle;
-}
-#sidebarc {
-  float: left;
-  width: 200px;
-  margin-left: -200px;
-  background-color: #CCE5FF;
-  vertical-align: middle;
-}
-#cleared {
-  clear: both;
-}
-</style>
-<div id="wrapper">
-  <div id="sidebar"><p align="center"><a href="https://github.com/pratas/falcon"><img src="https://raw.githubusercontent.com/pratas/falcon/master/imgs/logoTrans.png" alt="FALCON" width="160" height="160" border="0"/></a></p></div>
-  <div id="content">FALCON is a compression-based method to infer metagenomic sample composition<br><br>
-  It answers:
-    <ul>
-      <li>Whose genomes do I also have in my FASTQ samples? (contamination, integration, etc)</li>
-      <li>Where are they similar to my FASTQ samples?</li>
-      <li>Are those regions complex or repetitive?</li>
-    </ul>
-  <a href="falcon/index.html">Site</a> | <a href="#">Paper</a> | <a href="https://github.com/pratas/falcon">Program</a>
-  </div>
-  <div id="cleared"></div>
-</div>
-<div id="wrapperc">
-  <div id="sidebarc"><p align="center"><a href="https://github.com/pratas/smash"><img src="https://raw.githubusercontent.com/pratas/smash/master/imgs/logo.png" alt="SMASH" width="140" height="140" border="0"/></a></p></div>
-  <div id="contentc">SMASH: an alignment-free method to find and visualise rearrangements between pairs of DNA sequences.<br>The method is based on the relative information contained in across the sequences.<br><br>
-  It answers:
-    <ul>
-      <li>Where do rearrangements occur between two sequences?</li>
-      <li>Can SMASH run when one of the sequences is shuffled/permuted? (yes)</li>
-    </ul>
-  <a href="smash/index.html">Site</a> | <a href="http://www.nature.com/articles/srep10203.pdf">Paper</a> | <a href="https://github.com/pratas/smash">Program</a>
-  </div>
-  <div id="cleared"></div>
-</div>
+<html lang="en">
 
-<div id="wrapper">
-  <div id="sidebar"><br><br><p align="center"><a href="https://github.com/pratas/eagle"><img src="https://raw.githubusercontent.com/pratas/eagle/master/imgs/logo.png" alt="EAGLE" width="160" border="0"/></a></p><br></div>
-  <div id="content">EAGLE: alignment-free method to find relative absent words (RAWs) in genomic sequences using a reference sequence.<br><br>
-    It answers:
-    <ul>
-      <li>Whose words of size-k are present in a sequence but absent from another?</li>
-      <li>Where do they appear?</li>
-    </ul>
-  <a href="eagle/index.html">Site</a> | <a href="bioinformatics.oxfordjournals.org/content/early/2015/04/17/bioinformatics.btv189.full.pdf">Paper</a> | <a href="https://github.com/pratas/eagle">Program</a>
-  </div>
-  <div id="cleared"></div>
-</div>
+<head>
 
-<div id="wrapperc">
-  <div id="sidebarc"><p align="center"><a href="https://github.com/pratas/chester"><img src="https://raw.githubusercontent.com/pratas/chester/master/imgs/logo.png" alt="CHESTER" width="140" height="140" border="0"/></a></p></div>
-  <div id="contentc">CHESTER: an alignment-free method to find and visualize relative singularity regions.<br><br>
-  It answers:
-    <ul>
-      <li>Whose regions are present in multiple sequences but absent from others?</li>
-      <li>How to visualize it?</li>
-      <li>Can CHESTER use BLOOM filters (trading space by precision)? (yes)</li>
-    </ul>
-    <a href="chester/index.html">Site</a> | <a href="https://github.com/pratas/chester/blob/master/paper.pdf">Paper</a> | <a href="https://github.com/pratas/chester">Program</a>
-  </div>
-  <div id="cleared"></div>
-</div>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-<div id="wrapper">
-  <div id="sidebar"><p align="center"><a href="https://github.com/pratas/geco"><img src="https://raw.githubusercontent.com/pratas/geco/master/imgs/logo.png" alt="GECO" width="140" height="140" border="0"/></a></p></div>
-  <div id="content">GeCo: an efficient compressor for genomic sequences.<br><br>
-  It answers:
-    <ul>
-      <li>Can GeCo efficiently compress a genomic sequence? (yes)</li>
-      <li>Can GeCo compress a genomic sequence using other as reference? (yes)</li>
-      <li>Can GeCo estimate the local complexity for analysis purposes? (yes)</li>
-    </ul>
-    <a href="geco/index.html">Site</a> | <a href="http://sweet.ua.pt/pratas/papers/Pratas-2016b.pdf">Paper</a> | <a href="https://github.com/pratas/geco">Program</a>
-  </div>
-  <div id="cleared"></div>
-</div>
+  <title>D. Pratas</title>
 
-<div id="wrapperc">
-  <div id="sidebarc"><p align="center"><a href="https://github.com/pratas/GULL"><img src="https://raw.githubusercontent.com/pratas/GULL/master/imgs/logo.png" alt="GULL" width="140" height="140" border="0"/></a></p></div>
-  <div id="contentc">GULL: a tool for measuring relative similarity between non-assembled genomic sequences without supervision.<br>
-  It answers:
-    <ul>
-      <li>What is the relative similarity between sequences?</li>
-      <li>Can it run on very dissimilar sequences? (yes)</li>
-      <li>Does it run with all non-assembled sequences with very different sizes? (yes)</li>
-      <li>Can we visualize in a compact map the output? (yes)</li>
-    </ul>
-    <a href="GULL/index.html">Site</a> | <a href="#">Paper</a> | <a href="https://github.com/pratas/GULL">Program</a>
-  </div>
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-  <div id="cleared"></div>
-</div>
+  <!-- Custom styles for this template -->
+  <link href="css/scrolling-nav.css" rel="stylesheet">
 
-<div id="wrapper">
-  <div id="sidebar"><p align="center"><a href="https://github.com/pratas/goose"><img src="https://raw.githubusercontent.com/pratas/goose/master/imgs/logo.png" alt="GOOSE" height="140" border="0"/></a></p></div>
-  <div id="content">GOOSE: a framework for DNA sequence manipulation and analysis.<br>
-  It answers:
-    <ul>
-      <li>Can GOOSE manipulate any genomic sequence? (yes)</li>
-      <li>Can GOOSE filter, simulate, transform, compact, shuffle genomic sequences? (yes)</li>
-      <li>Can GOOSE process SEQ (ACGTN), FASTA, Multi-FASTA, and FASTQ files? (yes)</li>
-    </ul>
-    <a href="goose/index.html">Site</a> | <a href="#">Paper</a> | <a href="https://github.com/pratas/goose">Program</a>
-  </div>
-  <div id="cleared"></div>
-</div>
+</head>
+
+<body id="page-top">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="#page-top">D. Pratas</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#about">About</a>
+          </li>
+	  <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#advising">Advising</a>
+          </li>
+	  <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#publications">Publications</a>
+          </li>
+ 	  <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#tools">Tools</a>
+          </li>
+	  <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#links">Links</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="text-black" id="about" class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <img src="imgs/back3.jpg" height="176px">
+          <p align="justify">
+          <br>
+          Diogo Pratas is a computer scientist at IEETA at the University of Aveiro. His research interests include computational biology, data compression, and information theory. Diogo earned his Ph.D. in Computer Science from the University of Aveiro and holds a B.S. degree in Information and Communications Technologies also from the University of Aveiro, with a segment carried at the University of Salamanca. He joined IEETA in 2009, after being working two years in the private sector. Diogo actively collaborates with the Department of Virology at the University of Helsinki, namely in the identification and reconstruction of viral genomes, and the respective human-hosts, at multi-organ level. Diogo is a member of the Super Dimension Fortress, the International Society for Computational Biology, and the Portuguese Association for Pattern Recognition.
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+   <section id="advising" class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>Advising</h2>
+	  <p class="lead">Current and former Msc and PhD students:</p>
+	  <p class="lead">
+	  <ul>
+	    <li>Jorge Miguel Silva (PhD)</li>
+            <li>Morteza Hosseini (PhD)</li>
+	    <li>Manuel Gaspar (Msc)</li>
+	  </ul>
+	  </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="publications">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>Publications</h2>
+          <p class="lead">
+          <ul>
+            <li>M. Hosseini, D. Pratas, A. J. Pinho. A Probabilistic Method to Find and Visualize Distinct Regions in Protein Sequences. EUSIPCO, 2019.</li>
+            <li>D. Pratas, M. Hosseini, A. J. Pinho. Visualization of Similar Primer and Adapter Sequences in Assembled Archaeal Genomes. PACBB, 2019.</li>
+            <li>D. Pratas, M. Hosseini, A. J. Pinho. GeCo2: An Optimized Tool for Lossless Compression and Analysis of DNA Sequences. PACBB, 2019 [<a href="http://x.x">PDF</a>].</li>
+            <li>M. Hosseini, D. Pratas, A. J. Pinho. AC: A Compression Tool for Amino Acid Sequences. Interdisciplinary Sciences: Computational Life Sciences, 2019.</li>
+            <li>D. Pratas, M. Hosseini, G. Grilo, A. J. Pinho, R. M. Silva, T. Caetano, J. Carneiro, F. Pereira. Metagenomic Composition Analysis of an Ancient Sequenced Polar Bear Jawbone from Svalbard. Genes 9 (9), 2018.</li>
+            <li>D. Pratas, A. J. Pinho. Metagenomic composition analysis of sedimentary ancient DNA from the Isle of Wight. EUSIPCO, 2018.</li>
+            <li>D. Pratas, R. M. Silva, A. J. Pinho. Comparison of Compression-Based Measures with Application to the Evolution of Primate Genomes. Entropy 20 (6), 2018.</li>
+            <li>A. J. Pinho, D. Pratas. An Application of Data Compression Models to Handwritten Digit Classification. ICACIVS, 2018.</li>
+            <li>A. Teixeira, D. Pratas, A. J. Pinho, R. M. Silva. Evolutionary insights from the comparative analysis of hominid genomes. RECPAD, 2018.</li>
+            <li>C. Figueiredo, D. Pratas, A. J. Pinho, R. M. Silva. Identification of antifungal targets using alignment-free methods. RECPAD, 2018.</li>
+            <li>J. M. Carvalho, S. Brás, D. Pratas, J. Ferreira, S. C. Soares, A. J. Pinho. Extended-alphabet finite-context models. Pattern Recognition Letters 112, 2018.</li>
+            <li>M. Hosseini, D. Pratas, A. J. Pinho. Cryfa: a secure encryption tool for genomic data. Bioinformatics, 35 (1), 2018.</li>
+            <li>M. Gaspar, D. Pratas, A. J. Pinho. NET-ASAR: A Tool for DNA Sequence Search Based on Data Compression. PACBB, 2018.</li>
+            <li>D. Pratas, M. Hosseini, A. J. Pinho. Compression of Amino Acid Sequences. PACBB, 2018.</li>
+            <li>D. Pratas, A. J. Pinho. A DNA Sequence Corpus for Compression Benchmark. PACBB, 2018.</li> 
+            <li>D. Pratas, A. J. Pinho, R. M. Silva, J. M. O. S. Rodrigues, M. Hosseini, T. Caetano, P. J. S. G. Ferreira. FALCON-meta: a method to infer metagenomic composition of ancient DNA. bioRxiv, 267179, 2018</li>
+            <li>D. Pratas, A. J. Pinho. On the Approximation of the Kolmogorov Complexity for DNA Sequences. IbPRIA, 259-266. Springer, 2017.</li>
+            <li>D. Pratas, M. Hosseini, R. M. Silva, A. J. Pinho, P. J. S. G. Ferreira. Visualization of Distinct DNA Regions of the Modern Human Relatively to a Neanderthal Genome. IbPRIA, 235-242. Springer, 2017.</li>
+	    <li>D. Pratas, M. Hosseini, A. J. Pinho. Cryfa: A Tool to Compact and Encrypt FASTA Files. PACBB, Springer, 2017.</li>
+	    <li>D. Pratas, M. Hosseini, A. J. Pinho. Substitutional Tolerant Markov Models for Relative Compression of DNA Sequences. PACBB, Springer, 2017.</li>
+	    <li>M. Hosseini, D. Pratas, A. J. Pinho. On the Role of Inverted Repeats in DNA Sequence Similarity. PACBB, Springer, 2017.</li>
+            <li>D. Figueiredo, C. Martín-Vide, D. Pratas, M. A. Vega-Rodríguez. Algorithms for Computational Biology: 4th International Conference, AlCoB 2017, Aveiro, Portugal, Springer, 2017.</li>
+	    <li>M. Hosseini, D. Pratas, A. J. Pinho. A Survey on Data Compression Methods for Biological Sequences. Information, 7 (4), 2016.</li>
+	    <li>D. Pratas, A. J. Pinho, P. J. S. G. Ferreira. Efficient compression of genomic sequences. DCC, 231-240, 2016.</li>
+	    <li>A. J. Pinho, D. Pratas, P. J. S. G. Ferreira. Authorship Attribution Using Relative Compression. DCC, 329-338, 2016.</li>
+            <li>D. Pratas. Compression and analysis of genomic data. Ph.D. Thesis, University of Aveiro, January 2016.</li>
+	    <li>D. Pratas, R. M. Silva, A. J. Pinho, P. J. S. G. Ferreira. Detection and visualisation of regions of human DNA not present in other primates. RecPad, 2015.</li>
+	    <li>D. Pratas, R. M. Silva, A. J. Pinho, P. J. S. G. Ferreira. An alignment-free method to find and visualise rearrangements between pairs of DNA sequences. SciRep, 5 (10203) 2015.</li>
+	    <li>R. M. Silva, D. Pratas, L. Castro, A. J. Pinho, P. J. S. G. Ferreira. Three minimal sequences found in Ebola virus genomes and absent from human DNA. Bioinformatics, 2015.</li>
+	    <li>L. M. O. Matos, A. J. R. Neves, D. Pratas, A. J. Pinho. MAFCO: A compression tool for MAF files. PLoS ONE, 10 (3), 2015.</li>
+	    <li>D. Pratas, A. J. Pinho, J. M. O. S. Rodrigues. XS: a FASTQ read simulator. BMC Research Notes, 7 (40), 2014.</li>
+	    <li>A. J. Pinho, D. Pratas. MFCompress: a compression tool for FASTA and multi-FASTA data. Bioinformatics, 30 (1), 2014.</li>
+	    <li>A. J. Pinho, D. Pratas, P. J. S. G. Ferreira. A new compressor for measuring distances among images. ICIAR, 2014.</li>
+            <li>D. Pratas, R. M. Silva, A. J. Pinho. Large-scale inversions between human reference assemblies. RecPad, 2014.</li>
+            <li>R. M. Silva, L. Castro, D. Pratas, A. J. Pinho. Towards personalized medicine: ebola virus absent words in the human genome. RecPad, 2014.</li>  
+            <li>D. Pratas, A. J. Pinho. Exploring deep Markov models in genomic data compression using sequence pre-analysis. EUSIPCO, 2014.</li>
+            <li>D. Pratas, A. J. Pinho. A conditional compression distance that unveils insights of the genomic evolution. DCC, 2014.</li>
+            <li>A. J. Pinho, D. Pratas, P. J. S. G. Ferreira. Information Profiles for DNA Pattern Discovery. DCC, 2014.</li>
+            <li>A. J. Pinho, D. Pratas, S. P. Garcia. Compressing resequencing data with GReEn. Deep Sequencing Data Analysis, Noam Shomron (Ed.), Humana Press, vol. 1038, 2013</li>
+            <li>D. Pratas, A. J. Pinho. Insights into primates genomic evolution using a compression distance. RecPad, 2013.</li>
+	    <li>A. J. Pinho, S. P. Garcia, D. Pratas, P. J. S. G. Ferreira. DNA sequences at a glance. PLoS ONE, 8 (11), 2013.</li>
+	    <li>L. M. O. Matos, D. Pratas, A. J. Pinho. A compression model for DNA multiple sequence alignment blocks. IEEE Transactions on Information Theory, 59 (5), 2013.</li>
+	    <li>S. P. Garcia, J. M. O. S. Rodrigues, S. Santos, D. Pratas, V. Afreixo, C. A. C. Bastos, P. J. S. G. Ferreira, A. J. Pinho A genomic distance for assembly comparison based on compressed maximal exact matches. IEEE/ACM TCBB, 10 (3), 2013.</li>
+	    <li>A. J. Pinho, D. Pratas, S. P. Garcia. GReEn: a tool for efficient compression of genome resequencing data. Nucleic Acids Research, 40 (4), 2012.</li>
+            <li>D. Pratas, A. J. Pinho. On the compression of FASTQ quality-scores. RecPad, 2012.</li>
+            <li>L. Matos, D. Pratas, A. J. Pinho. Compression of Whole Genome Alignments Using a Mixture of Finite-Context Models. ICIAR, 2012.</li>
+            <li>D. Pratas, A. J. Pinho. On the Detection of Unknown Locally Repeating Patterns in Images. ICIAR, 2012.</li>
+            <li>D. Pratas, A. J. Pinho, S. P. Garcia. Exon: A Web-Based Software Toolkit for DNA Sequence Analysis. PACBB, 2012.</li>
+            <li>D. Pratas, A. J. Pinho, S. P. Garcia. Computation of the normalized compression distance of DNA sequences using a mixture of finite-context models. Bioinformatics, 2012.</li>
+            <li>A. J. Pinho, D. Pratas, S. P. Garcia. Complexity Profiles of DNA Sequences Using Finite-Context Models. USAB, 2011.</li>
+            <li>D. Pratas, S. P. Garcia, A. J. Pinho. Analysis of patterns in S. pombe genome through compression-based complexity profiles. RecPad, 2011.</li>
+<li>A. J. Pinho, D. Pratas, P. J. S. G. Ferreira, S. P. Garcia. Symbolic to numerical conversion of DNA sequences using finite-context models. EUSIPCO, 2011.</li>
+            <li>D. Pratas, C. A. C. Bastos, A. J. Pinho, A. J. R. Neves, L. Matos. DNA synthetic sequences generation using multiple competing Markov models. SSP, 2011.</li>
+            <li>A. J. Pinho, D. Pratas, P. J. S. G. Ferreira. Bacteria DNA sequence compression using a mixture of finite-context models. SSP, 2011.</li>
+            <li>D. Pratas, A. J. Pinho. Compressing the human genome using exclusively Markov models. PACBB, 2011.</li>
+            <li>D. Pratas, A. J. Pinho, A. J. R. Neves, C. A. C. Bastos. DNA synthetic sequences generated by finite-context models. RecPad, 2010.</li>
+            <li>D. Pratas, A. J. Pinho. Analysis of DNA sequences using finite-context modelling and compression. RecPad, 2010.</li>
+          </ul>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tools" class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>Tools</h2>
+          <p class="lead">
+	  <ul>
+	    <li><a href="https://github.com/pratas/tracespipe">TRACESPipe</a>: a pipeline for reconstruction of viral and human-host genomes at multi-organ level.</li>
+	    <li><a href="https://github.com/cobilab/falcon">FALCON-meta</a>: a sensitive and ultra-fast tool to infer metagenomic sample composition.</li>
+            <li><a href="https://github.com/cobilab/cryfa">Cryfa</a>: a secure encryption tool for genomic data.</li>
+	    <li><a href="https://github.com/cobilab/smash">Smash</a>: a tool to find and visualize rearrangements in DNA sequences.</li>
+	    <li><a href="https://github.com/cobilab/chester">Chester</a>: a memory efficient tool to map and visualize evolutionary regions.</li> 
+	    <li><a href="https://github.com/cobilab/gto">GTO</a>: a multi-purpose toolkit for genomics.</li>
+            <li><a href="https://github.com/cobilab/geco">GeCo</a>: an efficient compressor for genomic sequences (reference and reference-free).</li>
+            <li><a href="https://github.com/cobilab/ac">AC</a>: a compressor for Amino Acid sequences (reference and reference-free).</li>
+            <li><a href="https://bioinformatics.ua.pt/software/mfcompress">MFCompress</a>: an efficient compressor for FASTA sequences.</li>
+	    <li><a href="https://bioinformatics.ua.pt/software/green">GReEn</a>: a reference-based compressor for resequencing data.</li>
+	    <li><a href="https://github.com/cobilab/magnet">MAGNET</a>: an alignment-free tool to separate targeted data of FASTQ reads.</li>
+            <li><a href="https://github.com/cobilab/eagle">EAGLE</a>: an alignment-free tool to compute (minimal) Relative Absent Words.</li>
+	  </ul>
+	  </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="links">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>Links</h2>
+          <br>
+	  <p class="lead" align="justify"><a href="http://www.ieeta.pt"><img src="imgs/ieeta.jpg" height="70px"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://github.com/pratas"><img src="imgs/github.png" height="60px"></a>&nbsp;<a href="https://scholar.google.es/citations?user=rLV0be0AAAAJ&hl=en"><img src="imgs/scholar.png" height="50px"></a><a href="https://twitter.com/dxpratas"><img src="imgs/twitter.png" height="50px"></a>&nbsp;&nbsp;<a href="https://www.researchgate.net/profile/Diogo_Pratas"><img src="imgs/researchgate.png" height="26px"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://orcid.org/0000-0003-1176-552X"><img src="imgs/orcid.png" height="36px"></a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <h2>Contact</h2>
+          <p class="lead"><h6>
+          IEETA, University of Aveiro<br>
+          Campus Universitário Santiago, 3810-193<br>
+          Aveiro, Portugal<br><br>
+          Phone: +351 234 370 506<br></h6>
+	  <br>
+	  <img src="imgs/enderecos.png" height="24px">
+	  <br>
+	  <br>
+          <h6>
+	  Institute of Electronics and Informatics Engineering of Aveiro, University of Aveiro<br>
+          Department of Electronics, Telecommunications and Informatics, University of Aveiro<br>
+          Department of Virology, University of Helsinki</h6><br><br>
+          <img src="imgs/AVR.png" height="110px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <img src="imgs/ieeta.jpg" height="110px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <img src="imgs/UAv.png" height="110px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <img src="imgs/UH.png" height="110px">
+	  </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="py-3 bg-dark">
+    <div class="container">
+	    <p class="m-0 text-center text-white"><small>Copyright &copy; DPratas-2019-2020 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="http://wiki.ieeta.pt/wiki/index.php/Main_Page">IEETA</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="https://www.ua.pt/deti/">DETI</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="https://www.ua.pt">University of Aveiro</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="https://www.helsinki.fi">University of Helsinki</a></small></p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom JavaScript for this theme -->
+  <script src="js/scrolling-nav.js"></script>
 
 </body>
+
 </html>
-
-
