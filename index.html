@@ -55,12 +55,52 @@
     </div>
   </nav>
 
+<style>
+* {
+  box-sizing: border-box;
+}
+.column1 {
+  float: left;
+  width: 25%;
+  padding: 10px;
+}
+.column2 {
+  float: left;
+  width: 47%;
+  padding: 10px;
+}
+.column3 {
+  float: left;
+  width: 28%;
+  padding: 10px;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+}
+</style>
+
   <header class="text-black" id="about" class="bg-light">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 mx-auto">
-	<p align="justify"><img src="imgs/Gibraltar.jpg" width="148px" align="left" hspace="20px" />I am mostly a Researcher at IEETA/DETI at the University of Aveiro. My research interests include computational biology, data compression, and information theory. I completed the Ph.D. in Computer Science from the University of Aveiro in 2016 and hold a B.S. degree in Information and Communications Technologies also from the University of Aveiro, with a segment carried at the Pontifical University of Salamanca. I have joined IEETA/DETI in 2009, after being working some years in the private sector. I actively collaborate with the Department of Virology at the University of Helsinki, namely in the identification and reconstruction of viral genomes, and the respective human-hosts, at multi-organ level. I am a member of the Super Dimension Fortress, the International Society for Computational Biology, and the Portuguese Association for Pattern Recognition.<a class="twitter-timeline" data-width="220" data-height="420" data-theme="light" href="https://twitter.com/DXPratas?ref_src=twsrc%5Etfw">Tweets by DXPratas</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-	</p>
+        <div class="col-lg-10 mx-auto">
+          <div class="row">
+            <div class="column1" style="background-color:#fff;">
+            <p><img src="imgs/Gibraltar.jpg" width="190px" align="left" hspace="20px" /></p>
+            </div>
+            <div class="column2" style="background-color:#fff;">
+            <p align="justify">I am mostly a Researcher at IEETA/DETI at the University of Aveiro. My research interests include computational biology, data compression, and information theory. I completed the Ph.D. in Computer Science from the University of Aveiro in 2016 and hold a B.S. degree in Information and Communications Technologies also from the University of Aveiro, with a segment carried at the Pontifical University of Salamanca. I have joined IEETA/DETI in 2009, after being working some years in the private sector. I actively collaborate with the Department of Virology at the University of Helsinki, namely in the identification and reconstruction of viral genomes, and the respective human-hosts, at multi-organ level. I am a member of the Super Dimension Fortress, the International Society for Computational Biology, and the Portuguese Association for Pattern Recognition.</p>
+            </div>
+            <div class="column3" style="background-color:#fff;">
+            <a class="twitter-timeline" data-width="220" data-height="400" data-theme="light" href="https://twitter.com/DXPratas?ref_src=twsrc%5Etfw">Tweets by DXPratas</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -69,8 +109,8 @@
    <section id="advising" class="bg-light">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <h2>Advising</h2>
+        <div class="col-lg-10 mx-auto">
+          <h3>Advising</h3>
 	  <p class="lead">Current Msc and PhD students:</p>
 	  <p class="lead">
 	  <ul>
@@ -96,8 +136,8 @@
   <section id="publications">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <h2>Publications</h2>
+        <div class="col-lg-10 mx-auto">
+          <h3>Publications</h3>
           <p class="lead">
           <ul>
 	    <li>M. Toppinen, D. Pratas, E. Väisänen, M. Söderlund-Venermo, K. Hedmanad, M. F. Perdomo, A. Sajantila. The landscape of persistent human DNA viruses in femoral bone. Forensic Science International: Genetics, 48, 2020 [<a href="https://doi.org/10.1016/j.fsigen.2020.102353">PDF</a>].</li>
@@ -172,8 +212,8 @@
   <section id="tools" class="bg-light">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <h2>Tools</h2>
+        <div class="col-lg-10 mx-auto">
+          <h3>Tools</h3>
           <p class="lead">
 	  <ul>
 	    <li><a href="https://github.com/pratas/tracespipe">TRACESPipe</a>: a pipeline for reconstruction of viral and human-host genomes at multi-organ level.</li>
@@ -198,8 +238,8 @@
   <section id="datasets">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <h2>Datasets</h2>
+        <div class="col-lg-10 mx-auto">
+          <h3>Datasets</h3>
 	  <p class="lead" align="center">
 	  <br>
 	  <a href="http://sweet.ua.pt/pratas/datasets/DNACorpus.zip"><img src="imgs/dna_dataset.png" height="140px"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://sweet.ua.pt/pratas/datasets/AminoAcidsCorpus.zip"><img src="imgs/protein_dataset.png" height="140px"></a>
@@ -212,8 +252,8 @@
   <section id="links">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <h2>Links</h2>
+        <div class="col-lg-10 mx-auto">
+          <h3>Links</h3>
           <br>
 	  <p class="lead" align="center"><a href="http://www.ieeta.pt"><img src="imgs/ieeta.jpg" height="50px"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://github.com/pratas"><img src="imgs/github.png" height="42px"></a>&nbsp;<a href="https://scholar.google.es/citations?user=rLV0be0AAAAJ&hl=en"><img src="imgs/scholar.png" height="40px"></a><a href="https://twitter.com/dxpratas"><img src="imgs/twitter.png" height="40px"></a>&nbsp;&nbsp;<a href="https://www.researchgate.net/profile/Diogo_Pratas"><img src="imgs/researchgate.png" height="20px"></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://orcid.org/0000-0003-1176-552X"><img src="imgs/orcid.png" height="28px"></a></p>
         </div>
@@ -224,8 +264,8 @@
   <section id="contact">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 mx-auto">
-          <h2>Contact</h2>
+        <div class="col-lg-10 mx-auto">
+          <h3>Contact</h3>
           <p class="lead"><h6>
           IEETA, University of Aveiro<br>
           Campus Universitário Santiago, 3810-193<br>
