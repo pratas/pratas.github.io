@@ -6,12 +6,22 @@ document.getElementById('toggleAlumni').addEventListener('click', function() {
     : 'Hide Alumni';
 });
 
-document.getElementById('toggleBiography').addEventListener('click', function() {
-  const list = document.getElementById('biography');
-  list.classList.toggle('hidden');
-  this.textContent = list.classList.contains('hidden')
-    ? 'Show Biography'
-    : 'Hide Biography';
+// script.js
+document.addEventListener("BDOMContentLoaded", function () {
+  const bio = document.getElementById("biography");
+  const btn = document.getElementById("bioButton");
+
+  if (btn && bio) {
+    btn.addEventListener("click", function () {
+      if (bio.style.display === "none" || bio.style.display === "") {
+        bio.style.display = "block";
+        btn.textContent = "Hide Biography";
+      } else {
+        bio.style.display = "none";
+        btn.textContent = "Show Biography";
+      }
+    });
+  }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
