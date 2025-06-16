@@ -29,9 +29,31 @@
         <p align="justify">
           Diogo Pratas is a researcher in interdisciplinary informatics, dedicated to developing computational methods that bridge informatics with biomedical, anthropological, and historical research. His work focuses on analyzing and interpreting complex data. Current projects include efficient compression of biological data, reconstruction and analysis of viral genomes, metagenomic studies of ancient DNA, and the application of machine learning to date and localize ancient artifacts such as metals, texts, and genetic material.
         </p>
-      <button id="toggleBiography">Show Biography</button>
-      <ul id="biography" class="hidden">
-        <p align="justify">
+
+        <div class="social-icons">
+          <a href="https://www.researchgate.net/profile/SEU_UTILIZADOR" target="_blank" title="ResearchGate">
+            <i class="fab fa-researchgate fa-2x"></i>
+          </a>
+          <a href="https://scholar.google.com/citations?user=SEU_ID" target="_blank" title="Google Scholar">
+            <i class="fas fa-graduation-cap fa-2x"></i>
+          </a>
+          <a href="https://orcid.org/0000-0002-1825-0097" target="_blank" title="ORCID">
+            <i class="fab fa-orcid fa-2x"></i>
+          </a>
+          <a href="https://www.scopus.com/authid/detail.uri?authorId=SEU_ID" target="_blank" title="Scopus">
+            <i class="fas fa-book fa-2x"></i>
+          </a>
+          <a href="https://twitter.com/SEU_UTILIZADOR" target="_blank" title="Twitter">
+            <i class="fab fa-twitter fa-2x"></i>
+          </a>
+          <a href="https://bsky.app/profile/SEU_UTILIZADOR.bsky.social" target="_blank" title="Bluesky">
+            <i class="fas fa-cloud fa-2x"></i>
+          </a>
+          <br>
+          <button id="bioButton" onclick="toggleBio()">Show Biography</button>
+        </div>
+        <div id="biography">
+        <p>
         Diogo Pratas was born in Aveiro, in 1986.
         He graduated in Information and Communication Technologies at the University of Aveiro, in 2008. During his degree, he participated in the Erasmus program in Computer Engineering at the Pontifical University of Salamanca, Spain. He worked in the private sector from 2008 to 2010 in the areas of ​​networks and IT security and in the development of Linux systems. In 2016, he obtained his PhD in Informatics at the University of Aveiro with a thesis on compression and analysis of genomic sequences. He did a post-doctorate in Computer Science from 2016 to 2019 at the University of Aveiro.
         In 2019, he was a Staff Bioinformatician at the University of Helsinki, Finland.
@@ -41,7 +63,7 @@
         His main areas of interest and research are Bioinformatics, Computational virology, Cultural Heritage, Artificial Inteligence, and Information Theory. 
         He has participated as a speaker at various international conferences and scientific meetings and is the author of more than 100 publications in the areas of  Medicine, Biology, and Informatics.
         </p>
-      </ul>
+        </div>
     </section>
 
     <section id="Research">
