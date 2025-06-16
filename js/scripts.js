@@ -1,33 +1,39 @@
-document.getElementById('toggleAlumni').addEventListener('click', function() {
-  const list = document.getElementById('alumniList');
-  list.classList.toggle('hidden');
-  this.textContent = list.classList.contains('hidden')
-    ? 'Show Alumni'
-    : 'Hide Alumni';
-});
-
-// script.js
 document.addEventListener("DOMContentLoaded", function () {
-  const bio = document.getElementById("biography");
-  const btn = document.getElementById("bioButton");
-
-  if (btn && bio) {
-    btn.addEventListener("click", function () {
-      if (bio.style.display === "none" || bio.style.display === "") {
-        bio.style.display = "block";
-        btn.textContent = "Hide Biography";
-      } else {
-        bio.style.display = "none";
-        btn.textContent = "Show Biography";
-      }
-    });
-  }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
+  const toggleAlumniBtn = document.getElementById('toggleAlumni');
+  const alumniList = document.getElementById('alumniList');
+  const toggleBiographyBtn = document.getElementById('toggleBiography');
+  const biography = document.getElementById('biography');
   const topBtn = document.getElementById("topBtn");
 
-  topBtn.addEventListener("click", function () {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
+  if (toggleAlumniBtn && alumniList) {
+    toggleAlumniBtn.addEventListener('click', function() {
+      alumniList.classList.toggle('hidden');
+      this.textContent = alumniList.classList.contains('hidden')
+        ? 'Show Alumni'
+        : 'Hide Alumni';
+    });
+  }
+
+  if (toggleBiographyBtn && biography) {
+    toggleBiographyBtn.addEventListener('click', function() {
+      biography.classList.toggle('hidden');
+      this.textContent = biography.classList.contains('hidden')
+        ? 'Show Biography'
+        : 'Hide Biography';
+    });
+  }
+
+  if (topBtn) {
+    window.addEventListener("scroll", function () {
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        topBtn.style.display = "block";
+      } else {
+        topBtn.style.display = "none";
+      }
+    });
+
+    topBtn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
 });
