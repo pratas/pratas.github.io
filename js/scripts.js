@@ -7,7 +7,7 @@ document.getElementById('toggleAlumni').addEventListener('click', function() {
 });
 
 // script.js
-document.addEventListener("BDOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
   const bio = document.getElementById("biography");
   const btn = document.getElementById("bioButton");
 
