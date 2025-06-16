@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const toggleAlumniBtn = document.getElementById('toggleAlumni');
   const alumniList = document.getElementById('alumniList');
-  const toggleBiographyBtn = document.getElementById('bioButton');  // updated here
+  const toggleBiographyBtn = document.getElementById('toggleBiography');  // updated here
   const biography = document.getElementById('biography');
   const topBtn = document.getElementById("topBtn");
 
