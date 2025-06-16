@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  if (toggleBiographyBtn && biography) {
+  if (toggleBiographyBtn) {
     toggleBiographyBtn.addEventListener('click', function() {
       biography.classList.toggle('hidden');
       this.textContent = biography.classList.contains('hidden')
