@@ -1,39 +1,33 @@
+document.getElementById('toggleAlumni').addEventListener('click', function() {
+  const list = document.getElementById('alumniList');
+  list.classList.toggle('hidden');
+  this.textContent = list.classList.contains('hidden')
+    ? 'Show Alumni'
+    : 'Hide Alumni';
+});
+
+document.getElementById('toggleBiography').addEventListener('click', function() {
+  const list = document.getElementById('biography');
+  list.classList.toggle('hidden');
+  this.textContent = list.classList.contains('hidden')
+    ? 'Show Biography'
+    : 'Hide Biography';
+});
+
 document.addEventListener("DOMContentLoaded", function () {
-  const toggleAlumniBtn = document.getElementById('toggleAlumni');
-  const alumniList = document.getElementById('alumniList');
-  const toggleBiographyBtn = document.getElementById('toggleBiography');  // updated here
-  const biography = document.getElementById('biography');
   const topBtn = document.getElementById("topBtn");
 
-  if (toggleAlumniBtn && alumniList) {
-    toggleAlumniBtn.addEventListener('click', function() {
-      alumniList.classList.toggle('hidden');
-      this.textContent = alumniList.classList.contains('hidden')
-        ? 'Show Alumni'
-        : 'Hide Alumni';
-    });
-  }
+  // Mostrar ou esconder o botão consoante o scroll
+  window.addEventListener("scroll", function () {
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+      topBtn.style.display = "block";
+    } else {
+      topBtn.style.display = "none";
+    }
+  });
 
-  if (toggleBiographyBtn && biography) {
-    toggleBiographyBtn.addEventListener('click', function() {
-      biography.classList.toggle('hidden');
-      this.textContent = biography.classList.contains('hidden')
-        ? 'Show Biography'
-        : 'Hide Biography';
-    });
-  }
-
-  if (topBtn) {
-    window.addEventListener("scroll", function () {
-      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-        topBtn.style.display = "block";
-      } else {
-        topBtn.style.display = "none";
-      }
-    });
-
-    topBtn.addEventListener("click", function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
+  // Voltar ao topo ao clicar
+  topBtn.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 });
