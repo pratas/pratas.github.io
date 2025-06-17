@@ -62,34 +62,20 @@ h2 {
   transform: scale(1.2);
 }
 
-#toggleAlumni {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #00796b;
-  color: white;
+button {
+  background: #00796b;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  padding: 0.5rem 1rem;
   cursor: pointer;
 }
 
-#toggleAlumni:hover {
-  background-color: #004d40;
+button:hover {
+  background: #004d40;
 }
 
-#toggleBiography {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: #00796b;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#toggleBiography:hover {
-  background-color: #004d40;
+.hidden {
+  display: none;
 }
 
 footer {
