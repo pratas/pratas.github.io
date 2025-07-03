@@ -44,13 +44,13 @@ main {
 a {
   color: #00796b;              /* Same as headings and buttons */
   text-decoration: none;       /* Clean look */
-  border-bottom: 1px dashed #00796b;  /* Subtle cue it's a link */
-  transition: color 0.3s ease, border-bottom 0.3s ease;
+  /*border-bottom: 1px dashed #00796b;*/  /* Subtle cue it's a link */
+  /*transition: color 0.3s ease, border-bottom 0.3s ease;*/
 }
 
 a:hover {
   color: #004d40;              /* Darker shade on hover */
-  border-bottom: 1px solid #004d40;  /* Stronger underline on hover */
+  /*border-bottom: 1px solid #004d40;*/  /* Stronger underline on hover */
 }
 
 h2 {
