@@ -38,7 +38,7 @@ main {
   max-width: 900px;  /* max width to avoid too wide on large screens */
   margin: 0 auto;    /* center horizontally */
   padding: 2rem;
-  text-align: justify; /* to justify text */
+  text-align: left; /* to justify text */
 }
 
 a {
