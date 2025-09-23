@@ -135,6 +135,26 @@ h2 {
   }
 }
 
+.cha-container { display: flow-root; }
+
+.cha-container__img {
+  float: right;
+  width: min(32%, 320px);
+  height: auto;
+  margin: 0 0 1rem 1.25rem; /* space between image and text */
+  border-radius: 8px;       /* optional */
+  object-fit: cover;
+}
+
+@media (max-width: 700px) {
+  .cha-container__img {
+    float: none;
+    display: block;
+    margin: 0 auto 1rem;
+    width: min(100%, 420px);
+  }
+}
+
 button {
   background: #00796b;
   color: #fff;
