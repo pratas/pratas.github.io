@@ -135,6 +135,62 @@ h2 {
   }
 }
 
+.ua-contact-grid {
+    --ua-gap: 1.2rem;
+    --ua-pad: 1.25rem;
+    --ua-radius: 12px;
+    --ua-border: 1px solid rgba(0,0,0,.12);
+    --ua-card-bg: linear-gradient(180deg, #fffdf6 0%, #f3f0e7 100%);
+    --ua-muted: #555;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--ua-gap);
+
+    /* equal-height columns: stretch items to row height */
+    align-items: stretch;
+}
+
+@media (min-width: 720px) {
+    .ua-contact-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.ua-card {
+    background: var(--ua-card-bg);
+    border: var(--ua-border);
+    border-radius: var(--ua-radius);
+    padding: var(--ua-pad);
+
+    /* fill the grid track height without affecting subsequent content */
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.ua-card h3 {
+    margin: 0 0 .6rem;
+    font-size: 1.15rem;
+}
+.ua-card h4 {
+    margin: 1rem 0 .35rem;
+    font-size: .95rem;
+    color: var(--ua-muted);
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+.ua-card address {
+    font-style: normal;
+    line-height: 1.45;
+}
+.ua-card a {
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+}
+.ua-card a:hover { border-bottom-style: solid; }
+.ua-list { margin: .2rem 0 0; padding-left: 1.1rem; }
+.ua-list li { margin: .35rem 0; }
+
 .cha-container { display: flow-root; }
 
 .cha-container__img {
