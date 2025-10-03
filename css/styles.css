@@ -121,7 +121,7 @@ h2 {
   float: right;
   width: min(32%, 320px);
   height: auto;
-  margin: 0 0 1rem 1.25rem; /* space between image and text */
+  margin: 0 0 0rem 1.25rem; /* space between image and text */
   border-radius: 8px;       /* optional */
   object-fit: cover;
 }
@@ -197,7 +197,7 @@ h2 {
   float: right;
   width: min(32%, 320px);
   height: auto;
-  margin: 0 0 1rem 1.25rem; /* space between image and text */
+  margin: 0 0 0rem 1.25rem; /* space between image and text */
   border-radius: 8px;       /* optional */
   object-fit: cover;
 }
