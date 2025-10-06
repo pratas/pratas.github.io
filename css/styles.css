@@ -5,14 +5,14 @@ body {
 }
 
 header {
-  background: #004d40;
+  background: #003399;
   color: #fff;
   padding: 1rem;
   text-align: center;
 }
 
 nav {
-  background: #00695c;
+  background: #0b3ba7;
 }
 
 nav ul {
@@ -30,7 +30,7 @@ nav a {
 }
 
 nav a:hover {
-  background: #004d40;
+  background: #1852d4;
 }
 
 main {
@@ -42,7 +42,7 @@ main {
 }
 
 a {
-  color: #00796b;              /* Same as headings and buttons */
+  color: #0b3ba7;              /* Same as headings and buttons */
   text-decoration: none;       /* Clean look */
   /*border-bottom: 1px dashed #00796b;*/  /* Subtle cue it's a link */
   /*transition: color 0.3s ease, border-bottom 0.3s ease;*/
@@ -56,7 +56,7 @@ a:hover {
 }
 
 h2 {
-  color: #00796b;
+  color: #0b3ba7;
 }
 
 /* Grid para os cards */
@@ -67,10 +67,10 @@ h2 {
 }
 
 .software-card {
-  border: 1px solid #00796b;
+  border: 1px solid #1852d4;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #e0f2f1;
+  background-color: #003399;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
 }
@@ -89,7 +89,7 @@ h2 {
 
 .software-card .content {
   padding: 1rem;
-  color: #004d40;
+  color: #fff;
 }
 
 .software-card .content h3 {
@@ -111,7 +111,7 @@ h2 {
 }
 
 .social-icons a:hover {
-  color: #00796b;
+  color: #1852d4;
   transform: scale(1.2);
 }
 
@@ -212,7 +212,7 @@ h2 {
 }
 
 button {
-  background: #00796b;
+  background: #0b3ba7;
   color: #fff;
   border: none;
   padding: 0.5rem 1rem;
@@ -220,7 +220,7 @@ button {
 }
 
 button:hover {
-  background: #004d40;
+  background: #1852d4;
 }
 
 .hidden {
@@ -228,7 +228,7 @@ button:hover {
 }
 
 footer {
-  background: #004d40;
+  background: #0b3ba7;
   color: #fff;
   text-align: center;
   padding: 1rem;
@@ -250,7 +250,7 @@ footer {
   bottom: 20px;
   right: 20px;
   z-index: 99;
-  background-color: #00796b;
+  background-color: #1852d4;
   color: white;
   border: none;
   padding: 0.75rem 1rem;
@@ -261,5 +261,5 @@ footer {
 }
 
 #topBtn:hover {
-  background-color: #004d40;
+  background-color: #246EFF
 }
