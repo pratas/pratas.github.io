@@ -140,7 +140,7 @@ h2 {
     --ua-pad: 1.25rem;
     --ua-radius: 12px;
     --ua-border: 1px solid rgba(0,0,0,.12);
-    --ua-card-bg: linear-gradient(180deg, #fffdf6 0%, #f3f0e7 100%);
+    --ua-card-bg: linear-gradient(180deg, #ededed 0%, #ededed 100%);
     --ua-muted: #555;
 
     display: grid;
