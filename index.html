@@ -400,6 +400,15 @@
         This fully sequenced genome is described in detail in the corresponding <a href="https://doi.org/10.1126/science.abj6987">scientific article</a>, which serves as the foundation for the task. Participants are invited to propose innovative compression methods that advance the state of the art, with results compared against existing solutions on the <a href="https://github.com/cobilab/HumanGenome">current leaderboard</a>. Each of the compressor and decompressor must complete within 48 hours (wall-clock) and use no more than 32 GB of RAM (peak). The leading entries are currently dominated by the JARVIS series—specifically JARVIS3 and JARVIS2. These DNA-based compressors are capable of reducing the size of the human genome by nearly one-third. JARVIS3 achieves approximately 7% greater compression compared to <em>nncp</em>, a Transformer-based general-purpose data compression tool.
         </p>
       </article>
+
+      <h3>2. Cassava genome sequence compression</h3>
+      <article class="cha-container">
+        <p align="justify">
+        <a href="https://github.com/cobilab/CassavaGenome"><img class="cha-container__img" src="imgs/cgsc.png" alt="Cassava Genome Sequence Challenge" width="320" height="240" /></a>
+        The task is to build a lossless, reference-free compressor that minimizes the representation of the cassava TME204 genome (762,392,783 DNA symbols). The target assembly is the one linked in the repository (<a href="https://doi.org/10.1093/gigascience/giac028">article</a> and <a href="https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/analysis_set/chm13v2.0.fa.gz">sequence</a>), and results are ranked by smallest compressed size in bytes (a Kolmogorov-complexity proxy), with a baseline of 2 bits per symbol used to report a compression factor. Runtime and peak RAM are recorded for transparency; the reference runs are executed on a Linux desktop (Intel i7-6700, 31.2 GiB RAM).
+        Participants are invited to propose innovative methods and compare against the current leaderboard provided in the repo. At present, the top entries are JARVIS2 variants, with the best run compressing TME204 to 69,078,516 bytes (0.7249 bps; ~64% factor) in about 193 minutes using ~11.3 GB RAM, outperforming general compressors and prior genome-specific tools (e.g., GeCo3, NAF) on this dataset. Reproducible scripts are provided (Install_Tools.sh, GetCassava.sh, RunCassava.sh) to fetch the data, install tools, and rerun the benchmark.
+        </p>
+      </article>
     </section> 
 
     <section id="Contact">
