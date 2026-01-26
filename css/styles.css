@@ -48,7 +48,6 @@ a {
   /*transition: color 0.3s ease, border-bottom 0.3s ease;*/
 }
 
-
 a:hover {
   /* color: #004d40; */             /* Darker shade on hover */
   font-weight: bold;
@@ -57,6 +56,28 @@ a:hover {
 
 h2 {
   color: #0b3ba7;
+}
+
+/* Golden-star bullets for Research list */
+.research-list {
+  list-style: none;          /* remove default dots */
+  padding-left: 0;           /* reset default indent */
+  margin-left: 0;
+}
+
+.research-list li {
+  position: relative;
+  padding-left: 1.4em;       /* space for the star */
+}
+
+.research-list li::before {
+  content: "★";              /* star character */
+  position: absolute;
+  left: 0;
+  top: 0.05em;               /* tweak vertical alignment */
+  color: #d4af37;            /* “gold” */
+  font-size: 1em;
+  line-height: 1;
 }
 
 /* Grid para os cards */
