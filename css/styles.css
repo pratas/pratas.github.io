@@ -88,8 +88,8 @@ h2 {
 
 .students-list li {
   position: relative;
-  padding-left: 1.2em;
-  /* margin: 0.4em 0; */
+  padding-left: 1.5em;
+  margin: 0.3em 0;
 }
 
 .students-list li::before {
@@ -97,7 +97,7 @@ h2 {
   position: absolute;
   left: 0;
   top: 0.1em;
-  /* color: #d4af37;   */         /* “gold” */ 
+  color: #d4af37;        /* “gold” */ 
   font-size: 1em;        /* match text size */
   line-height: 1;
 }
