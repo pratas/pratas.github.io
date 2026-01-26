@@ -88,8 +88,8 @@ h2 {
 
 .students-list li {
   position: relative;
-  padding-left: 1.6em;   /* a bit wider than star */
-  margin: 0.4em 0;
+  padding-left: 1.2em;
+  /* margin: 0.4em 0; */
 }
 
 .students-list li::before {
