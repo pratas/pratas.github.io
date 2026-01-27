@@ -97,26 +97,24 @@ h2 {
   position: absolute;
   left: 0;
   top: 0.1em;
-  color: #d4af37;        /* “gold” */ 
   font-size: 1em;        /* match text size */
   line-height: 1;
 }
 
-/* Contact → affiliation list */
-#contact ul {
+.affiliation-list {
   list-style: none;
   padding-left: 0;
   margin-left: 1.2em;
 }
 
-#contact ul li {
+.affiliation-list li {
   position: relative;
   padding-left: 1.5em;
   margin: 0.3em 0;
 }
 
-#contact ul li::before {
-  content: "🏛️";         /* affiliation icon */
+.affiliation-list li::before {
+  content: "🏛️";
   position: absolute;
   left: 0;
   top: 0.1em;
