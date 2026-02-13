@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AIT Challenge 2026 — Lossless Compression Leaderboard</title>
+  <style>
+    :root{
+      --bg:#0b1020; --card:rgba(255,255,255,.06); --border:rgba(255,255,255,.12);
+      --text:#f3f4f6; --muted:rgba(255,255,255,.68);
+    }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(124,58,237,.25), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(59,130,246,.22), transparent 55%),
+        var(--bg);
+      min-height:100vh;
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:28px 18px 44px;}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      padding:16px 18px 18px;
+    }
+    .banner{
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 10px 26px rgba(0,0,0,.35);
+      margin-bottom:14px;
+    }
+    .banner svg{display:block; width:100%; height:auto;}
+    .muted{color:var(--muted); font-size:13px; line-height:1.35;}
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-top:12px;}
+    input{
+      width:min(360px, 100%);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      outline:none;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:14px;
+      overflow:hidden;
+      border-radius:14px;
+    }
+    thead th{
+      position:sticky; top:0;
+      background:rgba(11,16,32,.92);
+      text-align:left;
+      font-size:12px;
+      letter-spacing:.02em;
+      color:rgba(255,255,255,.75);
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+    }
+    tbody td{
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      font-size:13px;
+      white-space:nowrap;
+    }
+    tbody tr:hover{background:rgba(255,255,255,.05);}
+    .right{text-align:right;}
+    .center{text-align:center;}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    .badge{
+      display:inline-block;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      font-size:12px;
+      color:rgba(255,255,255,.85);
+    }
+    .ok{border-color:rgba(34,197,94,.35); background:rgba(34,197,94,.10);}
+    .fail{border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.10);}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+
+      <!-- Top banner (inline SVG image) -->
+      <div class="banner" aria-label="AIT Challenge 2026 banner">
+        <svg viewBox="0 0 1200 280" role="img" aria-label="AIT Challenge 2026 — Lossless Compression Leaderboard">
+          <defs>
+            <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#0B2A7A"/>
+              <stop offset="0.55" stop-color="#3B3AA8"/>
+              <stop offset="1" stop-color="#8B2EA6"/>
+            </linearGradient>
+            <radialGradient id="glow" cx="35%" cy="40%" r="70%">
+              <stop offset="0" stop-color="rgba(255,255,255,0.14)"/>
+              <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+            </radialGradient>
+            <linearGradient id="zip" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#BFD3FF" stop-opacity="0.95"/>
+              <stop offset="1" stop-color="#7AA7FF" stop-opacity="0.75"/>
+            </linearGradient>
+            <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="rgba(0,0,0,0.45)"/>
+            </filter>
+            <clipPath id="clipBanner">
+              <rect x="0" y="0" width="1200" height="280" rx="18" ry="18"></rect>
+            </clipPath>
+          </defs>
+
+          <g clip-path="url(#clipBanner)">
+            <rect x="0" y="0" width="1200" height="280" fill="url(#bg)"/>
+            <rect x="0" y="0" width="1200" height="280" fill="url(#glow)"/>
+
+            <!-- subtle grid -->
+            <g opacity="0.08">
+              <path d="M0 40H1200M0 80H1200M0 120H1200M0 160H1200M0 200H1200M0 240H1200" stroke="#FFFFFF" stroke-width="1"/>
+              <path d="M80 0V280M160 0V280M240 0V280M320 0V280M400 0V280M480 0V280M560 0V280M640 0V280M720 0V280M800 0V280M880 0V280M960 0V280M1040 0V280M1120 0V280" stroke="#FFFFFF" stroke-width="1"/>
+            </g>
+
+            <!-- left "zip file" icon -->
+            <g transform="translate(56,54)" filter="url(#softShadow)">
+              <rect x="0" y="0" width="130" height="170" rx="18" fill="rgba(255,255,255,0.16)" stroke="rgba(255,255,255,0.28)"/>
+              <rect x="14" y="18" width="102" height="134" rx="14" fill="rgba(0,0,0,0.20)" stroke="rgba(255,255,255,0.20)"/>
+              <!-- zipper track -->
+              <rect x="60" y="22" width="10" height="126" rx="5" fill="url(#zip)" opacity="0.85"/>
+              <!-- zipper teeth -->
+              <g opacity="0.9" fill="rgba(255,255,255,0.55)">
+                <rect x="59" y="28" width="12" height="4" rx="2"/><rect x="59" y="40" width="12" height="4" rx="2"/>
+                <rect x="59" y="52" width="12" height="4" rx="2"/><rect x="59" y="64" width="12" height="4" rx="2"/>
+                <rect x="59" y="76" width="12" height="4" rx="2"/><rect x="59" y="88" width="12" height="4" rx="2"/>
+                <rect x="59" y="100" width="12" height="4" rx="2"/><rect x="59" y="112" width="12" height="4" rx="2"/>
+                <rect x="59" y="124" width="12" height="4" rx="2"/><rect x="59" y="136" width="12" height="4" rx="2"/>
+              </g>
+              <!-- binary hint -->
+              <text x="30" y="80" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+                    font-size="20" fill="rgba(155,255,255,0.85)">1010</text>
+              <text x="30" y="110" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+                    font-size="20" fill="rgba(155,255,255,0.65)">0110</text>
+            </g>
+
+            <!-- right "stopwatch" icon (no numbers) -->
+            <g transform="translate(980,58)" filter="url(#softShadow)">
+              <!-- crown -->
+              <rect x="54" y="-6" width="32" height="18" rx="6" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.28)"/>
+              <circle cx="70" cy="-18" r="14" fill="rgba(255,255,255,0.16)" stroke="rgba(255,255,255,0.28)"/>
+              <!-- body -->
+              <circle cx="70" cy="90" r="78" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.32)" stroke-width="4"/>
+              <circle cx="70" cy="90" r="64" fill="rgba(0,0,0,0.18)" stroke="rgba(255,255,255,0.18)"/>
+
+              <!-- colored arc segments -->
+              <path d="M70,26 A64,64 0 0 1 114,46" fill="none" stroke="rgba(34,197,94,0.95)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M114,46 A64,64 0 0 1 130,92" fill="none" stroke="rgba(234,179,8,0.95)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M130,92 A64,64 0 0 1 105,144" fill="none" stroke="rgba(239,68,68,0.95)" stroke-width="12" stroke-linecap="round"/>
+
+              <!-- tick marks (no numbers) -->
+              <g stroke="rgba(255,255,255,0.55)" stroke-width="2" opacity="0.9">
+                <path d="M70 32 L70 40"/>
+                <path d="M114 48 L108 54"/>
+                <path d="M132 90 L124 90"/>
+                <path d="M114 132 L108 126"/>
+                <path d="M70 148 L70 140"/>
+                <path d="M26 132 L32 126"/>
+                <path d="M8 90 L16 90"/>
+                <path d="M26 48 L32 54"/>
+              </g>
+
+              <!-- hands -->
+              <circle cx="70" cy="90" r="6" fill="rgba(255,255,255,0.75)"/>
+              <path d="M70 90 L108 70" stroke="rgba(255,255,255,0.78)" stroke-width="5" stroke-linecap="round"/>
+              <path d="M70 90 L52 120" stroke="rgba(255,255,255,0.55)" stroke-width="4" stroke-linecap="round"/>
+
+              <!-- side buttons -->
+              <rect x="20" y="18" width="18" height="12" rx="5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.26)"/>
+              <rect x="102" y="18" width="18" height="12" rx="5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.26)"/>
+            </g>
+
+            <!-- bars (right background) -->
+            <g transform="translate(790,70)" opacity="0.85">
+              <rect x="0" y="160" width="18" height="50" fill="rgba(147,197,253,0.35)"/>
+              <rect x="24" y="140" width="18" height="70" fill="rgba(167,139,250,0.35)"/>
+              <rect x="48" y="120" width="18" height="90" fill="rgba(216,180,254,0.38)"/>
+              <rect x="72" y="100" width="18" height="110" fill="rgba(244,114,182,0.32)"/>
+              <rect x="96" y="130" width="18" height="80" fill="rgba(167,139,250,0.30)"/>
+              <rect x="120" y="90" width="18" height="120" fill="rgba(244,114,182,0.28)"/>
+              <rect x="144" y="110" width="18" height="100" fill="rgba(147,197,253,0.30)"/>
+            </g>
+
+            <!-- title -->
+            <text x="220" y="118"
+                  font-size="56"
+                  font-weight="800"
+                  fill="rgba(255,255,255,0.96)"
+                  font-family="system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', Arial, sans-serif">
+              AIT Challenge 2026
+            </text>
+            <text x="220" y="166"
+                  font-size="26"
+                  font-weight="600"
+                  fill="rgba(155,255,255,0.92)"
+                  font-family="system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', Arial, sans-serif">
+              — Lossless Compression Leaderboard —
+            </text>
+
+            <!-- subtle waveform line -->
+            <path d="M210 200 C 270 182, 320 226, 380 204
+                     S 500 190, 560 210
+                     S 690 238, 760 214
+                     S 860 180, 950 208"
+                  fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2"/>
+            <path d="M210 200 C 270 182, 320 226, 380 204
+                     S 500 190, 560 210
+                     S 690 238, 760 214
+                     S 860 180, 950 208"
+                  fill="none" stroke="rgba(155,255,255,0.18)" stroke-width="5" opacity="0.5"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="muted">
+        Last updated: <span class="mono">2026-02-13</span><br/>
+        Results are reported as totals aggregated across all files.<br/>
+        To download the dataset, click <a href="data.zip">here</a>.<br/>
+        Click column headers to sort. Search filters by group name.
+      </div>
+
+      <div class="row">
+        <div></div>
+        <input id="search" placeholder="Search group…" />
+      </div>
+
+      <table aria-label="Leaderboard">
+        <thead>
+          <tr>
+            <th data-key="rank">Rank</th>
+            <th data-key="group">Group</th>
+            <th class="right" data-key="orig_mb">Original (MB)</th>
+            <th class="right" data-key="comp_mb">Compressed (MB)</th>
+            <th class="right" data-key="ratio">Ratio</th>
+            <th class="right" data-key="bpb">bits/byte</th>
+            <th class="right" data-key="t_comp_s">t_comp (s)</th>
+            <th class="right" data-key="t_decomp_s">t_decomp (s)</th>
+            <th class="right" data-key="t_total">t_total (s)</th>
+            <th class="center" data-key="ok">Lossless</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- === EDIT THIS BLOCK ONLY === -->
+  <script id="csv-data" type="text/plain">
+group,orig_bytes,comp_bytes,t_comp_s,t_decomp_s,ok
+gzip,13136308,7812663,0.640000,0.050000,1
+bzip2,13136308,7209203,2.010000,0.860000,1
+zstd,13136308,7869822,0.030000,0.000000,1
+  </script>
+
+  <script>
+    function detectSep(headerLine){
+      const commas = (headerLine.match(/,/g)||[]).length;
+      const semis  = (headerLine.match(/;/g)||[]).length;
+      return semis > commas ? ";" : ",";
+    }
+    function parseCSV(text){
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if(!lines.length) return [];
+      const sep = detectSep(lines[0]);
+      const header = lines[0].split(sep).map(h => h.trim().toLowerCase());
+      const rows = [];
+      for(let i=1;i<lines.length;i++){
+        const parts = lines[i].split(sep).map(p => p.trim());
+        if(parts.length !== header.length) continue;
+        const obj = {};
+        for(let j=0;j<header.length;j++) obj[header[j]] = parts[j];
+        rows.push(obj);
+      }
+      return rows;
+    }
+
+    function toNum(x){
+      const n = Number(String(x).replace(",", "."));
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function toBool(x){
+      const v = String(x).trim().toLowerCase();
+      return (v === "1" || v === "true" || v === "yes" || v === "ok" || v === "pass");
+    }
+    function fmt(n, d=3){
+      return Number.isFinite(n) ? n.toFixed(d) : "—";
+    }
+    function fmtMB(bytes){
+      return Number.isFinite(bytes) ? (bytes/1024/1024).toFixed(2) : "—";
+    }
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    let data = [];
+    let sortKey = "comp_bytes";
+    let sortAsc = true;
+
+    function recompute(){
+      const csvText = document.getElementById("csv-data").textContent.trim();
+      const rows = parseCSV(csvText);
+
+      data = rows.map(r => {
+        const group = (r.group ?? "").trim();
+        const orig = toNum(r.orig_bytes);
+        const comp = toNum(r.comp_bytes);
+        const tc = toNum(r.t_comp_s);
+        const td = toNum(r.t_decomp_s);
+        const ok = toBool(r.ok);
+
+        const ratio = (Number.isFinite(orig) && orig>0 && Number.isFinite(comp)) ? (comp/orig) : NaN;
+        const bpb   = (Number.isFinite(orig) && orig>0 && Number.isFinite(comp)) ? (8*comp/orig) : NaN;
+        const ttot  = (Number.isFinite(tc)?tc:0) + (Number.isFinite(td)?td:0);
+
+        return {
+          group,
+          orig_bytes: orig, comp_bytes: comp,
+          orig_mb: orig/1024/1024, comp_mb: comp/1024/1024,
+          ratio, bpb,
+          t_comp_s: tc, t_decomp_s: td,
+          t_total: ttot,
+          ok
+        };
+      }).filter(r => r.group);
+
+      // default: ok first, then smallest compressed bytes, then total time
+      data.sort((a,b) =>
+        (a.ok===b.ok ? 0 : (a.ok ? -1 : 1)) ||
+        (a.comp_bytes - b.comp_bytes) ||
+        (a.t_total - b.t_total)
+      );
+
+      // dense rank by (ok, comp_bytes, t_total)
+      let rank = 0, lastKey = "";
+      for(const r of data){
+        const k = `${r.ok}|${r.comp_bytes}|${r.t_total}`;
+        if(k !== lastKey) rank++;
+        r.rank = rank;
+        lastKey = k;
+      }
+    }
+
+    function applySort(){
+      const key = sortKey;
+      data.sort((a,b) => {
+        // failures always at bottom
+        if(a.ok !== b.ok) return a.ok ? -1 : 1;
+
+        const va = a[key], vb = b[key];
+        const aNan = (typeof va === "number") && !Number.isFinite(va);
+        const bNan = (typeof vb === "number") && !Number.isFinite(vb);
+        if(aNan && !bNan) return 1;
+        if(!aNan && bNan) return -1;
+
+        if(typeof va === "string") {
+          return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+        }
+        return sortAsc ? (va - vb) : (vb - va);
+      });
+    }
+
+    function render(){
+      const q = document.getElementById("search").value.trim().toLowerCase();
+      const tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      const filtered = q ? data.filter(r => r.group.toLowerCase().includes(q)) : data;
+
+      for(const r of filtered){
+        const tr = document.createElement("tr");
+        const ratioPct = Number.isFinite(r.ratio) ? (100*r.ratio).toFixed(1) + "%" : "—";
+        const badge = r.ok
+          ? `<span class="badge ok">✅</span>`
+          : `<span class="badge fail">❌</span>`;
+
+        tr.innerHTML = `
+          <td class="mono">${r.rank}</td>
+          <td class="mono">${escapeHtml(r.group)}</td>
+          <td class="right mono">${fmtMB(r.orig_bytes)}</td>
+          <td class="right mono">${fmtMB(r.comp_bytes)}</td>
+          <td class="right mono">${ratioPct}</td>
+          <td class="right mono">${fmt(r.bpb, 3)}</td>
+          <td class="right mono">${fmt(r.t_comp_s, 3)}</td>
+          <td class="right mono">${fmt(r.t_decomp_s, 3)}</td>
+          <td class="right mono">${fmt(r.t_total, 3)}</td>
+          <td class="center">${badge}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    document.querySelectorAll("thead th").forEach(th => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.key;
+        if(!key) return;
+
+        if(sortKey === key) sortAsc = !sortAsc;
+        else { sortKey = key; sortAsc = true; }
+
+        applySort();
+        render();
+      });
+    });
+
+    document.getElementById("search").addEventListener("input", render);
+
+    recompute();
+    applySort();
+    render();
+  </script>
+</body>
+</html>
+
