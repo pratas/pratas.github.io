@@ -263,188 +263,13 @@
         <tbody id="tbody"></tbody>
       </table>
 
-<hr>
+      <br>
 
-<h2>Trade-off: bits/byte vs (compression + decompression time)</h2>
-<p>
-  y: bits/byte &nbsp;&nbsp;|&nbsp;&nbsp; x: t<sub>comp</sub> + t<sub>decomp</sub> (log scale)
-</p>
+      <h2>Evaluation Plot</h2>
 
-<div style="max-width: 1000px;">
-  <canvas id="bitsByteTimeChart" height="420"></canvas>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
-<script>
-(() => {
-  const CANVAS_ID = "bitsByteTimeChart";
-  let chart = null;
-  let debounceTimer = null;
-
-  const norm = (s) => (s || "").toString().trim().toLowerCase();
-  const toNum = (s) => {
-    const cleaned = (s || "")
-      .toString()
-      .replace(",", ".")
-      .replace(/[^0-9.+-eE]/g, "");
-    const v = Number.parseFloat(cleaned);
-    return Number.isFinite(v) ? v : null;
-  };
-
-  function findResultsTable() {
-    const tables = Array.from(document.querySelectorAll("table"));
-    return tables.find(t => {
-      const headerText = norm(t.querySelector("thead")?.innerText || t.querySelector("tr")?.innerText);
-      return headerText.includes("t_comp") && headerText.includes("t_decomp") && headerText.includes("rank");
-    }) || null;
-  }
-
-  function getColumnIndexMap(table) {
-    const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
-    if (!headerRow) return null;
-
-    const headerCells = Array.from(headerRow.querySelectorAll("th,td"));
-    const map = new Map();
-    headerCells.forEach((cell, idx) => map.set(norm(cell.textContent), idx));
-    return map;
-  }
-
-  function pickCol(map, candidates) {
-    for (const c of candidates) {
-      const key = norm(c);
-      for (const [k, idx] of map.entries()) {
-        if (k === key || k.includes(key)) return idx;
-      }
-    }
-    return null;
-  }
-
-  function visibleRows(table) {
-    const tbody = table.querySelector("tbody");
-    const rows = Array.from((tbody || table).querySelectorAll("tr"));
-    return rows.filter(r => {
-      const style = window.getComputedStyle(r);
-      return style.display !== "none" && style.visibility !== "hidden";
-    });
-  }
-
-  function extractPoints(table) {
-    const colMap = getColumnIndexMap(table);
-    if (!colMap) return [];
-
-    const iName   = pickCol(colMap, ["compressor", "name", "method"]);
-    const iBits   = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
-    const iComp   = pickCol(colMap, ["t_comp", "t_comp (s)", "compression"]);
-    const iDecomp = pickCol(colMap, ["t_decomp", "t_decomp (s)", "decompression"]);
-
-    if (iBits == null || iComp == null || iDecomp == null) return [];
-
-    const rows = visibleRows(table);
-    const points = [];
-
-    for (const r of rows) {
-      const cells = Array.from(r.querySelectorAll("td,th"));
-      if (cells.length < Math.max(iBits, iComp, iDecomp) + 1) continue;
-
-      const bitsByte = toNum(cells[iBits]?.textContent);
-      const tc = toNum(cells[iComp]?.textContent);
-      const td = toNum(cells[iDecomp]?.textContent);
-
-      if (bitsByte == null || tc == null || td == null) continue;
-
-      const x = tc + td;
-      if (!(x > 0)) continue; // log x-axis requires positive values
-
-      const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
-      points.push({ x, y: bitsByte, name });
-    }
-
-    return points;
-  }
-
-  function render(points) {
-    const canvas = document.getElementById(CANVAS_ID);
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    if (chart) chart.destroy();
-
-    chart = new Chart(ctx, {
-      type: "scatter",
-      data: {
-        datasets: [{
-          label: "Compressor",
-          data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
-          pointRadius: 4,
-          pointHoverRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        parsing: false,
-        scales: {
-          x: {
-            type: "logarithmic",
-            title: { display: true, text: "t_comp + t_decomp (seconds) — log scale" }
-          },
-          y: {
-            title: { display: true, text: "bits/byte" }
-          }
-        },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: (ctx) => {
-                const r = ctx.raw;
-                const name = r.name ? `${r.name}: ` : "";
-                return `${name}bits/byte=${r.y}, total=${r.x}s`;
-              }
-            }
-          },
-          legend: { display: false }
-        }
-      }
-    });
-  }
-
-  function updatePlot() {
-    const table = findResultsTable();
-    if (!table) return;
-
-    const points = extractPoints(table);
-    if (points.length) render(points);
-  }
-
-  function scheduleUpdate() {
-    window.clearTimeout(debounceTimer);
-    debounceTimer = window.setTimeout(updatePlot, 150);
-  }
-
-  window.addEventListener("load", () => {
-    updatePlot();
-
-    // keep in sync with sorting/filtering
-    const table = findResultsTable();
-    if (!table) return;
-
-    const obs = new MutationObserver(scheduleUpdate);
-    obs.observe(table, { childList: true, subtree: true, characterData: true });
-  });
-})();
-</script>
-
-
-
-
-
-
-
-
-
+      <div style="max-width: 1000px;">
+        <canvas id="bitsByteTimeChart" height="420"></canvas>
+      </div>
       
     </div>
   </div>
@@ -619,6 +444,169 @@ lzma -9,13136308,7140063,4.250000,0.230000,1
     recompute();
     applySort();
     render();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <script>
+(() => {
+  const CANVAS_ID = "bitsByteTimeChart";
+  let chart = null;
+  let debounceTimer = null;
+
+  const norm = (s) => (s || "").toString().trim().toLowerCase();
+  const toNum = (s) => {
+    const cleaned = (s || "")
+      .toString()
+      .replace(",", ".")
+      .replace(/[^0-9.+-eE]/g, "");
+    const v = Number.parseFloat(cleaned);
+    return Number.isFinite(v) ? v : null;
+  };
+
+  function findResultsTable() {
+    const tables = Array.from(document.querySelectorAll("table"));
+    return tables.find(t => {
+      const headerText = norm(t.querySelector("thead")?.innerText || t.querySelector("tr")?.innerText);
+      return headerText.includes("t_comp") && headerText.includes("t_decomp") && headerText.includes("rank");
+    }) || null;
+  }
+
+  function getColumnIndexMap(table) {
+    const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
+    if (!headerRow) return null;
+
+    const headerCells = Array.from(headerRow.querySelectorAll("th,td"));
+    const map = new Map();
+    headerCells.forEach((cell, idx) => map.set(norm(cell.textContent), idx));
+    return map;
+  }
+
+  function pickCol(map, candidates) {
+    for (const c of candidates) {
+      const key = norm(c);
+      for (const [k, idx] of map.entries()) {
+        if (k === key || k.includes(key)) return idx;
+      }
+    }
+    return null;
+  }
+
+  function visibleRows(table) {
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from((tbody || table).querySelectorAll("tr"));
+    return rows.filter(r => {
+      const style = window.getComputedStyle(r);
+      return style.display !== "none" && style.visibility !== "hidden";
+    });
+  }
+
+  function extractPoints(table) {
+    const colMap = getColumnIndexMap(table);
+    if (!colMap) return [];
+
+    const iName   = pickCol(colMap, ["compressor", "name", "method"]);
+    const iBits   = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
+    const iComp   = pickCol(colMap, ["t_comp", "t_comp (s)", "compression"]);
+    const iDecomp = pickCol(colMap, ["t_decomp", "t_decomp (s)", "decompression"]);
+
+    if (iBits == null || iComp == null || iDecomp == null) return [];
+
+    const rows = visibleRows(table);
+    const points = [];
+
+    for (const r of rows) {
+      const cells = Array.from(r.querySelectorAll("td,th"));
+      if (cells.length < Math.max(iBits, iComp, iDecomp) + 1) continue;
+
+      const bitsByte = toNum(cells[iBits]?.textContent);
+      const tc = toNum(cells[iComp]?.textContent);
+      const td = toNum(cells[iDecomp]?.textContent);
+
+      if (bitsByte == null || tc == null || td == null) continue;
+
+      const x = tc + td;
+      if (!(x > 0)) continue; // log x-axis requires positive values
+
+      const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
+      points.push({ x, y: bitsByte, name });
+    }
+
+    return points;
+  }
+
+  function render(points) {
+    const canvas = document.getElementById(CANVAS_ID);
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+      type: "scatter",
+      data: {
+        datasets: [{
+          label: "Compressor",
+          data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        parsing: false,
+        scales: {
+          x: {
+            type: "logarithmic",
+            title: { display: true, text: "t_comp + t_decomp (seconds) — log scale" }
+          },
+          y: {
+            title: { display: true, text: "bits/byte" }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const r = ctx.raw;
+                const name = r.name ? `${r.name}: ` : "";
+                return `${name}bits/byte=${r.y}, total=${r.x}s`;
+              }
+            }
+          },
+          legend: { display: false }
+        }
+      }
+    });
+  }
+
+  function updatePlot() {
+    const table = findResultsTable();
+    if (!table) return;
+
+    const points = extractPoints(table);
+    if (points.length) render(points);
+  }
+
+  function scheduleUpdate() {
+    window.clearTimeout(debounceTimer);
+    debounceTimer = window.setTimeout(updatePlot, 150);
+  }
+
+  window.addEventListener("load", () => {
+    updatePlot();
+
+    // keep in sync with sorting/filtering
+    const table = findResultsTable();
+    if (!table) return;
+
+    const obs = new MutationObserver(scheduleUpdate);
+    obs.observe(table, { childList: true, subtree: true, characterData: true });
+  });
+})();
   </script>
 </body>
 </html>
