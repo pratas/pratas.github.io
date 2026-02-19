@@ -502,38 +502,47 @@ lzma -9,13136308,7140063,4.250000,0.230000,1
   }
 
   function extractPoints(table) {
-    const colMap = getColumnIndexMap(table);
-    if (!colMap) return [];
+  const colMap = getColumnIndexMap(table);
+  if (!colMap) return [];
 
-    const iName   = pickCol(colMap, ["compressor", "name", "method"]);
-    const iBits   = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
-    const iComp   = pickCol(colMap, ["t_comp", "t_comp (s)", "compression"]);
-    const iDecomp = pickCol(colMap, ["t_decomp", "t_decomp (s)", "decompression"]);
+  const iRank  = pickCol(colMap, ["rank"]);
+  const iName  = pickCol(colMap, ["compressor", "name", "method"]);
+  const iBits  = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
+  const iTotal = pickCol(colMap, ["t_total", "t_total (s)", "total"]);
 
-    if (iBits == null || iComp == null || iDecomp == null) return [];
+  // t_total passa a ser obrigatório (é isto que queres usar)
+  if (iBits == null || iTotal == null) return [];
 
-    const rows = visibleRows(table);
-    const points = [];
+  const rows = visibleRows(table); // mantém sync com pesquisa/filtros
+  const points = [];
 
-    for (const r of rows) {
-      const cells = Array.from(r.querySelectorAll("td,th"));
-      if (cells.length < Math.max(iBits, iComp, iDecomp) + 1) continue;
+  for (const r of rows) {
+    const cells = Array.from(r.querySelectorAll("td,th"));
+    const need = Math.max(iBits, iTotal, (iRank ?? 0), (iName ?? 0)) + 1;
+    if (cells.length < need) continue;
 
-      const bitsByte = toNum(cells[iBits]?.textContent);
-      const tc = toNum(cells[iComp]?.textContent);
-      const td = toNum(cells[iDecomp]?.textContent);
+    const bitsByte = toNum(cells[iBits]?.textContent);
+    const ttot = toNum(cells[iTotal]?.textContent);
+    if (bitsByte == null || ttot == null) continue;
+    if (!(ttot > 0)) continue; // eixo log => tem de ser > 0
 
-      if (bitsByte == null || tc == null || td == null) continue;
+    const rank = iRank != null ? toNum(cells[iRank]?.textContent) : null;
+    const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
 
-      const x = tc + td;
-      if (!(x > 0)) continue; // log x-axis requires positive values
-
-      const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
-      points.push({ x, y: bitsByte, name });
-    }
-
-    return points;
+    points.push({
+      x: ttot,
+      y: bitsByte,
+      rank,
+      name,
+      // “número e pontos” para desenhar no gráfico:
+      labelTop: (rank != null ? String(rank) : ""),
+      labelBottom: bitsByte.toFixed(3)
+    });
   }
+
+  return points;
+}
+
 
   function render(points) {
     const canvas = document.getElementById(CANVAS_ID);
@@ -561,7 +570,7 @@ lzma -9,13136308,7140063,4.250000,0.230000,1
         scales: {
           x: {
             type: "logarithmic",
-            title: { display: true, text: "t_comp + t_decomp (seconds) — log scale" }
+            title: { display: true, text: "t_total (seconds) in log scale" }
           },
           y: {
             title: { display: true, text: "bits/byte" }
