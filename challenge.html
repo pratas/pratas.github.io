@@ -31,7 +31,7 @@
     outline-offset: 2px;
   }
 
-  /* Dark mode sem reescrever o teu CSS:
+  /* Dark mode:
      - aplica "invert + hue-rotate" ao BODY
      - re-inverte imagens/canvas/svg para manter gráficos/imagens “normais” */
   html.dp-dark { background: #0b0d10; }
@@ -167,7 +167,7 @@
 
   function apply(theme){
     root.classList.toggle("dp-dark", theme === "dark");
-    btn.textContent = theme === "dark" ? "☀ Claro" : "🌙 Escuro";
+    btn.textContent = theme === "dark" ? "☀ Light" : "🌙 Dark";
     btn.setAttribute("aria-pressed", String(theme === "dark"));
   }
 
