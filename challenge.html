@@ -7,51 +7,58 @@
 
   <meta name="color-scheme" content="light">
 
-<style>
-  :root { color-scheme: light; }
+<!-- === BEGIN: theme toggle (minimal, non-invasive) === -->
+<meta name="color-scheme" content="light dark">
 
-  body{
-    background:#ffffff !important;
-    color:#000000 !important;
+<style id="dp-theme-toggle-style">
+  /* botão flutuante (não interfere com layout existente) */
+  #dpThemeToggle{
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 999999;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(127,127,127,.35);
+    background: rgba(255,255,255,.85);
+    color: #111;
+    font: 700 14px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+  #dpThemeToggle:focus{
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
   }
 
-  a{ color:#0b57d0 !important; }
+  /* Dark mode sem reescrever o teu CSS:
+     - aplica "invert + hue-rotate" ao BODY
+     - re-inverte imagens/canvas/svg para manter gráficos/imagens “normais” */
+  html.dp-dark { background: #0b0d10; }
+  html.dp-dark body { filter: invert(1) hue-rotate(180deg); }
 
-  /* tabelas / leaderboard */
-  table{
-    background:#ffffff !important;
-    color:#111111 !important;
-    border-color:#dddddd !important;
-  }
-  th{
-    background:#f3f4f6 !important;
-    color:#111111 !important;
-    border-color:#dddddd !important;
-  }
-  td{
-    border-color:#dddddd !important;
-  }
-  tr:nth-child(even){
-    background:#fafafa !important;
+  html.dp-dark img,
+  html.dp-dark video,
+  html.dp-dark iframe,
+  html.dp-dark canvas,
+  html.dp-dark svg {
+    filter: invert(1) hue-rotate(180deg);
   }
 
-  /* caixa de pesquisa / inputs */
-  input, select, textarea{
-    background:#ffffff !important;
-    color:#111111 !important;
-    border:1px solid #cfcfcf !important;
+  /* garante que o botão fica legível em dark (anula o efeito do filtro do body) */
+  html.dp-dark #dpThemeToggle{
+    filter: invert(1) hue-rotate(180deg);
+    background: rgba(15,18,23,.85);
+    color: #e9edf1;
+    border-color: rgba(200,200,200,.25);
   }
 
-  /* se algum CSS antigo estiver a forçar branco nos parágrafos/divs */
-p, div, span, li{
-  color:#111 !important;
-}
-
-/* links "here" */
-a, a:visited{
-  color:#0b57d0 !important;
-}
+  @media print{
+    body{ filter:none !important; }
+  }
 </style>
+<!-- === END: theme toggle === -->
+
   
   <style>
     .special-link { color: #FFFFFF; }
@@ -146,6 +153,44 @@ a, a:visited{
 <body>
   <div class="wrap">
     <div class="card">
+
+      <!-- === BEGIN: theme toggle script === -->
+<script id="dp-theme-toggle-script">
+(() => {
+  const KEY = "dp-theme"; // "light" | "dark"
+  const root = document.documentElement;
+
+  function currentSystemTheme(){
+    return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ? "dark" : "light";
+  }
+
+  function apply(theme){
+    root.classList.toggle("dp-dark", theme === "dark");
+    btn.textContent = theme === "dark" ? "☀ Claro" : "🌙 Escuro";
+    btn.setAttribute("aria-pressed", String(theme === "dark"));
+  }
+
+  // cria o botão sem mexer no teu HTML existente
+  const btn = document.createElement("button");
+  btn.id = "dpThemeToggle";
+  btn.type = "button";
+  btn.setAttribute("aria-label", "Alternar tema claro/escuro");
+  document.addEventListener("DOMContentLoaded", () => document.body.appendChild(btn));
+
+  // tema inicial: localStorage > sistema
+  const saved = localStorage.getItem(KEY);
+  const initial = (saved === "light" || saved === "dark") ? saved : currentSystemTheme();
+  apply(initial);
+
+  btn.addEventListener("click", () => {
+    const next = root.classList.contains("dp-dark") ? "light" : "dark";
+    localStorage.setItem(KEY, next);
+    apply(next);
+  });
+})();
+</script>
+<!-- === END: theme toggle script === -->
 
       <!-- Top banner (inline SVG image) -->
       <div class="banner" aria-label="AIT Challenge 2026 banner">
