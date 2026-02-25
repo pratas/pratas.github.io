@@ -33,7 +33,7 @@
   }
 
   /* LIGHT MODE: força o quadrado principal a branco puro */
-html:not(.dp-dark){
+html.dp-dark{
   --card: #ffffff;              /* branco sólido */
   --border: rgba(0,0,0,.12);    /* opcional: borda mais “light” */
   --text: #0b0d10;              /* opcional: texto escuro no light */
@@ -41,7 +41,7 @@ html:not(.dp-dark){
 }
 
 /* garante que nada “tinta” o branco */
-html:not(.dp-dark) .card{
+html.dp-dark .card{
   background: #ffffff !important;
   backdrop-filter: none; /* opcional, mas ajuda a evitar qualquer efeito */
 }
