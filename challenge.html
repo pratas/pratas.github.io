@@ -1,74 +1,80 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dp-dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AIT Challenge 2026 — Lossless Compression Leaderboard</title>
 
-  <meta name="color-scheme" content="light">
+  <!-- One meta only -->
+  <meta name="color-scheme" content="light dark">
 
-<!-- === BEGIN: theme toggle (minimal, non-invasive) === -->
-<meta name="color-scheme" content="light dark">
+  <!-- Set initial theme BEFORE first paint: localStorage > default dark -->
+  <script>
+  (() => {
+    const KEY = "dp-theme"; // "light" | "dark"
+    const saved = localStorage.getItem(KEY);
+    const theme = (saved === "light" || saved === "dark") ? saved : "dark";
+    const root = document.documentElement;
+    root.classList.toggle("dp-dark", theme === "dark");
+    root.classList.toggle("dp-light", theme === "light");
+  })();
+  </script>
 
-<style id="dp-theme-toggle-style">
- 
-  /* botão flutuante (não interfere com layout existente) */
-  #dpThemeToggle{
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    z-index: 999999;
-    padding: 8px 10px;
-    border-radius: 12px;
-    border: 1px solid rgba(127,127,127,.35);
-    background: rgba(255,255,255,.95);
-    color: #000;
-    font: 700 14px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-    cursor: pointer;
-    backdrop-filter: blur(6px);
-  }
-  #dpThemeToggle:focus{
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
-
-  /* Dark mode:
-     - aplica "invert + hue-rotate" ao BODY
-     - re-inverte imagens/canvas/svg para manter gráficos/imagens “normais” */
-  html.dp-dark { background: #000000; }
-  html.dp-dark body { filter: invert(1) hue-rotate(180deg); }
-
-  html.dp-dark img,
-  html.dp-dark video,
-  html.dp-dark iframe,
-  html.dp-dark canvas,
-  html.dp-dark svg {
-    filter: invert(1) hue-rotate(180deg);
-  }
-
-  /* garante que o botão fica legível em dark (anula o efeito do filtro do body) */
-  html.dp-dark #dpThemeToggle{
-    filter: invert(1) hue-rotate(180deg);
-    background: rgba(15,18,23,.85);
-    color: #e9edf1;
-    border-color: rgba(200,200,200,.25);
-  }
-
-  @media print{
-    body{ filter:none !important; }
-  }
-</style>
-<!-- === END: theme toggle === -->
-
-  
-  <style>
-    .special-link { color: #FFFFFF; }
-    .special-link:visited { color: #FFFFFF; }  /* optional */
-    .special-link:hover { color: #CEBD27; }    /* optional */
-    :root{
-      --bg:#0b1020; --card:rgba(255,255,255,.06); --border:rgba(255,255,255,.12);
-      --text:#f3f4f6; --muted:rgba(255,255,255,.68);
+  <!-- === BEGIN: theme toggle (light/dark, no invert filters) === -->
+  <style id="dp-theme-toggle-style">
+    /* Floating button */
+    #dpThemeToggle{
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 999999;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 2px solid rgba(0,0,0,.35);
+      background: rgba(255,255,255,.98);
+      color: #000;
+      font: 800 14px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      cursor: pointer;
     }
+    #dpThemeToggle:focus{
+      outline: 3px solid currentColor;
+      outline-offset: 2px;
+    }
+
+    /* Button in dark */
+    html.dp-dark #dpThemeToggle{
+      background: rgba(15,18,23,.92);
+      color: #e9edf1;
+      border-color: rgba(255,255,255,.25);
+    }
+
+    @media print{
+      #dpThemeToggle{ display:none; }
+    }
+  </style>
+  <!-- === END: theme toggle === -->
+
+  <style>
+    /* =========================
+       BASE (DARK THEME DEFAULT)
+       ========================= */
+    :root{
+      --bg:#0b1020;
+      --card:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.12);
+      --text:#f3f4f6;
+      --muted:rgba(255,255,255,.68);
+
+      /* Chart colors (dark) */
+      --chart-text: rgba(255,255,255,.92);
+      --chart-grid: rgba(255,255,255,.18);
+      --chart-point: rgba(155,255,255,.95);
+    }
+
+    .special-link { color: #FFFFFF; }
+    .special-link:visited { color: #FFFFFF; }
+    .special-link:hover { color: #CEBD27; }
+
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif;
@@ -79,7 +85,9 @@
         var(--bg);
       min-height:100vh;
     }
+
     .wrap{max-width:1100px; margin:0 auto; padding:28px 18px 44px;}
+
     .card{
       background:var(--card);
       border:1px solid var(--border);
@@ -88,6 +96,7 @@
       backdrop-filter: blur(10px);
       padding:16px 18px 18px;
     }
+
     .banner{
       border-radius:16px;
       overflow:hidden;
@@ -96,8 +105,15 @@
       margin-bottom:14px;
     }
     .banner svg{display:block; width:100%; height:auto;}
+
     .muted{color:var(--muted); font-size:13px; line-height:1.35;}
-    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-top:12px;}
+
+    .row{
+      display:flex; gap:12px; flex-wrap:wrap;
+      align-items:center; justify-content:space-between;
+      margin-top:12px;
+    }
+
     input{
       width:min(360px, 100%);
       padding:10px 12px;
@@ -107,6 +123,7 @@
       color:var(--text);
       outline:none;
     }
+
     table{
       width:100%;
       border-collapse:collapse;
@@ -114,6 +131,7 @@
       overflow:hidden;
       border-radius:14px;
     }
+
     thead th{
       position:sticky; top:0;
       background:rgba(11,16,32,.92);
@@ -127,6 +145,7 @@
       user-select:none;
       white-space:nowrap;
     }
+
     tbody td{
       padding:10px 10px;
       border-bottom:1px solid rgba(255,255,255,.08);
@@ -134,9 +153,11 @@
       white-space:nowrap;
     }
     tbody tr:hover{background:rgba(255,255,255,.05);}
+
     .right{text-align:right;}
     .center{text-align:center;}
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+
     .badge{
       display:inline-block;
       padding:3px 8px;
@@ -148,50 +169,128 @@
     }
     .ok{border-color:rgba(34,197,94,.35); background:rgba(34,197,94,.10);}
     .fail{border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.10);}
+
+    /* =========================
+       LIGHT THEME (HIGH CONTRAST)
+       ========================= */
+    html.dp-light{
+      --bg:#ffffff;
+      --card:#ffffff;
+      --border: rgba(0,0,0,.40);
+      --text:#000000;
+      --muted: rgba(0,0,0,.80);
+
+      --chart-text:#000000;
+      --chart-grid: rgba(0,0,0,.22);
+      --chart-point:#000000;
+    }
+
+    html.dp-light body{
+      background:#ffffff !important; /* pure white for projection */
+    }
+
+    html.dp-light .card{
+      background:#ffffff !important;
+      border:2px solid #000 !important;
+      backdrop-filter:none !important;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+
+    html.dp-light .banner{
+      border-color: rgba(0,0,0,.25);
+      box-shadow: 0 10px 18px rgba(0,0,0,.18);
+    }
+
+    html.dp-light .special-link{ color:#0033cc; }
+    html.dp-light .special-link:visited{ color:#551A8B; }
+    html.dp-light .special-link:hover{ color:#000; text-decoration: underline; }
+
+    html.dp-light input{
+      background:#fff;
+      border:2px solid #000;
+      color:#000;
+    }
+
+    /* LIGHT: table with strong contrast + NO ugly 90° corner artifacts */
+    html.dp-light table{
+      border:2px solid #000;
+      border-collapse: separate !important; /* key fix */
+      border-spacing: 0;
+      background:#fff;
+      overflow:hidden;
+      border-radius:14px;
+    }
+
+    html.dp-light thead th{
+      background:#000 !important;
+      color:#fff !important;
+      border-bottom:2px solid #000;
+    }
+    html.dp-light thead th:first-child{ border-top-left-radius: 12px; }
+    html.dp-light thead th:last-child { border-top-right-radius: 12px; }
+
+    html.dp-light tbody td{
+      border-bottom:1px solid rgba(0,0,0,.25);
+    }
+    html.dp-light tbody tr:hover{
+      background:#f0f0f0;
+    }
+    html.dp-light tbody tr:last-child td:first-child{ border-bottom-left-radius: 12px; }
+    html.dp-light tbody tr:last-child td:last-child { border-bottom-right-radius: 12px; }
+
+    html.dp-light .badge{
+      border-color:#000;
+      background:#fff;
+      color:#000;
+    }
+    html.dp-light .ok{ border-color:#0a7a0a; background:#c6f6d5; }
+    html.dp-light .fail{ border-color:#b00020; background:#ffd6d6; }
   </style>
 </head>
 
 <body>
+  <!-- === BEGIN: theme toggle script === -->
+  <script id="dp-theme-toggle-script">
+  (() => {
+    const KEY = "dp-theme"; // "light" | "dark"
+    const root = document.documentElement;
+
+    function getInitialTheme(){
+      const saved = localStorage.getItem(KEY);
+      return (saved === "light" || saved === "dark") ? saved : "dark"; // default dark
+    }
+
+    function apply(theme){
+      root.classList.toggle("dp-dark", theme === "dark");
+      root.classList.toggle("dp-light", theme === "light");
+      btn.textContent = theme === "dark" ? "🌙 Dark Mode" : "☀ Light Mode";
+      btn.setAttribute("aria-pressed", String(theme === "dark"));
+      window.dispatchEvent(new Event("dp-theme-change"));
+    }
+
+    const btn = document.createElement("button");
+    btn.id = "dpThemeToggle";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Toggle light/dark theme");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.appendChild(btn);
+
+      // sync button + classes with initial theme (localStorage > default dark)
+      apply(getInitialTheme());
+
+      btn.addEventListener("click", () => {
+        const next = root.classList.contains("dp-dark") ? "light" : "dark";
+        localStorage.setItem(KEY, next);
+        apply(next);
+      });
+    });
+  })();
+  </script>
+  <!-- === END: theme toggle script === -->
+
   <div class="wrap">
     <div class="card">
-
-      <!-- === BEGIN: theme toggle script === -->
-<script id="dp-theme-toggle-script">
-(() => {
-  const KEY = "dp-theme"; // "light" | "dark"
-  const root = document.documentElement;
-
-  function currentSystemTheme(){
-    return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ? "dark" : "light";
-  }
-
-  function apply(theme){
-    root.classList.toggle("dp-dark", theme === "dark");
-    btn.textContent = theme === "dark" ? "🌙 Dark Mode" : "☀ Light Mode";
-    btn.setAttribute("aria-pressed", String(theme === "dark"));
-  }
-
-  // cria o botão sem mexer no teu HTML existente
-  const btn = document.createElement("button");
-  btn.id = "dpThemeToggle";
-  btn.type = "button";
-  btn.setAttribute("aria-label", "Alternar tema claro/escuro");
-  document.addEventListener("DOMContentLoaded", () => document.body.appendChild(btn));
-
-  // tema inicial: localStorage > sistema
-  const saved = localStorage.getItem(KEY);
-  const initial = (saved === "light" || saved === "dark") ? saved : currentSystemTheme();
-  apply(initial);
-
-  btn.addEventListener("click", () => {
-    const next = root.classList.contains("dp-dark") ? "light" : "dark";
-    localStorage.setItem(KEY, next);
-    apply(next);
-  });
-})();
-</script>
-<!-- === END: theme toggle script === -->
 
       <!-- Top banner (inline SVG image) -->
       <div class="banner" aria-label="AIT Challenge 2026 banner">
@@ -232,9 +331,7 @@
             <g transform="translate(56,54)" filter="url(#softShadow)">
               <rect x="0" y="0" width="130" height="170" rx="18" fill="rgba(255,255,255,0.16)" stroke="rgba(255,255,255,0.28)"/>
               <rect x="14" y="18" width="102" height="134" rx="14" fill="rgba(0,0,0,0.20)" stroke="rgba(255,255,255,0.20)"/>
-              <!-- zipper track -->
               <rect x="60" y="22" width="10" height="126" rx="5" fill="url(#zip)" opacity="0.85"/>
-              <!-- zipper teeth -->
               <g opacity="0.9" fill="rgba(255,255,255,0.55)">
                 <rect x="59" y="28" width="12" height="4" rx="2"/><rect x="59" y="40" width="12" height="4" rx="2"/>
                 <rect x="59" y="52" width="12" height="4" rx="2"/><rect x="59" y="64" width="12" height="4" rx="2"/>
@@ -242,28 +339,23 @@
                 <rect x="59" y="100" width="12" height="4" rx="2"/><rect x="59" y="112" width="12" height="4" rx="2"/>
                 <rect x="59" y="124" width="12" height="4" rx="2"/><rect x="59" y="136" width="12" height="4" rx="2"/>
               </g>
-              <!-- binary hint -->
               <text x="30" y="80" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
                     font-size="20" fill="rgba(155,255,255,0.85)">1010</text>
               <text x="30" y="110" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
                     font-size="20" fill="rgba(155,255,255,0.65)">0110</text>
             </g>
 
-            <!-- right "stopwatch" icon (no numbers) -->
+            <!-- right "stopwatch" icon -->
             <g transform="translate(980,58)" filter="url(#softShadow)">
-              <!-- crown -->
               <rect x="54" y="-6" width="32" height="18" rx="6" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.28)"/>
               <circle cx="70" cy="-18" r="14" fill="rgba(255,255,255,0.16)" stroke="rgba(255,255,255,0.28)"/>
-              <!-- body -->
               <circle cx="70" cy="90" r="78" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.32)" stroke-width="4"/>
               <circle cx="70" cy="90" r="64" fill="rgba(0,0,0,0.18)" stroke="rgba(255,255,255,0.18)"/>
 
-              <!-- colored arc segments -->
               <path d="M70,26 A64,64 0 0 1 114,46" fill="none" stroke="rgba(34,197,94,0.95)" stroke-width="12" stroke-linecap="round"/>
               <path d="M114,46 A64,64 0 0 1 130,92" fill="none" stroke="rgba(234,179,8,0.95)" stroke-width="12" stroke-linecap="round"/>
               <path d="M130,92 A64,64 0 0 1 105,144" fill="none" stroke="rgba(239,68,68,0.95)" stroke-width="12" stroke-linecap="round"/>
 
-              <!-- tick marks (no numbers) -->
               <g stroke="rgba(255,255,255,0.55)" stroke-width="2" opacity="0.9">
                 <path d="M70 32 L70 40"/>
                 <path d="M114 48 L108 54"/>
@@ -275,17 +367,14 @@
                 <path d="M26 48 L32 54"/>
               </g>
 
-              <!-- hands -->
               <circle cx="70" cy="90" r="6" fill="rgba(255,255,255,0.75)"/>
               <path d="M70 90 L108 70" stroke="rgba(255,255,255,0.78)" stroke-width="5" stroke-linecap="round"/>
               <path d="M70 90 L52 120" stroke="rgba(255,255,255,0.55)" stroke-width="4" stroke-linecap="round"/>
 
-              <!-- side buttons -->
               <rect x="20" y="18" width="18" height="12" rx="5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.26)"/>
               <rect x="102" y="18" width="18" height="12" rx="5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.26)"/>
             </g>
 
-            <!-- bars (right background) -->
             <g transform="translate(790,70)" opacity="0.85">
               <rect x="0" y="160" width="18" height="50" fill="rgba(147,197,253,0.35)"/>
               <rect x="24" y="140" width="18" height="70" fill="rgba(167,139,250,0.35)"/>
@@ -296,7 +385,6 @@
               <rect x="144" y="110" width="18" height="100" fill="rgba(147,197,253,0.30)"/>
             </g>
 
-            <!-- title -->
             <text x="220" y="118"
                   font-size="56"
                   font-weight="800"
@@ -312,7 +400,6 @@
               — Lossless Compression Leaderboard —
             </text>
 
-            <!-- subtle waveform line -->
             <path d="M210 200 C 270 182, 320 226, 380 204
                      S 500 190, 560 210
                      S 690 238, 760 214
@@ -328,7 +415,7 @@
       </div>
 
       <div class="muted">
-        Last updated: <span class="mono">2026-02-20</span><br/>
+        Last updated: <span class="mono">2026-02-25</span><br/>
         Results are reported as totals aggregated across all files.<br/>
         To download the dataset, click <a href="data/data.zip" class="special-link">here</a>.<br/>
         To go to the home page, click <a href="index.html" class="special-link">here</a>.<br/>
@@ -365,7 +452,7 @@
       <div style="max-width: 1000px;">
         <canvas id="bitsByteTimeChart" height="420"></canvas>
       </div>
-      
+
     </div>
   </div>
 
@@ -478,7 +565,6 @@ G7-V1,13136308,9384276,0.840000,1.290000,1
     function applySort(){
       const key = sortKey;
       data.sort((a,b) => {
-        // failures always at bottom
         if(a.ok !== b.ok) return a.ok ? -1 : 1;
 
         const va = a[key], vb = b[key];
@@ -547,175 +633,178 @@ G7-V1,13136308,9384276,0.840000,1.290000,1
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
   <script>
-(() => {
-  const CANVAS_ID = "bitsByteTimeChart";
-  let chart = null;
-  let debounceTimer = null;
+  (() => {
+    const CANVAS_ID = "bitsByteTimeChart";
+    let chart = null;
+    let debounceTimer = null;
 
-  const norm = (s) => (s || "").toString().trim().toLowerCase();
-  const toNum = (s) => {
-    const cleaned = (s || "")
-      .toString()
-      .replace(",", ".")
-      .replace(/[^0-9.+-eE]/g, "");
-    const v = Number.parseFloat(cleaned);
-    return Number.isFinite(v) ? v : null;
-  };
+    const norm = (s) => (s || "").toString().trim().toLowerCase();
+    const toNum = (s) => {
+      const cleaned = (s || "")
+        .toString()
+        .replace(",", ".")
+        .replace(/[^0-9.+-eE]/g, "");
+      const v = Number.parseFloat(cleaned);
+      return Number.isFinite(v) ? v : null;
+    };
 
-  function findResultsTable() {
-    const tables = Array.from(document.querySelectorAll("table"));
-    return tables.find(t => {
-      const headerText = norm(t.querySelector("thead")?.innerText || t.querySelector("tr")?.innerText);
-      return headerText.includes("t_comp") && headerText.includes("t_decomp") && headerText.includes("rank");
-    }) || null;
-  }
-
-  function getColumnIndexMap(table) {
-    const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
-    if (!headerRow) return null;
-
-    const headerCells = Array.from(headerRow.querySelectorAll("th,td"));
-    const map = new Map();
-    headerCells.forEach((cell, idx) => map.set(norm(cell.textContent), idx));
-    return map;
-  }
-
-  function pickCol(map, candidates) {
-    for (const c of candidates) {
-      const key = norm(c);
-      for (const [k, idx] of map.entries()) {
-        if (k === key || k.includes(key)) return idx;
-      }
+    function findResultsTable() {
+      const tables = Array.from(document.querySelectorAll("table"));
+      return tables.find(t => {
+        const headerText = norm(t.querySelector("thead")?.innerText || t.querySelector("tr")?.innerText);
+        return headerText.includes("t_comp") && headerText.includes("t_decomp") && headerText.includes("rank");
+      }) || null;
     }
-    return null;
-  }
 
-  function visibleRows(table) {
-    const tbody = table.querySelector("tbody");
-    const rows = Array.from((tbody || table).querySelectorAll("tr"));
-    return rows.filter(r => {
-      const style = window.getComputedStyle(r);
-      return style.display !== "none" && style.visibility !== "hidden";
-    });
-  }
+    function getColumnIndexMap(table) {
+      const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
+      if (!headerRow) return null;
 
-  function extractPoints(table) {
-  const colMap = getColumnIndexMap(table);
-  if (!colMap) return [];
+      const headerCells = Array.from(headerRow.querySelectorAll("th,td"));
+      const map = new Map();
+      headerCells.forEach((cell, idx) => map.set(norm(cell.textContent), idx));
+      return map;
+    }
 
-  const iRank  = pickCol(colMap, ["rank"]);
-  const iName  = pickCol(colMap, ["compressor", "name", "method"]);
-  const iBits  = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
-  const iTotal = pickCol(colMap, ["t_total", "t_total (s)", "total"]);
-
-  // t_total passa a ser obrigatório (é isto que queres usar)
-  if (iBits == null || iTotal == null) return [];
-
-  const rows = visibleRows(table); // mantém sync com pesquisa/filtros
-  const points = [];
-
-  for (const r of rows) {
-    const cells = Array.from(r.querySelectorAll("td,th"));
-    const need = Math.max(iBits, iTotal, (iRank ?? 0), (iName ?? 0)) + 1;
-    if (cells.length < need) continue;
-
-    const bitsByte = toNum(cells[iBits]?.textContent);
-    const ttot = toNum(cells[iTotal]?.textContent);
-    if (bitsByte == null || ttot == null) continue;
-    if (!(ttot > 0)) continue; // eixo log => tem de ser > 0
-
-    const rank = iRank != null ? toNum(cells[iRank]?.textContent) : null;
-    const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
-
-    points.push({
-      x: ttot,
-      y: bitsByte,
-      rank,
-      name,
-      // “número e pontos” para desenhar no gráfico:
-      labelTop: (rank != null ? String(rank) : ""),
-      labelBottom: bitsByte.toFixed(3)
-    });
-  }
-
-  return points;
-}
-
-
-  function render(points) {
-    const canvas = document.getElementById(CANVAS_ID);
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    if (chart) chart.destroy();
-
-    chart = new Chart(ctx, {
-      type: "scatter",
-      data: {
-        datasets: [{
-          label: "Compressor",
-          data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
-          pointRadius: 4,
-          pointHoverRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        parsing: false,
-        scales: {
-          x: {
-            type: "linear", /*logarithmic*/
-            min: 0,
-            title: { display: true, text: "t_total (seconds)" }
-          },
-          y: {
-            title: { display: true, text: "bits/byte" }
-          }
-        },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: (ctx) => {
-                const r = ctx.raw;
-                const name = r.name ? `${r.name}: ` : "";
-                return `${name}bits/byte=${r.y}, total=${r.x}s`;
-              }
-            }
-          },
-          legend: { display: false }
+    function pickCol(map, candidates) {
+      for (const c of candidates) {
+        const key = norm(c);
+        for (const [k, idx] of map.entries()) {
+          if (k === key || k.includes(key)) return idx;
         }
       }
+      return null;
+    }
+
+    function visibleRows(table) {
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from((tbody || table).querySelectorAll("tr"));
+      return rows.filter(r => {
+        const style = window.getComputedStyle(r);
+        return style.display !== "none" && style.visibility !== "hidden";
+      });
+    }
+
+    function extractPoints(table) {
+      const colMap = getColumnIndexMap(table);
+      if (!colMap) return [];
+
+      const iName  = pickCol(colMap, ["compressor", "name", "method"]);
+      const iBits  = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
+      const iTotal = pickCol(colMap, ["t_total", "t_total (s)", "total"]);
+
+      if (iBits == null || iTotal == null) return [];
+
+      const rows = visibleRows(table);
+      const points = [];
+
+      for (const r of rows) {
+        const cells = Array.from(r.querySelectorAll("td,th"));
+        const need = Math.max(iBits, iTotal, (iName ?? 0)) + 1;
+        if (cells.length < need) continue;
+
+        const bitsByte = toNum(cells[iBits]?.textContent);
+        const ttot = toNum(cells[iTotal]?.textContent);
+        if (bitsByte == null || ttot == null) continue;
+        if (!(ttot > 0)) continue;
+
+        const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
+        points.push({ x: ttot, y: bitsByte, name });
+      }
+
+      return points;
+    }
+
+    function themeChartColors(){
+      const css = getComputedStyle(document.documentElement);
+      const textColor = (css.getPropertyValue("--chart-text") || "").trim() || "#000";
+      const gridColor = (css.getPropertyValue("--chart-grid") || "").trim() || "rgba(0,0,0,.2)";
+      const pointColor = (css.getPropertyValue("--chart-point") || "").trim() || textColor;
+      return { textColor, gridColor, pointColor };
+    }
+
+    function render(points) {
+      const canvas = document.getElementById(CANVAS_ID);
+      if (!canvas) return;
+
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      if (chart) chart.destroy();
+
+      const { textColor, gridColor, pointColor } = themeChartColors();
+
+      chart = new Chart(ctx, {
+        type: "scatter",
+        data: {
+          datasets: [{
+            label: "Compressor",
+            data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: pointColor,
+            pointBorderColor: pointColor
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          parsing: false,
+          scales: {
+            x: {
+              type: "linear",
+              min: 0,
+              title: { display: true, text: "t_total (seconds)", color: textColor },
+              ticks: { color: textColor },
+              grid: { color: gridColor }
+            },
+            y: {
+              title: { display: true, text: "bits/byte", color: textColor },
+              ticks: { color: textColor },
+              grid: { color: gridColor }
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const r = ctx.raw;
+                  const name = r.name ? `${r.name}: ` : "";
+                  return `${name}bits/byte=${r.y}, total=${r.x}s`;
+                }
+              }
+            },
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    function updatePlot() {
+      const table = findResultsTable();
+      if (!table) return;
+
+      const points = extractPoints(table);
+      if (points.length) render(points);
+    }
+
+    function scheduleUpdate() {
+      window.clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(updatePlot, 150);
+    }
+
+    window.addEventListener("load", () => {
+      updatePlot();
+
+      const table = findResultsTable();
+      if (!table) return;
+
+      const obs = new MutationObserver(scheduleUpdate);
+      obs.observe(table, { childList: true, subtree: true, characterData: true });
     });
-  }
 
-  function updatePlot() {
-    const table = findResultsTable();
-    if (!table) return;
-
-    const points = extractPoints(table);
-    if (points.length) render(points);
-  }
-
-  function scheduleUpdate() {
-    window.clearTimeout(debounceTimer);
-    debounceTimer = window.setTimeout(updatePlot, 150);
-  }
-
-  window.addEventListener("load", () => {
-    updatePlot();
-
-    // keep in sync with sorting/filtering
-    const table = findResultsTable();
-    if (!table) return;
-
-    const obs = new MutationObserver(scheduleUpdate);
-    obs.observe(table, { childList: true, subtree: true, characterData: true });
-  });
-})();
+    window.addEventListener("dp-theme-change", updatePlot);
+  })();
   </script>
 </body>
 </html>
-
