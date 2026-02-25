@@ -32,20 +32,6 @@
     outline-offset: 2px;
   }
 
-  /* LIGHT MODE: força o quadrado principal a branco puro */
-html.dp-dark{
-  --card: #ffffff;              /* branco sólido */
-  --border: rgba(0,0,0,.12);    /* opcional: borda mais “light” */
-  --text: #0b0d10;              /* opcional: texto escuro no light */
-  --muted: rgba(0,0,0,.65);     /* opcional: texto muted no light */
-}
-
-/* garante que nada “tinta” o branco */
-html.dp-dark .card{
-  background: #ffffff !important;
-  backdrop-filter: none; /* opcional, mas ajuda a evitar qualquer efeito */
-}
-
   /* Dark mode:
      - aplica "invert + hue-rotate" ao BODY
      - re-inverte imagens/canvas/svg para manter gráficos/imagens “normais” */
