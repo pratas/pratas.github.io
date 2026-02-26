@@ -68,7 +68,7 @@
       /* Chart colors (dark) */
       --chart-text: rgba(255,255,255,.92);
       --chart-grid: rgba(255,255,255,.18);
-      --chart-point: rgba(155,255,255,.95);
+      --chart-point: #3b82f6; /* default BLUE for points (fallback) */
     }
 
     .special-link { color: #FFFFFF; }
@@ -182,7 +182,7 @@
 
       --chart-text:#000000;
       --chart-grid: rgba(0,0,0,.22);
-      --chart-point:#000000;
+      --chart-point: #3b82f6; /* default BLUE for points (fallback) */
     }
 
     html.dp-light body{
@@ -415,7 +415,7 @@
       </div>
 
       <div class="muted">
-        Last updated: <span class="mono">2026-02-25</span><br/>
+        Last updated: <span class="mono">2026-02-26</span><br/>
         Results are reported as totals aggregated across all files.<br/>
         To download the dataset, click <a href="data/data.zip" class="special-link">here</a>.<br/>
         To go to the home page, click <a href="index.html" class="special-link">here</a>.<br/>
@@ -457,19 +457,20 @@
   </div>
 
   <!-- === EDIT THIS BLOCK ONLY === -->
+  <!-- Use colors WITHOUT commas (e.g., #RRGGBB or #RRGGBBAA or names like "red"). -->
   <script id="csv-data" type="text/plain">
-group,orig_bytes,comp_bytes,t_comp_s,t_decomp_s,ok
-gzip,13136308,7812663,1.910000,0.260000,1
-bzip2,13136308,7209203,6.060000,2.850000,1
-zstd-1,13136308,7869822,0.200000,0.100000,1
-zstd-5,13136308,7619682,0.550000,0.120000,1
-zstd-10,13136308,7562082,1.180000,0.100000,1
-zstd-18,13136308,7354313,9.010000,0.100000,1
-ox,13136308,9387078,0.410000,1.430000,1
-lzma-9,13136308,7140063,12.610000,0.700000,1
-lzma-5,13136308,7144129,11.490000,0.720000,1
-lzma-1,13136308,7463416,6.240000,0.790000,1
-G7-V1,13136308,9384276,2.270000,3.340000,1
+group,orig_bytes,comp_bytes,t_comp_s,t_decomp_s,ok,color
+gzip,13136308,7812663,1.910000,0.260000,1,#3b82f6f2
+bzip2,13136308,7209203,6.060000,2.850000,1,#3b82f6f2
+zstd-1,13136308,7869822,0.200000,0.100000,1,#3b82f6f2
+zstd-5,13136308,7619682,0.550000,0.120000,1,#3b82f6f2
+zstd-10,13136308,7562082,1.180000,0.100000,1,#3b82f6f2
+zstd-18,13136308,7354313,9.010000,0.100000,1,#3b82f6f2
+ox,13136308,9387078,0.410000,1.430000,1,#3b82f6f2
+lzma-9,13136308,7140063,12.610000,0.700000,1,#3b82f6f2
+lzma-5,13136308,7144129,11.490000,0.720000,1,#3b82f6f2
+lzma-1,13136308,7463416,6.240000,0.790000,1,#3b82f6f2
+G7-V1,13136308,9384276,2.270000,3.340000,1,#22c55ef2
   </script>
 
   <script>
@@ -517,6 +518,7 @@ G7-V1,13136308,9384276,2.270000,3.340000,1
         .replaceAll("'","&#039;");
     }
 
+    // NOTE: `data` is a global lexical binding (used later by the Chart.js script)
     let data = [];
     let sortKey = "comp_bytes";
     let sortAsc = true;
@@ -532,6 +534,7 @@ G7-V1,13136308,9384276,2.270000,3.340000,1
         const tc = toNum(r.t_comp_s);
         const td = toNum(r.t_decomp_s);
         const ok = toBool(r.ok);
+        const color = (r.color ?? "").trim(); // NEW: read color from CSV
 
         const ratio = (Number.isFinite(orig) && orig>0 && Number.isFinite(comp)) ? (comp/orig) : NaN;
         const bpb   = (Number.isFinite(orig) && orig>0 && Number.isFinite(comp)) ? (8*comp/orig) : NaN;
@@ -544,7 +547,8 @@ G7-V1,13136308,9384276,2.270000,3.340000,1
           ratio, bpb,
           t_comp_s: tc, t_decomp_s: td,
           t_total: ttot,
-          ok
+          ok,
+          color // NEW: keep it for plot coloring
         };
       }).filter(r => r.group);
 
@@ -726,6 +730,22 @@ G7-V1,13136308,9384276,2.270000,3.340000,1
       return { textColor, gridColor, pointColor };
     }
 
+    function buildColorMapFromData(){
+      // `data` is defined in the previous script (global lexical binding).
+      // If for some reason it isn't, just return an empty map.
+      const m = new Map();
+      try{
+        if (typeof data !== "undefined" && Array.isArray(data)){
+          for (const r of data){
+            const name = (r.group || "").trim();
+            const c = (r.color || "").trim();
+            if (name && c) m.set(norm(name), c);
+          }
+        }
+      }catch(_){}
+      return m;
+    }
+
     function render(points) {
       const canvas = document.getElementById(CANVAS_ID);
       if (!canvas) return;
@@ -736,6 +756,10 @@ G7-V1,13136308,9384276,2.270000,3.340000,1
       if (chart) chart.destroy();
 
       const { textColor, gridColor, pointColor } = themeChartColors();
+      const colorMap = buildColorMapFromData();
+
+      // Per-point colors from CSV color column; fallback to theme default if missing/empty
+      const colors = points.map(p => colorMap.get(norm(p.name)) || pointColor);
 
       chart = new Chart(ctx, {
         type: "scatter",
@@ -745,8 +769,8 @@ G7-V1,13136308,9384276,2.270000,3.340000,1
             data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
             pointRadius: 4,
             pointHoverRadius: 6,
-            pointBackgroundColor: pointColor,
-            pointBorderColor: pointColor
+            pointBackgroundColor: colors,
+            pointBorderColor: colors
           }]
         },
         options: {
