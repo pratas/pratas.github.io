@@ -538,7 +538,7 @@ G1-V4,13136308,8311389,2.000000,3.550000,1,#0000FF
         const tc = toNum(r.t_comp_s);
         const td = toNum(r.t_decomp_s);
         const ok = toBool(r.ok);
-        const color = (r.color ?? "").trim(); // NEW: read color from CSV
+        const color = (r.color ?? "").trim();
 
         const ratio = (Number.isFinite(orig) && orig>0 && Number.isFinite(comp)) ? (comp/orig) : NaN;
         const bpb   = (Number.isFinite(orig) && orig>0 && Number.isFinite(comp)) ? (8*comp/orig) : NaN;
@@ -552,7 +552,7 @@ G1-V4,13136308,8311389,2.000000,3.550000,1,#0000FF
           t_comp_s: tc, t_decomp_s: td,
           t_total: ttot,
           ok,
-          color // NEW: keep it for plot coloring
+          color
         };
       }).filter(r => r.group);
 
@@ -735,8 +735,6 @@ G1-V4,13136308,8311389,2.000000,3.550000,1,#0000FF
     }
 
     function buildColorMapFromData(){
-      // `data` is defined in the previous script (global lexical binding).
-      // If for some reason it isn't, just return an empty map.
       const m = new Map();
       try{
         if (typeof data !== "undefined" && Array.isArray(data)){
@@ -749,6 +747,18 @@ G1-V4,13136308,8311389,2.000000,3.550000,1,#0000FF
       }catch(_){}
       return m;
     }
+
+    // === L superior: assíntotas x=b e y=a (só para x>b) ===
+    function upperL(x, a, b, k, s){
+      if (x <= b) return null;
+      return a + k / Math.log(1 + (x - b)/s);
+    }
+
+    // Ajusta aqui os parâmetros da curva L
+    // a: assíntota horizontal (bits/byte)
+    // b: assíntota vertical (seconds)  [x=b]
+    // k,s: controlam "abertura" / curvatura
+    const L = { a: 4.00, b: 0.02, k: 1.20, s: 1.00 };
 
     function render(points) {
       const canvas = document.getElementById(CANVAS_ID);
@@ -765,19 +775,60 @@ G1-V4,13136308,8311389,2.000000,3.550000,1,#0000FF
       // Per-point colors from CSV color column; fallback to theme default if missing/empty
       const colors = points.map(p => colorMap.get(norm(p.name)) || pointColor);
 
+      // --- gerar a curva L no range do gráfico (e limitar para não esmagar a escala) ---
+      const xs = points.map(p => p.x);
+      const ys = points.map(p => p.y);
+
+      const minX = xs.length ? Math.min(...xs) : (L.b + 0.1);
+      const maxX = xs.length ? Math.max(...xs) : (L.b + 10);
+      const yMax = ys.length ? (Math.max(...ys) * 1.05) : (L.a * 2);
+
+      const N = 260;
+      const xStart = Math.max(L.b + 1e-6, minX);
+      const xEnd   = Math.max(xStart * 1.001, maxX * 1.05);
+
+      const dxMin = Math.max(1e-6, xStart - L.b);
+      const dxMax = Math.max(dxMin * 1.0001, xEnd - L.b);
+      const ratio = dxMax / dxMin;
+
+      const lcurve = [];
+      for (let i = 0; i < N; i++){
+        const dx = dxMin * Math.pow(ratio, i/(N-1)); // amostragem log perto de b
+        const x  = L.b + dx;
+        const y  = upperL(x, L.a, L.b, L.k, L.s);
+        if (y != null && Number.isFinite(y) && y <= yMax){
+          lcurve.push({ x, y });
+        }
+      }
+
       chart = new Chart(ctx, {
-        type: "scatter",
         data: {
-          datasets: [{
-            label: "Compressor",
-            data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
-            pointRadius: 6,
-            pointHoverRadius: 8,
-            pointBackgroundColor: colors,
-            pointBorderColor: "#000000",      // border preto
-            pointBorderWidth: 1.5,            // espessura
-            pointHoverBorderWidth: 2
-          }]
+          datasets: [
+            // Curva L (linha)
+            {
+              type: "line",
+              data: lcurve,
+              borderColor: textColor,  // adapta ao tema (preto no light, claro no dark)
+              borderWidth: 2,
+              pointRadius: 0,
+              tension: 0,
+              fill: false
+              // opcional: borderDash: [6, 6],
+            },
+
+            // Pontos (scatter)
+            {
+              type: "scatter",
+              label: "Compressor",
+              data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
+              pointRadius: 6,
+              pointHoverRadius: 8,
+              pointBackgroundColor: colors,     // cor dentro
+              pointBorderColor: "#000000",      // BORDA PRETA
+              pointBorderWidth: 1.5,            // espessura
+              pointHoverBorderWidth: 2
+            }
+          ]
         },
         options: {
           responsive: true,
@@ -803,6 +854,8 @@ G1-V4,13136308,8311389,2.000000,3.550000,1,#0000FF
                 label: (ctx) => {
                   const r = ctx.raw;
                   const name = r.name ? `${r.name}: ` : "";
+                  // para a linha (sem "name"), o tooltip fica simples
+                  if (!r.name) return `bits/byte=${r.y}, x=${r.x}s`;
                   return `${name}bits/byte=${r.y}, total=${r.x}s`;
                 }
               }
@@ -818,7 +871,7 @@ G1-V4,13136308,8311389,2.000000,3.550000,1,#0000FF
       if (!table) return;
 
       const points = extractPoints(table);
-      if (points.length) render(points);
+      render(points);
     }
 
     function scheduleUpdate() {
