@@ -4,8 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AIT Challenge 2026 — Lossless Compression Leaderboard</title>
-
-  <!-- One meta only -->
   <meta name="color-scheme" content="light dark">
 
   <!-- Set initial theme BEFORE first paint: localStorage > default dark -->
@@ -20,9 +18,8 @@
   })();
   </script>
 
-  <!-- === BEGIN: theme toggle (light/dark, no invert filters) === -->
+  <!-- Theme toggle button -->
   <style id="dp-theme-toggle-style">
-    /* Floating button */
     #dpThemeToggle{
       position: fixed;
       top: 12px;
@@ -40,19 +37,13 @@
       outline: 3px solid currentColor;
       outline-offset: 2px;
     }
-
-    /* Button in dark */
     html.dp-dark #dpThemeToggle{
       background: rgba(15,18,23,.92);
       color: #e9edf1;
       border-color: rgba(255,255,255,.25);
     }
-
-    @media print{
-      #dpThemeToggle{ display:none; }
-    }
+    @media print{ #dpThemeToggle{ display:none; } }
   </style>
-  <!-- === END: theme toggle === -->
 
   <style>
     /* =========================
@@ -65,10 +56,17 @@
       --text:#f3f4f6;
       --muted:rgba(255,255,255,.68);
 
-      /* Chart colors (dark) */
       --chart-text: rgba(255,255,255,.92);
       --chart-grid: rgba(255,255,255,.18);
-      --chart-point: #3b82f6; /* default BLUE for points (fallback) */
+      --chart-point: #3b82f6;
+
+      /* Responsive table typography */
+      --tbl-font: clamp(9.5px, 2.05vw, 13px);
+      --tbl-pad-y: clamp(6px, 1.15vw, 10px);
+      --tbl-pad-x: clamp(4px, 0.90vw, 8px);
+
+      /* Rounded table */
+      --tbl-radius: 16px;
     }
 
     .special-link { color: #FFFFFF; }
@@ -124,51 +122,89 @@
       outline:none;
     }
 
+    /* =========================
+       TABLE (SCALED, ROUNDED)
+       ========================= */
     table{
       width:100%;
-      border-collapse:collapse;
+      border-collapse:separate;
+      border-spacing:0;
       margin-top:14px;
+
+      border:1px solid var(--border);
+      background:var(--card);
+
+      font-size: var(--tbl-font);
+      table-layout: fixed;
+
+      border-radius: var(--tbl-radius);
       overflow:hidden;
-      border-radius:14px;
     }
 
+    /* Column widths (Option A, sums to 100%) */
+    col.rank { width: 6%; }
+    col.name { width: 16%; }
+    col.comp { width: 14%; }
+    col.ratio{ width: 10%; }
+    col.bpb  { width: 10%; }
+    col.tc   { width: 12%; }
+    col.td   { width: 12%; }
+    col.tt   { width: 12%; }
+    col.ok   { width: 8%; }
+
     thead th{
-      position:sticky; top:0;
-      background:rgba(11,16,32,.92);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background:rgba(11,16,32,.96);
       text-align:left;
-      font-size:12px;
       letter-spacing:.02em;
-      color:rgba(255,255,255,.75);
-      padding:10px 10px;
+      color:rgba(255,255,255,.80);
+      padding: var(--tbl-pad-y) var(--tbl-pad-x);
       border-bottom:1px solid rgba(255,255,255,.10);
       cursor:pointer;
       user-select:none;
-      white-space:nowrap;
+
+      white-space: normal;
+      line-height: 1.1;
     }
 
+    thead th:first-child { border-top-left-radius: var(--tbl-radius); }
+    thead th:last-child  { border-top-right-radius: var(--tbl-radius); }
+
     tbody td{
-      padding:10px 10px;
+      padding: var(--tbl-pad-y) var(--tbl-pad-x);
       border-bottom:1px solid rgba(255,255,255,.08);
-      font-size:13px;
-      white-space:nowrap;
+      line-height: 1.15;
+
+      overflow:hidden;
+      text-overflow: ellipsis;
     }
     tbody tr:hover{background:rgba(255,255,255,.05);}
 
+    tbody tr:last-child td:first-child { border-bottom-left-radius: var(--tbl-radius); }
+    tbody tr:last-child td:last-child  { border-bottom-right-radius: var(--tbl-radius); }
+
     .right{text-align:right;}
     .center{text-align:center;}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
 
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    .num{white-space: nowrap;}
+    .nameCell{
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    /* Badge is now neutral (no green/red) */
     .badge{
       display:inline-block;
-      padding:3px 8px;
+      padding: 2px 6px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.08);
-      font-size:12px;
+      font-size: 0.95em;
       color:rgba(255,255,255,.85);
     }
-    .ok{border-color:rgba(34,197,94,.35); background:rgba(34,197,94,.10);}
-    .fail{border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.10);}
 
     /* =========================
        LIGHT THEME (HIGH CONTRAST)
@@ -182,12 +218,10 @@
 
       --chart-text:#000000;
       --chart-grid: rgba(0,0,0,.22);
-      --chart-point: #3b82f6; /* default BLUE for points (fallback) */
+      --chart-point: #3b82f6;
     }
 
-    html.dp-light body{
-      background:#ffffff !important; /* pure white for projection */
-    }
+    html.dp-light body{ background:#ffffff !important; }
 
     html.dp-light .card{
       background:#ffffff !important;
@@ -211,53 +245,42 @@
       color:#000;
     }
 
-    /* LIGHT: table with strong contrast + NO ugly 90° corner artifacts */
     html.dp-light table{
       border:2px solid #000;
-      border-collapse: separate !important; /* key fix */
-      border-spacing: 0;
       background:#fff;
-      overflow:hidden;
-      border-radius:14px;
     }
-
     html.dp-light thead th{
       background:#000 !important;
       color:#fff !important;
       border-bottom:2px solid #000;
     }
-    html.dp-light thead th:first-child{ border-top-left-radius: 12px; }
-    html.dp-light thead th:last-child { border-top-right-radius: 12px; }
-
-    html.dp-light tbody td{
-      border-bottom:1px solid rgba(0,0,0,.25);
-    }
-    html.dp-light tbody tr:hover{
-      background:#f0f0f0;
-    }
-    html.dp-light tbody tr:last-child td:first-child{ border-bottom-left-radius: 12px; }
-    html.dp-light tbody tr:last-child td:last-child { border-bottom-right-radius: 12px; }
+    html.dp-light tbody td{ border-bottom:1px solid rgba(0,0,0,.25); }
+    html.dp-light tbody tr:hover{ background:#f0f0f0; }
 
     html.dp-light .badge{
       border-color:#000;
       background:#fff;
       color:#000;
     }
-    html.dp-light .ok{ border-color:#0a7a0a; background:#c6f6d5; }
-    html.dp-light .fail{ border-color:#b00020; background:#ffd6d6; }
+
+    @media (max-width: 680px){
+      .wrap{ padding:18px 12px 32px; }
+      .card{ padding:14px 14px 16px; }
+      input{ width:100%; }
+    }
   </style>
 </head>
 
 <body>
-  <!-- === BEGIN: theme toggle script === -->
+  <!-- Theme toggle script -->
   <script id="dp-theme-toggle-script">
   (() => {
-    const KEY = "dp-theme"; // "light" | "dark"
+    const KEY = "dp-theme";
     const root = document.documentElement;
 
     function getInitialTheme(){
       const saved = localStorage.getItem(KEY);
-      return (saved === "light" || saved === "dark") ? saved : "dark"; // default dark
+      return (saved === "light" || saved === "dark") ? saved : "dark";
     }
 
     function apply(theme){
@@ -275,10 +298,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       document.body.appendChild(btn);
-
-      // sync button + classes with initial theme (localStorage > default dark)
       apply(getInitialTheme());
-
       btn.addEventListener("click", () => {
         const next = root.classList.contains("dp-dark") ? "light" : "dark";
         localStorage.setItem(KEY, next);
@@ -287,12 +307,11 @@
     });
   })();
   </script>
-  <!-- === END: theme toggle script === -->
 
   <div class="wrap">
     <div class="card">
 
-      <!-- Top banner (inline SVG image) -->
+      <!-- Top banner (full version) -->
       <div class="banner" aria-label="AIT Challenge 2026 banner">
         <svg viewBox="0 0 1200 280" role="img" aria-label="AIT Challenge 2026 — Lossless Compression Leaderboard">
           <defs>
@@ -375,6 +394,7 @@
               <rect x="102" y="18" width="18" height="12" rx="5" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.26)"/>
             </g>
 
+            <!-- little bars -->
             <g transform="translate(790,70)" opacity="0.85">
               <rect x="0" y="160" width="18" height="50" fill="rgba(147,197,253,0.35)"/>
               <rect x="24" y="140" width="18" height="70" fill="rgba(167,139,250,0.35)"/>
@@ -428,11 +448,14 @@
       </div>
 
       <table aria-label="Leaderboard">
+        <colgroup>
+          <col class="rank"><col class="name"><col class="comp"><col class="ratio"><col class="bpb">
+          <col class="tc"><col class="td"><col class="tt"><col class="ok">
+        </colgroup>
         <thead>
           <tr>
             <th data-key="rank">Rank</th>
             <th data-key="group">Compressor</th>
-            <th class="right" data-key="orig_mb">Original (MB)</th>
             <th class="right" data-key="comp_mb">Compressed (MB)</th>
             <th class="right" data-key="ratio">Ratio</th>
             <th class="right" data-key="bpb">bits/byte</th>
@@ -457,7 +480,6 @@
   </div>
 
   <!-- === EDIT THIS BLOCK ONLY === -->
-  <!-- Use colors WITHOUT commas (e.g., #RRGGBB or #RRGGBBAA or names like "red"). -->
   <script id="csv-data" type="text/plain">
 group,orig_bytes,comp_bytes,t_comp_s,t_decomp_s,ok,color
 gzip,13136308,7812663,1.910000,0.260000,1,#99004C
@@ -512,9 +534,6 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
     function fmt(n, d=3){
       return Number.isFinite(n) ? n.toFixed(d) : "—";
     }
-    function fmtMB(bytes){
-      return Number.isFinite(bytes) ? (bytes/1024/1024).toFixed(2) : "—";
-    }
     function escapeHtml(s){
       return String(s)
         .replaceAll("&","&amp;")
@@ -524,9 +543,8 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
         .replaceAll("'","&#039;");
     }
 
-    // NOTE: `data` is a global lexical binding (used later by the Chart.js script)
     let data = [];
-    let sortKey = "comp_bytes";
+    let sortKey = "comp_mb";
     let sortAsc = true;
 
     function recompute(){
@@ -548,8 +566,8 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
 
         return {
           group,
-          orig_bytes: orig, comp_bytes: comp,
-          orig_mb: orig/1024/1024, comp_mb: comp/1024/1024,
+          comp_bytes: comp,
+          comp_mb: comp/1024/1024,
           ratio, bpb,
           t_comp_s: tc, t_decomp_s: td,
           t_total: ttot,
@@ -558,14 +576,12 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
         };
       }).filter(r => r.group);
 
-      // default: ok first, then smallest compressed bytes, then total time
       data.sort((a,b) =>
         (a.ok===b.ok ? 0 : (a.ok ? -1 : 1)) ||
         (a.comp_bytes - b.comp_bytes) ||
         (a.t_total - b.t_total)
       );
 
-      // dense rank by (ok, comp_bytes, t_total)
       let rank = 0, lastKey = "";
       for(const r of data){
         const k = `${r.ok}|${r.comp_bytes}|${r.t_total}`;
@@ -603,20 +619,20 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
       for(const r of filtered){
         const tr = document.createElement("tr");
         const ratioPct = Number.isFinite(r.ratio) ? (100*r.ratio).toFixed(1) + "%" : "—";
+
         const badge = r.ok
-          ? `<span class="badge ok">✅</span>`
-          : `<span class="badge fail">❌</span>`;
+          ? `<span class="badge">✅</span>`
+          : `<span class="badge">❌</span>`;
 
         tr.innerHTML = `
-          <td class="mono">${r.rank}</td>
-          <td class="mono">${escapeHtml(r.group)}</td>
-          <td class="right mono">${fmtMB(r.orig_bytes)}</td>
-          <td class="right mono">${fmtMB(r.comp_bytes)}</td>
-          <td class="right mono">${ratioPct}</td>
-          <td class="right mono">${fmt(r.bpb, 3)}</td>
-          <td class="right mono">${fmt(r.t_comp_s, 3)}</td>
-          <td class="right mono">${fmt(r.t_decomp_s, 3)}</td>
-          <td class="right mono">${fmt(r.t_total, 3)}</td>
+          <td class="mono num">${r.rank}</td>
+          <td class="mono nameCell">${escapeHtml(r.group)}</td>
+          <td class="right mono num">${fmt(r.comp_mb, 2)}</td>
+          <td class="right mono num">${ratioPct}</td>
+          <td class="right mono num">${fmt(r.bpb, 3)}</td>
+          <td class="right mono num">${fmt(r.t_comp_s, 3)}</td>
+          <td class="right mono num">${fmt(r.t_decomp_s, 3)}</td>
+          <td class="right mono num">${fmt(r.t_total, 3)}</td>
           <td class="center">${badge}</td>
         `;
         tbody.appendChild(tr);
@@ -672,7 +688,6 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
     function getColumnIndexMap(table) {
       const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
       if (!headerRow) return null;
-
       const headerCells = Array.from(headerRow.querySelectorAll("th,td"));
       const map = new Map();
       headerCells.forEach((cell, idx) => map.set(norm(cell.textContent), idx));
@@ -705,12 +720,10 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
       const iName  = pickCol(colMap, ["compressor", "name", "method"]);
       const iBits  = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
       const iTotal = pickCol(colMap, ["t_total", "t_total (s)", "total"]);
-
       if (iBits == null || iTotal == null) return [];
 
       const rows = visibleRows(table);
       const points = [];
-
       for (const r of rows) {
         const cells = Array.from(r.querySelectorAll("td,th"));
         const need = Math.max(iBits, iTotal, (iName ?? 0)) + 1;
@@ -724,7 +737,6 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
         const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
         points.push({ x: ttot, y: bitsByte, name });
       }
-
       return points;
     }
 
@@ -750,22 +762,16 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
       return m;
     }
 
-    // === L superior: assíntotas x=b e y=a (só para x>b) ===
     function upperL(x, a, b, k, s){
       if (x <= b) return null;
       return a + k / Math.log(1 + (x - b)/s);
     }
 
-    // Ajusta aqui os parâmetros da curva L
-    // a: assíntota horizontal (bits/byte)
-    // b: assíntota vertical (seconds)  [x=b]
-    // k,s: controlam "abertura" / curvatura
     const L = { a: 4.00, b: 0.02, k: 1.20, s: 1.00 };
 
-    function render(points) {
+    function renderPlot(points) {
       const canvas = document.getElementById(CANVAS_ID);
       if (!canvas) return;
-
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
@@ -773,11 +779,8 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
 
       const { textColor, gridColor, pointColor } = themeChartColors();
       const colorMap = buildColorMapFromData();
-
-      // Per-point colors from CSV color column; fallback to theme default if missing/empty
       const colors = points.map(p => colorMap.get(norm(p.name)) || pointColor);
 
-      // --- gerar a curva L no range do gráfico (e limitar para não esmagar a escala) ---
       const xs = points.map(p => p.x);
       const ys = points.map(p => p.y);
 
@@ -795,7 +798,7 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
 
       const lcurve = [];
       for (let i = 0; i < N; i++){
-        const dx = dxMin * Math.pow(ratio, i/(N-1)); // amostragem log perto de b
+        const dx = dxMin * Math.pow(ratio, i/(N-1));
         const x  = L.b + dx;
         const y  = upperL(x, L.a, L.b, L.k, L.s);
         if (y != null && Number.isFinite(y) && y <= yMax){
@@ -806,28 +809,24 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
       chart = new Chart(ctx, {
         data: {
           datasets: [
-            // Curva L (linha)
             {
               type: "line",
               data: lcurve,
-              borderColor: textColor,  // adapta ao tema (preto no light, claro no dark)
+              borderColor: textColor,
               borderWidth: 2,
               pointRadius: 0,
               tension: 0,
               fill: false
-              // opcional: borderDash: [6, 6],
             },
-
-            // Pontos (scatter)
             {
               type: "scatter",
               label: "Compressor",
               data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
               pointRadius: 6,
               pointHoverRadius: 8,
-              pointBackgroundColor: colors,     // cor dentro
-              pointBorderColor: "#000000",      // BORDA PRETA
-              pointBorderWidth: 1.5,            // espessura
+              pointBackgroundColor: colors,
+              pointBorderColor: "#000000",
+              pointBorderWidth: 1.5,
               pointHoverBorderWidth: 2
             }
           ]
@@ -856,7 +855,6 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
                 label: (ctx) => {
                   const r = ctx.raw;
                   const name = r.name ? `${r.name}: ` : "";
-                  // para a linha (sem "name"), o tooltip fica simples
                   if (!r.name) return `bits/byte=${r.y}, x=${r.x}s`;
                   return `${name}bits/byte=${r.y}, total=${r.x}s`;
                 }
@@ -871,9 +869,8 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
     function updatePlot() {
       const table = findResultsTable();
       if (!table) return;
-
       const points = extractPoints(table);
-      render(points);
+      renderPlot(points);
     }
 
     function scheduleUpdate() {
@@ -883,10 +880,8 @@ G8-V1,13136308,8120497,1.120000,2.110000,1,#27C8F5
 
     window.addEventListener("load", () => {
       updatePlot();
-
       const table = findResultsTable();
       if (!table) return;
-
       const obs = new MutationObserver(scheduleUpdate);
       obs.observe(table, { childList: true, subtree: true, characterData: true });
     });
