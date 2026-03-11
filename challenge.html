@@ -489,7 +489,7 @@
         </colgroup>
         <thead>
           <tr>
-            <th data-key="rank">Rank</th>
+            <th data-key="rank">#</th>
             <th data-key="group">Compressor</th>
             <th class="right" data-key="comp_mb">Compressed (MB)</th>
             <th class="right" data-key="ratio">Ratio</th>
@@ -514,6 +514,27 @@
       <div class="chart-controls">
         <button id="scaleToggleBtn" type="button" aria-pressed="false">Use logarithmic scale</button>
       </div>
+
+      <br>
+
+      <h2><p align="center">Top 10 Weissman Score</p></h2>
+
+      <table id="weissmanTop10Table" aria-label="Top 10 Weissman Score">
+        <colgroup>
+          <col class="rank"><col class="name"><col class="ratio"><col class="ratio"><col class="tt"><col class="ok">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Compressor</th>
+            <th class="right">Weissman Score</th>
+            <th class="right">Ratio</th>
+            <th class="right">t_total (s)</th>
+            <th class="center">Lossless</th>
+          </tr>
+        </thead>
+        <tbody id="weissmanTop10Body"></tbody>
+      </table>
 
     </div>
   </div>
@@ -679,6 +700,61 @@ paq8px-8,13136308,6312697,2844.570000,2826.010000,1,#6600CC
       });
     }
 
+    const WEISSMAN_BASELINE = "gzip";
+
+    function getWeissmanScore(r){
+      const baseline = data.find(x => x.group === WEISSMAN_BASELINE && x.ok);
+      if(!baseline) return NaN;
+
+      const ratioBase = Number.isFinite(baseline.ratio) && baseline.ratio > 0 ? (1 / baseline.ratio) : NaN;
+      const ratioHere = Number.isFinite(r.ratio) && r.ratio > 0 ? (1 / r.ratio) : NaN;
+
+      // Weissman uses log(Tb)/log(T). Because several entries are below 1 second,
+      // use t_total + 1 so the logarithm stays defined while preserving ordering.
+      const tBase = Number.isFinite(baseline.t_total) ? baseline.t_total + 1 : NaN;
+      const tHere = Number.isFinite(r.t_total) ? r.t_total + 1 : NaN;
+
+      if(!Number.isFinite(ratioBase) || !Number.isFinite(ratioHere) ||
+         !Number.isFinite(tBase) || !Number.isFinite(tHere) ||
+         tBase <= 1 || tHere <= 1){
+        return NaN;
+      }
+
+      return (ratioHere / ratioBase) * (Math.log(tBase) / Math.log(tHere));
+    }
+
+    function renderWeissmanTop10(filtered){
+      const tbody = document.getElementById("weissmanTop10Body");
+      if(!tbody) return;
+      tbody.innerHTML = "";
+
+      const top10 = filtered
+        .filter(r => r.ok)
+        .map(r => ({ ...r, weissman: getWeissmanScore(r) }))
+        .filter(r => Number.isFinite(r.weissman))
+        .sort((a, b) => b.weissman - a.weissman)
+        .slice(0, 10);
+
+      for(let i = 0; i < top10.length; i++){
+        const r = top10[i];
+        const tr = document.createElement("tr");
+        const ratioPct = Number.isFinite(r.ratio) ? (100*r.ratio).toFixed(1) + "%" : "—";
+        const badge = r.ok
+          ? `<span class="badge">✅</span>`
+          : `<span class="badge">❌</span>`;
+
+        tr.innerHTML = `
+          <td class="mono num">${i + 1}</td>
+          <td class="mono nameCell">${escapeHtml(r.group)}</td>
+          <td class="right mono num">${fmt(r.weissman, 6)}</td>
+          <td class="right mono num">${ratioPct}</td>
+          <td class="right mono num">${fmt(r.t_total, 3)}</td>
+          <td class="center">${badge}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
     function render(){
       const q = document.getElementById("search").value.trim().toLowerCase();
       const exclude = document.getElementById("exclude").value.trim().toLowerCase();
@@ -687,14 +763,13 @@ paq8px-8,13136308,6312697,2844.570000,2826.010000,1,#6600CC
       tbody.innerHTML = "";
 
       const filtered = data.filter(r => {
-      const name = r.group.toLowerCase();
+        const name = r.group.toLowerCase();
 
-      const matchesSearch = !q || name.includes(q);
-      const matchesExclude = !exclude || !name.includes(exclude);
+        const matchesSearch = !q || name.includes(q);
+        const matchesExclude = !exclude || !name.includes(exclude);
 
-      return matchesSearch && matchesExclude;
+        return matchesSearch && matchesExclude;
       });
-
 
       for(const r of filtered){
         const tr = document.createElement("tr");
@@ -717,6 +792,8 @@ paq8px-8,13136308,6312697,2844.570000,2826.010000,1,#6600CC
         `;
         tbody.appendChild(tr);
       }
+
+      renderWeissmanTop10(filtered);
     }
 
     document.querySelectorAll("thead th").forEach(th => {
