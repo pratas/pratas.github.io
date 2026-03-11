@@ -472,16 +472,14 @@
       </div>
 
       <div class="muted">
-        Last updated: <span class="mono">2026-03-11</span><br/>
-        Results are reported as totals aggregated across all files.<br/>
-        To download the dataset, click <a href="data/data.zip" class="special-link">here</a>.<br/>
-        To go to the home page, click <a href="index.html" class="special-link">here</a>.<br/>
-        Click column headers to sort. Search filters by name.
+        Last updated: <span class="mono">2026-03-11</span>. Results are reported as totals aggregated across all files. <br />
+        To download the dataset, click <a href="data/data.zip" class="special-link">here</a>. To go to the home page, click <a href="index.html" class="special-link">here</a>.<br/>
+        Click column headers to sort. Search and Ignore by text patterns.
       </div>
 
       <div class="row">
-        <div></div>
-        <input id="search" placeholder="Search …" />
+        <input id="search" placeholder="Search names ..." />
+        <input id="exclude" placeholder="Ignore names ..." />
       </div>
 
       <table aria-label="Leaderboard">
@@ -683,10 +681,20 @@ paq8px-8,13136308,6312697,2844.570000,2826.010000,1,#6600CC
 
     function render(){
       const q = document.getElementById("search").value.trim().toLowerCase();
+      const exclude = document.getElementById("exclude").value.trim().toLowerCase();
+
       const tbody = document.getElementById("tbody");
       tbody.innerHTML = "";
 
-      const filtered = q ? data.filter(r => r.group.toLowerCase().includes(q)) : data;
+      const filtered = data.filter(r => {
+      const name = r.group.toLowerCase();
+
+      const matchesSearch = !q || name.includes(q);
+      const matchesExclude = !exclude || !name.includes(exclude);
+
+      return matchesSearch && matchesExclude;
+      });
+
 
       for(const r of filtered){
         const tr = document.createElement("tr");
@@ -725,6 +733,7 @@ paq8px-8,13136308,6312697,2844.570000,2826.010000,1,#6600CC
     });
 
     document.getElementById("search").addEventListener("input", render);
+    document.getElementById("exclude").addEventListener("input", render);
 
     recompute();
     applySort();
