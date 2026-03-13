@@ -520,8 +520,8 @@
           <a href="#ranking-table">Ranking table</a>
           <a href="#evaluation-plot">Evaluation plot</a>
           <a href="#weissman-score">Weissman score</a>
-          <a href="../index.html">Home page</a>
           <a href="../data/data.zip" download>Download dataset</a>
+          <a href="../index.html">Home page</a>
         </nav>
       </div>
 
@@ -549,7 +549,7 @@
             <tr>
               <th data-key="rank">Rank</th>
               <th data-key="group">Compressor</th>
-              <th class="right" data-key="comp_mb">Compressed (MB)</th>
+              <th class="right" data-key="comp_bytes">Compressed (Bytes)</th>
               <th class="right" data-key="ratio">Ratio</th>
               <th class="right" data-key="bpb">bits/byte</th>
               <th class="right" data-key="t_comp_s">t_comp (s)</th>
@@ -630,7 +630,7 @@ G1-V17,13136308,7358685,12.880000,3.450000,1,#0000FF
 G1-V18,13136308,8238570,0.770000,1.620000,1,#0000FF
 G1-V19,13136308,7646201,3.350000,2.180000,1,#0000FF
 G1-V20,13136308,7340677,9.050000,6.100000,1,#0000FF
-G1-V21,13136308,7209138,26.470000,22.780000,1,#0000FF  
+G1-V21,13136308,7209138,26.470000,22.780000,1,#0000FF
 G2-V1,13136308,8121302,5.430000,6.450000,1,#11c55ef2
 G3-V1,13136308,7631873,10.330000,10.480000,1,#ccc55ef2
 G3-V2,13136308,7350569,6.100000,1.960000,1,#ccc55ef2
@@ -708,7 +708,7 @@ brotli-9,13136308,7468601,1.310000,0.030000,1,#6300CC
     }
 
     let data = [];
-    let sortKey = "comp_mb";
+    let sortKey = "comp_bytes";
     let sortAsc = true;
 
     function recompute(){
@@ -845,7 +845,7 @@ brotli-9,13136308,7468601,1.310000,0.030000,1,#6300CC
         tr.innerHTML = `
           <td class="mono num">${r.rank}</td>
           <td class="mono nameCell">${escapeHtml(r.group)}</td>
-          <td class="right mono num">${fmt(r.comp_mb, 2)}</td>
+          <td class="right mono num">${Number.isFinite(r.comp_bytes) ? r.comp_bytes.toLocaleString("en-US") : "—"}</td>
           <td class="right mono num">${ratioPct}</td>
           <td class="right mono num">${fmt(r.bpb, 3)}</td>
           <td class="right mono num">${fmt(r.t_comp_s, 3)}</td>
