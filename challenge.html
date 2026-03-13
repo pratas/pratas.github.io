@@ -517,7 +517,7 @@
 
       <h2><p align="center">Top-20 Weissman Score</p></h2>
 
-      <table id="weissmanTop20Table" aria-label="Top 20 Weissman Score">
+      <table id="weissmanTop50Table" aria-label="Top 20 Weissman Score">
         <colgroup>
           <col class="rank"><col class="name"><col class="ratio"><col class="ratio"><col class="tt"><col class="ok">
         </colgroup>
@@ -531,7 +531,7 @@
             <th class="center">Lossless</th>
           </tr>
         </thead>
-        <tbody id="weissmanTop20Body"></tbody>
+        <tbody id="weissmanTop50Body"></tbody>
       </table>
 
     </div>
@@ -725,20 +725,20 @@ brotli-9,13136308,7468601,1.310000,0.030000,1,#6300CC
       return (ratioHere / ratioBase) * (Math.log(tBase) / Math.log(tHere));
     }
 
-    function renderWeissmanTop20(filtered){
-      const tbody = document.getElementById("weissmanTop20Body");
+    function renderWeissmanTop50(filtered){
+      const tbody = document.getElementById("weissmanTop50Body");
       if(!tbody) return;
       tbody.innerHTML = "";
 
-      const top20 = filtered
+      const top50 = filtered
         .filter(r => r.ok)
         .map(r => ({ ...r, weissman: getWeissmanScore(r) }))
         .filter(r => Number.isFinite(r.weissman))
         .sort((a, b) => b.weissman - a.weissman)
         .slice(0, 20);
 
-      for(let i = 0; i < top20.length; i++){
-        const r = top20[i];
+      for(let i = 0; i < top50.length; i++){
+        const r = top50[i];
         const tr = document.createElement("tr");
         const ratioPct = Number.isFinite(r.ratio) ? (100*r.ratio).toFixed(1) + "%" : "—";
         const badge = r.ok
@@ -795,7 +795,7 @@ brotli-9,13136308,7468601,1.310000,0.030000,1,#6300CC
         tbody.appendChild(tr);
       }
 
-      renderWeissmanTop20(filtered);
+      renderWeissmanTop50(filtered);
     }
 
     document.querySelectorAll("thead th").forEach(th => {
