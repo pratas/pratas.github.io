@@ -615,8 +615,8 @@
           </nav>
         </div>
         <div class="row">
-          <input id="search" placeholder="Search names ..." />
-          <input id="exclude" placeholder="Ignore names ..." />
+          <input id="search" placeholder="Search names... (comma, ;, or new line separated)" />
+          <input id="exclude" placeholder="Ignore names ... (comma, ;, or new line separated)" />
         </div>
       </section>
 
@@ -1426,584 +1426,597 @@ G,brotli-9,2526752,845836,0.460,0.010,1,#00994C
 H,brotli-9,1022760,408359,0.120,0.000,1,#00994C
 overall,brotli-9,13136308,7468601,1.270,0.040,1,#00994C
   </script>
-
   <script>
-    function detectSep(headerLine){
-      const commas = (headerLine.match(/,/g)||[]).length;
-      const semis  = (headerLine.match(/;/g)||[]).length;
-      return semis > commas ? ";" : ",";
+  function detectSep(headerLine){
+    const commas = (headerLine.match(/,/g)||[]).length;
+    const semis  = (headerLine.match(/;/g)||[]).length;
+    return semis > commas ? ";" : ",";
+  }
+
+  function parseCSV(text){
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    if(!lines.length) return [];
+    const sep = detectSep(lines[0]);
+    const header = lines[0].split(sep).map(h => h.trim().toLowerCase());
+    const rows = [];
+    for(let i=1;i<lines.length;i++){
+      const parts = lines[i].split(sep).map(p => p.trim());
+      if(parts.length !== header.length) continue;
+      const obj = {};
+      for(let j=0;j<header.length;j++) obj[header[j]] = parts[j];
+      rows.push(obj);
     }
+    return rows;
+  }
 
-    function parseCSV(text){
-      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-      if(!lines.length) return [];
-      const sep = detectSep(lines[0]);
-      const header = lines[0].split(sep).map(h => h.trim().toLowerCase());
-      const rows = [];
-      for(let i=1;i<lines.length;i++){
-        const parts = lines[i].split(sep).map(p => p.trim());
-        if(parts.length !== header.length) continue;
-        const obj = {};
-        for(let j=0;j<header.length;j++) obj[header[j]] = parts[j];
-        rows.push(obj);
-      }
-      return rows;
-    }
+  function toNum(x){
+    const n = Number(String(x).replace(",", "."));
+    return Number.isFinite(n) ? n : NaN;
+  }
 
-    function toNum(x){
-      const n = Number(String(x).replace(",", "."));
-      return Number.isFinite(n) ? n : NaN;
-    }
+  function toBool(x){
+    const v = String(x).trim().toLowerCase();
+    return (v === "1" || v === "true" || v === "yes" || v === "ok" || v === "pass");
+  }
 
-    function toBool(x){
-      const v = String(x).trim().toLowerCase();
-      return (v === "1" || v === "true" || v === "yes" || v === "ok" || v === "pass");
-    }
+  function fmt(n, d=3){
+    return Number.isFinite(n) ? n.toFixed(d) : "—";
+  }
 
-    function fmt(n, d=3){
-      return Number.isFinite(n) ? n.toFixed(d) : "—";
-    }
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
 
-    function escapeHtml(s){
-      return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
+  function datasetDisplayName(dataset){
+    if(dataset === "overall") return "Overall";
+    return dataset;
+  }
 
-    function datasetDisplayName(dataset){
-      if(dataset === "overall") return "Overall";
-      return dataset;
-    }
+  function splitPatterns(text){
+    return String(text || "")
+      .split(/[,\n;]+/)
+      .map(s => s.trim().toLowerCase())
+      .filter(Boolean);
+  }
 
-    const WEISSMAN_BASELINE = "gzip";
+  const WEISSMAN_BASELINE = "gzip";
 
-    let allData = [];
-    let currentData = [];
-    let sortKey = "comp_bytes";
-    let sortAsc = true;
-    let selectedDataset = "overall";
+  let allData = [];
+  let currentData = [];
+  let sortKey = "comp_bytes";
+  let sortAsc = true;
+  let selectedDataset = "overall";
 
-    function recompute(){
-      const csvText = document.getElementById("csv-data").textContent.trim();
-      const rows = parseCSV(csvText);
+  function recompute(){
+    const csvText = document.getElementById("csv-data").textContent.trim();
+    const rows = parseCSV(csvText);
 
-      allData = rows.map(r => {
-        const dataset = (r.dataset ?? "overall").trim();
-        const group = (r.group ?? "").trim();
-        const orig = toNum(r.orig_bytes);
-        const comp = toNum(r.comp_bytes);
-        const tc = toNum(r.t_comp_s);
-        const td = toNum(r.t_decomp_s);
-        const ok = toBool(r.ok);
-        const color = (r.color ?? "").trim();
+    allData = rows.map(r => {
+      const dataset = (r.dataset ?? "overall").trim();
+      const group = (r.group ?? "").trim();
+      const orig = toNum(r.orig_bytes);
+      const comp = toNum(r.comp_bytes);
+      const tc = toNum(r.t_comp_s);
+      const td = toNum(r.t_decomp_s);
+      const ok = toBool(r.ok);
+      const color = (r.color ?? "").trim();
 
-        const ratio = (Number.isFinite(orig) && orig > 0 && Number.isFinite(comp)) ? (comp / orig) : NaN;
-        const bpb   = (Number.isFinite(orig) && orig > 0 && Number.isFinite(comp)) ? (8 * comp / orig) : NaN;
-        const ttot  = (Number.isFinite(tc) ? tc : 0) + (Number.isFinite(td) ? td : 0);
+      const ratio = (Number.isFinite(orig) && orig > 0 && Number.isFinite(comp)) ? (comp / orig) : NaN;
+      const bpb   = (Number.isFinite(orig) && orig > 0 && Number.isFinite(comp)) ? (8 * comp / orig) : NaN;
+      const ttot  = (Number.isFinite(tc) ? tc : 0) + (Number.isFinite(td) ? td : 0);
 
-        return {
-          dataset,
-          group,
-          orig_bytes: orig,
-          comp_bytes: comp,
-          comp_mb: comp / 1024 / 1024,
-          ratio,
-          bpb,
-          t_comp_s: tc,
-          t_decomp_s: td,
-          t_total: ttot,
-          ok,
-          color
-        };
-      }).filter(r => r.dataset && r.group);
-    }
+      return {
+        dataset,
+        group,
+        orig_bytes: orig,
+        comp_bytes: comp,
+        comp_mb: comp / 1024 / 1024,
+        ratio,
+        bpb,
+        t_comp_s: tc,
+        t_decomp_s: td,
+        t_total: ttot,
+        ok,
+        color
+      };
+    }).filter(r => r.dataset && r.group);
+  }
 
-    function getDatasetRows(dataset){
-      return allData.filter(r => r.dataset === dataset);
-    }
+  function getDatasetRows(dataset){
+    return allData.filter(r => r.dataset === dataset);
+  }
 
-    function applySort(rows){
-      const out = [...rows];
-      const key = sortKey;
+  function applySort(rows){
+    const out = [...rows];
+    const key = sortKey;
 
-      out.sort((a, b) => {
-        if (key !== "rank" && a.ok !== b.ok) return a.ok ? -1 : 1;
+    out.sort((a, b) => {
+      if (key !== "rank" && a.ok !== b.ok) return a.ok ? -1 : 1;
 
-        const va = a[key];
-        const vb = b[key];
+      const va = a[key];
+      const vb = b[key];
 
-        const aNan = (typeof va === "number") && !Number.isFinite(va);
-        const bNan = (typeof vb === "number") && !Number.isFinite(vb);
-        if(aNan && !bNan) return 1;
-        if(!aNan && bNan) return -1;
+      const aNan = (typeof va === "number") && !Number.isFinite(va);
+      const bNan = (typeof vb === "number") && !Number.isFinite(vb);
+      if(aNan && !bNan) return 1;
+      if(!aNan && bNan) return -1;
 
-        if(typeof va === "string" || typeof vb === "string"){
-          const cmp = String(va ?? "").localeCompare(String(vb ?? ""), undefined, { numeric: true, sensitivity: "base" });
-          return sortAsc ? cmp : -cmp;
-        }
-
-        const cmp = (va ?? 0) - (vb ?? 0);
+      if(typeof va === "string" || typeof vb === "string"){
+        const cmp = String(va ?? "").localeCompare(String(vb ?? ""), undefined, { numeric: true, sensitivity: "base" });
         return sortAsc ? cmp : -cmp;
-      });
-
-      return out;
-    }
-
-    function rankRows(rows){
-      const rankedBase = [...rows].sort((a,b) =>
-        (a.ok===b.ok ? 0 : (a.ok ? -1 : 1)) ||
-        (a.comp_bytes - b.comp_bytes) ||
-        (a.t_total - b.t_total) ||
-        a.group.localeCompare(b.group, undefined, { numeric:true, sensitivity:"base" })
-      );
-
-      let rank = 0;
-      let lastKey = "";
-      const rankMap = new Map();
-
-      for(const r of rankedBase){
-        const k = `${r.ok}|${r.comp_bytes}|${r.t_total}`;
-        if(k !== lastKey) rank++;
-        rankMap.set(`${r.dataset}||${r.group}`, rank);
-        lastKey = k;
       }
 
-      return rows.map(r => ({
-        ...r,
-        rank: rankMap.get(`${r.dataset}||${r.group}`) ?? "—"
-      }));
+      const cmp = (va ?? 0) - (vb ?? 0);
+      return sortAsc ? cmp : -cmp;
+    });
+
+    return out;
+  }
+
+  function rankRows(rows){
+    const rankedBase = [...rows].sort((a,b) =>
+      (a.ok===b.ok ? 0 : (a.ok ? -1 : 1)) ||
+      (a.comp_bytes - b.comp_bytes) ||
+      (a.t_total - b.t_total) ||
+      a.group.localeCompare(b.group, undefined, { numeric:true, sensitivity:"base" })
+    );
+
+    let rank = 0;
+    let lastKey = "";
+    const rankMap = new Map();
+
+    for(const r of rankedBase){
+      const k = `${r.ok}|${r.comp_bytes}|${r.t_total}`;
+      if(k !== lastKey) rank++;
+      rankMap.set(`${r.dataset}||${r.group}`, rank);
+      lastKey = k;
     }
 
-    function getBaselineForDataset(datasetRows){
-      return datasetRows.find(x => x.group === WEISSMAN_BASELINE && x.ok) || null;
+    return rows.map(r => ({
+      ...r,
+      rank: rankMap.get(`${r.dataset}||${r.group}`) ?? "—"
+    }));
+  }
+
+  function getBaselineForDataset(datasetRows){
+    return datasetRows.find(x => x.group === WEISSMAN_BASELINE && x.ok) || null;
+  }
+
+  function getWeissmanScore(r, baseline){
+    if(!baseline) return NaN;
+
+    const ratioBase = Number.isFinite(baseline.ratio) && baseline.ratio > 0 ? (1 / baseline.ratio) : NaN;
+    const ratioHere = Number.isFinite(r.ratio) && r.ratio > 0 ? (1 / r.ratio) : NaN;
+    const tBase = Number.isFinite(baseline.t_total) ? baseline.t_total + 1 : NaN;
+    const tHere = Number.isFinite(r.t_total) ? r.t_total + 1 : NaN;
+
+    if(!Number.isFinite(ratioBase) || !Number.isFinite(ratioHere) ||
+       !Number.isFinite(tBase) || !Number.isFinite(tHere) ||
+       tBase <= 1 || tHere <= 1){
+      return NaN;
     }
 
-    function getWeissmanScore(r, baseline){
-      if(!baseline) return NaN;
+    return (ratioHere / ratioBase) * (Math.log(tBase) / Math.log(tHere));
+  }
 
-      const ratioBase = Number.isFinite(baseline.ratio) && baseline.ratio > 0 ? (1 / baseline.ratio) : NaN;
-      const ratioHere = Number.isFinite(r.ratio) && r.ratio > 0 ? (1 / r.ratio) : NaN;
-      const tBase = Number.isFinite(baseline.t_total) ? baseline.t_total + 1 : NaN;
-      const tHere = Number.isFinite(r.t_total) ? r.t_total + 1 : NaN;
+  function updateDatasetMenu(){
+    document.querySelectorAll("#datasetMenu button").forEach(btn => {
+      const active = btn.dataset.dataset === selectedDataset;
+      btn.classList.toggle("active", active);
+      btn.setAttribute("aria-pressed", String(active));
+    });
 
-      if(!Number.isFinite(ratioBase) || !Number.isFinite(ratioHere) ||
-         !Number.isFinite(tBase) || !Number.isFinite(tHere) ||
-         tBase <= 1 || tHere <= 1){
-        return NaN;
-      }
+    const label = datasetDisplayName(selectedDataset);
+    const datasetStatus = document.getElementById("datasetStatus");
+    const plotDatasetStatus = document.getElementById("plotDatasetStatus");
+    const weissmanStatus = document.getElementById("weissmanStatus");
 
-      return (ratioHere / ratioBase) * (Math.log(tBase) / Math.log(tHere));
+    if(datasetStatus) datasetStatus.textContent = `Showing results for ${label}`;
+    if(plotDatasetStatus) plotDatasetStatus.textContent = `Showing results for ${label}`;
+    if(weissmanStatus) weissmanStatus.textContent = `Computed with gzip as reference for ${label}`;
+  }
+
+  function renderWeissmanTop50(filteredDatasetRows){
+    const tbody = document.getElementById("weissmanTop50Body");
+    if(!tbody) return;
+    tbody.innerHTML = "";
+
+    const baseline = getBaselineForDataset(getDatasetRows(selectedDataset));
+
+    const top50 = filteredDatasetRows
+      .filter(r => r.ok)
+      .map(r => ({ ...r, weissman: getWeissmanScore(r, baseline) }))
+      .filter(r => Number.isFinite(r.weissman))
+      .sort((a, b) => b.weissman - a.weissman)
+      .slice(0, 50);
+
+    if(!top50.length){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="6" class="empty-state">No Weissman scores available for the current dataset.</td>`;
+      tbody.appendChild(tr);
+      return;
     }
 
-    function updateDatasetMenu(){
-      document.querySelectorAll("#datasetMenu button").forEach(btn => {
-        const active = btn.dataset.dataset === selectedDataset;
-        btn.classList.toggle("active", active);
-        btn.setAttribute("aria-pressed", String(active));
-      });
+    for(let i = 0; i < top50.length; i++){
+      const r = top50[i];
+      const tr = document.createElement("tr");
+      const ratioPct = Number.isFinite(r.ratio) ? (100 * r.ratio).toFixed(1) + "%" : "—";
+      const badge = r.ok ? `<span class="badge">✅</span>` : `<span class="badge">❌</span>`;
+      const swatch = r.color ? `<span class="swatch" style="background:${escapeHtml(r.color)}"></span>` : "";
 
-      const label = datasetDisplayName(selectedDataset);
-      const datasetStatus = document.getElementById("datasetStatus");
-      const plotDatasetStatus = document.getElementById("plotDatasetStatus");
-      const weissmanStatus = document.getElementById("weissmanStatus");
-
-      if(datasetStatus) datasetStatus.textContent = `Showing results for ${label}`;
-      if(plotDatasetStatus) plotDatasetStatus.textContent = `Showing results for ${label}`;
-      if(weissmanStatus) weissmanStatus.textContent = `Computed with gzip as reference for ${label}`;
+      tr.innerHTML = `
+        <td class="mono num">${i + 1}</td>
+        <td class="mono nameCell">${swatch}${escapeHtml(r.group)}</td>
+        <td class="right mono num">${fmt(r.weissman, 6)}</td>
+        <td class="right mono num">${ratioPct}</td>
+        <td class="right mono num">${fmt(r.t_total, 3)}</td>
+        <td class="center">${badge}</td>
+      `;
+      tbody.appendChild(tr);
     }
+  }
 
-    function renderWeissmanTop50(filteredDatasetRows){
-      const tbody = document.getElementById("weissmanTop50Body");
-      if(!tbody) return;
-      tbody.innerHTML = "";
+  function render(){
+    const searchPatterns = splitPatterns(document.getElementById("search").value);
+    const excludePatterns = splitPatterns(document.getElementById("exclude").value);
 
-      const baseline = getBaselineForDataset(getDatasetRows(selectedDataset));
+    const datasetRows = getDatasetRows(selectedDataset);
 
-      const top50 = filteredDatasetRows
-        .filter(r => r.ok)
-        .map(r => ({ ...r, weissman: getWeissmanScore(r, baseline) }))
-        .filter(r => Number.isFinite(r.weissman))
-        .sort((a, b) => b.weissman - a.weissman)
-        .slice(0, 50);
+    let filtered = datasetRows.filter(r => {
+      const name = r.group.toLowerCase();
 
-      if(!top50.length){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="6" class="empty-state">No Weissman scores available for the current dataset.</td>`;
-        tbody.appendChild(tr);
-        return;
-      }
+      const matchesSearch =
+        searchPatterns.length === 0 ||
+        searchPatterns.some(p => name.includes(p));
 
-      for(let i = 0; i < top50.length; i++){
-        const r = top50[i];
-        const tr = document.createElement("tr");
-        const ratioPct = Number.isFinite(r.ratio) ? (100 * r.ratio).toFixed(1) + "%" : "—";
-        const badge = r.ok ? `<span class="badge">✅</span>` : `<span class="badge">❌</span>`;
-        const swatch = r.color ? `<span class="swatch" style="background:${escapeHtml(r.color)}"></span>` : "";
+      const matchesExclude =
+        excludePatterns.length === 0 ||
+        !excludePatterns.some(p => name.includes(p));
 
-        tr.innerHTML = `
-          <td class="mono num">${i + 1}</td>
-          <td class="mono nameCell">${swatch}${escapeHtml(r.group)}</td>
-          <td class="right mono num">${fmt(r.weissman, 6)}</td>
-          <td class="right mono num">${ratioPct}</td>
-          <td class="right mono num">${fmt(r.t_total, 3)}</td>
-          <td class="center">${badge}</td>
-        `;
-        tbody.appendChild(tr);
-      }
-    }
+      return matchesSearch && matchesExclude;
+    });
 
-    function render(){
-      const q = document.getElementById("search").value.trim().toLowerCase();
-      const exclude = document.getElementById("exclude").value.trim().toLowerCase();
+    filtered = rankRows(filtered);
+    filtered = applySort(filtered);
+    currentData = filtered;
 
-      const datasetRows = getDatasetRows(selectedDataset);
+    const tbody = document.getElementById("tbody");
+    tbody.innerHTML = "";
 
-      let filtered = datasetRows.filter(r => {
-        const name = r.group.toLowerCase();
-        const matchesSearch = !q || name.includes(q);
-        const matchesExclude = !exclude || !name.includes(exclude);
-        return matchesSearch && matchesExclude;
-      });
-
-      filtered = rankRows(filtered);
-      filtered = applySort(filtered);
-      currentData = filtered;
-
-      const tbody = document.getElementById("tbody");
-      tbody.innerHTML = "";
-
-      if(!filtered.length){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="9" class="empty-state">No rows match the current dataset and filters.</td>`;
-        tbody.appendChild(tr);
-        renderWeissmanTop50(filtered);
-        updateDatasetMenu();
-        window.dispatchEvent(new Event("leaderboard-rendered"));
-        return;
-      }
-
-      for(const r of filtered){
-        const tr = document.createElement("tr");
-        const ratioPct = Number.isFinite(r.ratio) ? (100 * r.ratio).toFixed(1) + "%" : "—";
-        const badge = r.ok ? `<span class="badge">✅</span>` : `<span class="badge">❌</span>`;
-        const swatch = r.color ? `<span class="swatch" style="background:${escapeHtml(r.color)}"></span>` : "";
-
-        tr.innerHTML = `
-          <td class="mono num">${r.rank}</td>
-          <td class="mono nameCell">${swatch}${escapeHtml(r.group)}</td>
-          <td class="right mono num">${Number.isFinite(r.comp_bytes) ? r.comp_bytes.toLocaleString("en-US") : "—"}</td>
-          <td class="right mono num">${ratioPct}</td>
-          <td class="right mono num">${fmt(r.bpb, 3)}</td>
-          <td class="right mono num">${fmt(r.t_comp_s, 3)}</td>
-          <td class="right mono num">${fmt(r.t_decomp_s, 3)}</td>
-          <td class="right mono num">${fmt(r.t_total, 3)}</td>
-          <td class="center">${badge}</td>
-        `;
-        tbody.appendChild(tr);
-      }
-
+    if(!filtered.length){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="9" class="empty-state">No rows match the current dataset and filters.</td>`;
+      tbody.appendChild(tr);
       renderWeissmanTop50(filtered);
       updateDatasetMenu();
       window.dispatchEvent(new Event("leaderboard-rendered"));
+      return;
     }
 
-    document.querySelectorAll("thead th").forEach(th => {
-      th.addEventListener("click", () => {
-        const key = th.dataset.key;
-        if(!key) return;
-        if(sortKey === key) sortAsc = !sortAsc;
-        else { sortKey = key; sortAsc = true; }
-        render();
-      });
+    for(const r of filtered){
+      const tr = document.createElement("tr");
+      const ratioPct = Number.isFinite(r.ratio) ? (100 * r.ratio).toFixed(1) + "%" : "—";
+      const badge = r.ok ? `<span class="badge">✅</span>` : `<span class="badge">❌</span>`;
+      const swatch = r.color ? `<span class="swatch" style="background:${escapeHtml(r.color)}"></span>` : "";
+
+      tr.innerHTML = `
+        <td class="mono num">${r.rank}</td>
+        <td class="mono nameCell">${swatch}${escapeHtml(r.group)}</td>
+        <td class="right mono num">${Number.isFinite(r.comp_bytes) ? r.comp_bytes.toLocaleString("en-US") : "—"}</td>
+        <td class="right mono num">${ratioPct}</td>
+        <td class="right mono num">${fmt(r.bpb, 3)}</td>
+        <td class="right mono num">${fmt(r.t_comp_s, 3)}</td>
+        <td class="right mono num">${fmt(r.t_decomp_s, 3)}</td>
+        <td class="right mono num">${fmt(r.t_total, 3)}</td>
+        <td class="center">${badge}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    renderWeissmanTop50(filtered);
+    updateDatasetMenu();
+    window.dispatchEvent(new Event("leaderboard-rendered"));
+  }
+
+  document.querySelectorAll("thead th").forEach(th => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      if(!key) return;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      render();
     });
+  });
 
-    document.getElementById("search").addEventListener("input", render);
-    document.getElementById("exclude").addEventListener("input", render);
+  document.getElementById("search").addEventListener("input", render);
+  document.getElementById("exclude").addEventListener("input", render);
 
-    document.querySelectorAll("#datasetMenu button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        selectedDataset = btn.dataset.dataset || "overall";
-        render();
-      });
+  document.querySelectorAll("#datasetMenu button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedDataset = btn.dataset.dataset || "overall";
+      render();
     });
+  });
 
-    recompute();
-    render();
-  </script>
+  recompute();
+  render();
+</script>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-  <script>
-  (() => {
-    const CANVAS_ID = "bitsByteTimeChart";
-    const SCALE_KEY = "bitsByteTimeChart-scale";
-    const SCALE_TOGGLE_ID = "scaleToggleBtn";
+<script>
+(() => {
+  const CANVAS_ID = "bitsByteTimeChart";
+  const SCALE_KEY = "bitsByteTimeChart-scale";
+  const SCALE_TOGGLE_ID = "scaleToggleBtn";
 
-    let chart = null;
-    let debounceTimer = null;
-    let useLogScale = localStorage.getItem(SCALE_KEY) === "log";
+  let chart = null;
+  let debounceTimer = null;
+  let useLogScale = localStorage.getItem(SCALE_KEY) === "log";
 
-    const norm = (s) => (s || "").toString().trim().toLowerCase();
-    const toNum = (s) => {
-      const cleaned = (s || "")
-        .toString()
-        .replace(",", ".")
-        .replace(/[^0-9.+-eE]/g, "");
-      const v = Number.parseFloat(cleaned);
-      return Number.isFinite(v) ? v : null;
-    };
+  const norm = (s) => (s || "").toString().trim().toLowerCase();
+  const toNum = (s) => {
+    const cleaned = (s || "")
+      .toString()
+      .replace(",", ".")
+      .replace(/[^0-9.+-eE]/g, "");
+    const v = Number.parseFloat(cleaned);
+    return Number.isFinite(v) ? v : null;
+  };
 
-    function findResultsTable() {
-      const tables = Array.from(document.querySelectorAll("table"));
-      return tables.find(t => {
-        const headerText = norm(t.querySelector("thead")?.innerText || t.querySelector("tr")?.innerText);
-        return headerText.includes("t_comp") && headerText.includes("t_decomp") && headerText.includes("rank");
-      }) || null;
+  function findResultsTable() {
+    const tables = Array.from(document.querySelectorAll("table"));
+    return tables.find(t => {
+      const headerText = norm(t.querySelector("thead")?.innerText || t.querySelector("tr")?.innerText);
+      return headerText.includes("t_comp") && headerText.includes("t_decomp") && headerText.includes("rank");
+    }) || null;
+  }
+
+  function getColumnIndexMap(table) {
+    const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
+    if (!headerRow) return null;
+    const headerCells = Array.from(headerRow.querySelectorAll("th,td"));
+    const map = new Map();
+    headerCells.forEach((cell, idx) => map.set(norm(cell.textContent), idx));
+    return map;
+  }
+
+  function pickCol(map, candidates) {
+    for (const c of candidates) {
+      const key = norm(c);
+      for (const [k, idx] of map.entries()) {
+        if (k === key || k.includes(key)) return idx;
+      }
     }
+    return null;
+  }
 
-    function getColumnIndexMap(table) {
-      const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
-      if (!headerRow) return null;
-      const headerCells = Array.from(headerRow.querySelectorAll("th,td"));
-      const map = new Map();
-      headerCells.forEach((cell, idx) => map.set(norm(cell.textContent), idx));
-      return map;
+  function visibleRows(table) {
+    const tbody = table.querySelector("tbody");
+    const rows = Array.from((tbody || table).querySelectorAll("tr"));
+    return rows.filter(r => {
+      const style = window.getComputedStyle(r);
+      return style.display !== "none" && style.visibility !== "hidden";
+    });
+  }
+
+  function extractPoints(table) {
+    const colMap = getColumnIndexMap(table);
+    if (!colMap) return [];
+
+    const iName  = pickCol(colMap, ["compressor", "name", "method"]);
+    const iBits  = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
+    const iTotal = pickCol(colMap, ["t_total", "t_total (s)", "total"]);
+    if (iBits == null || iTotal == null) return [];
+
+    const rows = visibleRows(table);
+    const points = [];
+    for (const r of rows) {
+      const cells = Array.from(r.querySelectorAll("td,th"));
+      const need = Math.max(iBits, iTotal, (iName ?? 0)) + 1;
+      if (cells.length < need) continue;
+
+      const bitsByte = toNum(cells[iBits]?.textContent);
+      const ttot = toNum(cells[iTotal]?.textContent);
+      if (bitsByte == null || ttot == null) continue;
+      if (!(ttot > 0) || !(bitsByte > 0)) continue;
+
+      const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
+      points.push({ x: ttot, y: bitsByte, name });
     }
+    return points;
+  }
 
-    function pickCol(map, candidates) {
-      for (const c of candidates) {
-        const key = norm(c);
-        for (const [k, idx] of map.entries()) {
-          if (k === key || k.includes(key)) return idx;
+  function themeChartColors(){
+    const css = getComputedStyle(document.documentElement);
+    const textColor = (css.getPropertyValue("--chart-text") || "").trim() || "#000";
+    const gridColor = (css.getPropertyValue("--chart-grid") || "").trim() || "rgba(0,0,0,.2)";
+    const pointColor = (css.getPropertyValue("--chart-point") || "").trim() || textColor;
+    return { textColor, gridColor, pointColor };
+  }
+
+  function buildColorMapFromData(){
+    const m = new Map();
+    try{
+      if (typeof currentData !== "undefined" && Array.isArray(currentData)){
+        for (const r of currentData){
+          const name = (r.group || "").trim();
+          const c = (r.color || "").trim();
+          if (name && c) m.set(norm(name), c);
         }
       }
-      return null;
-    }
+    }catch(_){}
+    return m;
+  }
 
-    function visibleRows(table) {
-      const tbody = table.querySelector("tbody");
-      const rows = Array.from((tbody || table).querySelectorAll("tr"));
-      return rows.filter(r => {
-        const style = window.getComputedStyle(r);
-        return style.display !== "none" && style.visibility !== "hidden";
-      });
-    }
+  function upperL(x, a, b, k, s){
+    if (x <= b) return null;
+    return a + k / Math.log(1 + (x - b) / s);
+  }
 
-    function extractPoints(table) {
-      const colMap = getColumnIndexMap(table);
-      if (!colMap) return [];
+  const L = { a: 4.00, b: 0.02, k: 1.20, s: 1.00 };
 
-      const iName  = pickCol(colMap, ["compressor", "name", "method"]);
-      const iBits  = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
-      const iTotal = pickCol(colMap, ["t_total", "t_total (s)", "total"]);
-      if (iBits == null || iTotal == null) return [];
+  function updateScaleButton(){
+    const btn = document.getElementById(SCALE_TOGGLE_ID);
+    if (!btn) return;
+    btn.textContent = useLogScale ? "Use normal scale" : "Use logarithmic scale";
+    btn.setAttribute("aria-pressed", String(useLogScale));
+  }
 
-      const rows = visibleRows(table);
-      const points = [];
-      for (const r of rows) {
-        const cells = Array.from(r.querySelectorAll("td,th"));
-        const need = Math.max(iBits, iTotal, (iName ?? 0)) + 1;
-        if (cells.length < need) continue;
+  function renderPlot(points) {
+    const canvas = document.getElementById(CANVAS_ID);
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-        const bitsByte = toNum(cells[iBits]?.textContent);
-        const ttot = toNum(cells[iTotal]?.textContent);
-        if (bitsByte == null || ttot == null) continue;
-        if (!(ttot > 0) || !(bitsByte > 0)) continue;
+    if (chart) chart.destroy();
 
-        const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
-        points.push({ x: ttot, y: bitsByte, name });
+    const { textColor, gridColor, pointColor } = themeChartColors();
+    const colorMap = buildColorMapFromData();
+    const colors = points.map(p => colorMap.get(norm(p.name)) || pointColor);
+
+    const xs = points.map(p => p.x);
+    const ys = points.map(p => p.y);
+
+    const minX = xs.length ? Math.min(...xs) : (L.b + 0.1);
+    const maxX = xs.length ? Math.max(...xs) : (L.b + 10);
+    const yMax = ys.length ? (Math.max(...ys) * 1.05) : (L.a * 2);
+
+    const N = 260;
+    const xStart = Math.max(L.b + 1e-6, minX);
+    const xEnd   = Math.max(xStart * 1.001, maxX * 1.05);
+    const dxMin = Math.max(1e-6, xStart - L.b);
+    const dxMax = Math.max(dxMin * 1.0001, xEnd - L.b);
+    const ratio = dxMax / dxMin;
+
+    const lcurve = [];
+    for (let i = 0; i < N; i++){
+      const dx = dxMin * Math.pow(ratio, i / (N - 1));
+      const x  = L.b + dx;
+      const y  = upperL(x, L.a, L.b, L.k, L.s);
+      if (y != null && Number.isFinite(y) && y > 0 && y <= yMax){
+        lcurve.push({ x, y });
       }
-      return points;
     }
 
-    function themeChartColors(){
-      const css = getComputedStyle(document.documentElement);
-      const textColor = (css.getPropertyValue("--chart-text") || "").trim() || "#000";
-      const gridColor = (css.getPropertyValue("--chart-grid") || "").trim() || "rgba(0,0,0,.2)";
-      const pointColor = (css.getPropertyValue("--chart-point") || "").trim() || textColor;
-      return { textColor, gridColor, pointColor };
-    }
-
-    function buildColorMapFromData(){
-      const m = new Map();
-      try{
-        if (typeof currentData !== "undefined" && Array.isArray(currentData)){
-          for (const r of currentData){
-            const name = (r.group || "").trim();
-            const c = (r.color || "").trim();
-            if (name && c) m.set(norm(name), c);
+    chart = new Chart(ctx, {
+      data: {
+        datasets: [
+          {
+            type: "line",
+            data: lcurve,
+            borderColor: textColor,
+            borderWidth: 2,
+            pointRadius: 0,
+            tension: 0,
+            fill: false
+          },
+          {
+            type: "scatter",
+            label: "Compressor",
+            data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointBackgroundColor: colors,
+            pointBorderColor: "#000000",
+            pointBorderWidth: 1.5,
+            pointHoverBorderWidth: 2
           }
-        }
-      }catch(_){}
-      return m;
-    }
-
-    function upperL(x, a, b, k, s){
-      if (x <= b) return null;
-      return a + k / Math.log(1 + (x - b) / s);
-    }
-
-    const L = { a: 4.00, b: 0.02, k: 1.20, s: 1.00 };
-
-    function updateScaleButton(){
-      const btn = document.getElementById(SCALE_TOGGLE_ID);
-      if (!btn) return;
-      btn.textContent = useLogScale ? "Use normal scale" : "Use logarithmic scale";
-      btn.setAttribute("aria-pressed", String(useLogScale));
-    }
-
-    function renderPlot(points) {
-      const canvas = document.getElementById(CANVAS_ID);
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      if (chart) chart.destroy();
-
-      const { textColor, gridColor, pointColor } = themeChartColors();
-      const colorMap = buildColorMapFromData();
-      const colors = points.map(p => colorMap.get(norm(p.name)) || pointColor);
-
-      const xs = points.map(p => p.x);
-      const ys = points.map(p => p.y);
-
-      const minX = xs.length ? Math.min(...xs) : (L.b + 0.1);
-      const maxX = xs.length ? Math.max(...xs) : (L.b + 10);
-      const yMax = ys.length ? (Math.max(...ys) * 1.05) : (L.a * 2);
-
-      const N = 260;
-      const xStart = Math.max(L.b + 1e-6, minX);
-      const xEnd   = Math.max(xStart * 1.001, maxX * 1.05);
-      const dxMin = Math.max(1e-6, xStart - L.b);
-      const dxMax = Math.max(dxMin * 1.0001, xEnd - L.b);
-      const ratio = dxMax / dxMin;
-
-      const lcurve = [];
-      for (let i = 0; i < N; i++){
-        const dx = dxMin * Math.pow(ratio, i / (N - 1));
-        const x  = L.b + dx;
-        const y  = upperL(x, L.a, L.b, L.k, L.s);
-        if (y != null && Number.isFinite(y) && y > 0 && y <= yMax){
-          lcurve.push({ x, y });
-        }
-      }
-
-      chart = new Chart(ctx, {
-        data: {
-          datasets: [
-            {
-              type: "line",
-              data: lcurve,
-              borderColor: textColor,
-              borderWidth: 2,
-              pointRadius: 0,
-              tension: 0,
-              fill: false
-            },
-            {
-              type: "scatter",
-              label: "Compressor",
-              data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
-              pointRadius: 6,
-              pointHoverRadius: 8,
-              pointBackgroundColor: colors,
-              pointBorderColor: "#000000",
-              pointBorderWidth: 1.5,
-              pointHoverBorderWidth: 2
-            }
-          ]
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        parsing: false,
+        scales: {
+          x: {
+            type: useLogScale ? "logarithmic" : "linear",
+            min: useLogScale ? undefined : 0,
+            title: { display: true, text: "t_total (seconds)", color: textColor },
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          },
+          y: {
+            type: useLogScale ? "logarithmic" : "linear",
+            title: { display: true, text: "bits/byte", color: textColor },
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          }
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          parsing: false,
-          scales: {
-            x: {
-              type: useLogScale ? "logarithmic" : "linear",
-              min: useLogScale ? undefined : 0,
-              title: { display: true, text: "t_total (seconds)", color: textColor },
-              ticks: { color: textColor },
-              grid: { color: gridColor }
-            },
-            y: {
-              type: useLogScale ? "logarithmic" : "linear",
-              title: { display: true, text: "bits/byte", color: textColor },
-              ticks: { color: textColor },
-              grid: { color: gridColor }
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const r = ctx.raw;
+                const name = r.name ? `${r.name}: ` : "";
+                return `${name}bits/byte=${r.y}, total=${r.x}s`;
+              }
             }
           },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: (ctx) => {
-                  const r = ctx.raw;
-                  const name = r.name ? `${r.name}: ` : "";
-                  return `${name}bits/byte=${r.y}, total=${r.x}s`;
-                }
-              }
-            },
-            legend: { display: false }
-          }
+          legend: { display: false }
         }
+      }
+    });
+  }
+
+  function updatePlot() {
+    const table = findResultsTable();
+    if (!table) return;
+    const points = extractPoints(table);
+    renderPlot(points);
+    updateScaleButton();
+  }
+
+  function scheduleUpdate() {
+    window.clearTimeout(debounceTimer);
+    debounceTimer = window.setTimeout(updatePlot, 150);
+  }
+
+  window.addEventListener("load", () => {
+    updateScaleButton();
+
+    const scaleBtn = document.getElementById(SCALE_TOGGLE_ID);
+    if (scaleBtn) {
+      scaleBtn.addEventListener("click", () => {
+        useLogScale = !useLogScale;
+        localStorage.setItem(SCALE_KEY, useLogScale ? "log" : "linear");
+        updatePlot();
       });
     }
 
-    function updatePlot() {
-      const table = findResultsTable();
-      if (!table) return;
-      const points = extractPoints(table);
-      renderPlot(points);
-      updateScaleButton();
-    }
+    updatePlot();
+    const table = findResultsTable();
+    if (!table) return;
+    const obs = new MutationObserver(scheduleUpdate);
+    obs.observe(table, { childList: true, subtree: true, characterData: true });
+  });
 
-    function scheduleUpdate() {
-      window.clearTimeout(debounceTimer);
-      debounceTimer = window.setTimeout(updatePlot, 150);
-    }
+  window.addEventListener("dp-theme-change", updatePlot);
+  window.addEventListener("leaderboard-rendered", updatePlot);
+})();
+</script>
 
-    window.addEventListener("load", () => {
-      updateScaleButton();
+<script>
+(() => {
+  const btn = document.getElementById("backToTopBtn");
+  if (!btn) return;
 
-      const scaleBtn = document.getElementById(SCALE_TOGGLE_ID);
-      if (scaleBtn) {
-        scaleBtn.addEventListener("click", () => {
-          useLogScale = !useLogScale;
-          localStorage.setItem(SCALE_KEY, useLogScale ? "log" : "linear");
-          updatePlot();
-        });
-      }
+  function updateVisibility(){
+    btn.classList.toggle("show", window.scrollY > 280);
+  }
 
-      updatePlot();
-      const table = findResultsTable();
-      if (!table) return;
-      const obs = new MutationObserver(scheduleUpdate);
-      obs.observe(table, { childList: true, subtree: true, characterData: true });
-    });
+  btn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 
-    window.addEventListener("dp-theme-change", updatePlot);
-    window.addEventListener("leaderboard-rendered", updatePlot);
-  })();
-  </script>
-
-  <script>
-  (() => {
-    const btn = document.getElementById("backToTopBtn");
-    if (!btn) return;
-
-    function updateVisibility(){
-      btn.classList.toggle("show", window.scrollY > 280);
-    }
-
-    btn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-
-    window.addEventListener("scroll", updateVisibility, { passive: true });
-    window.addEventListener("load", updateVisibility);
-  })();
-  </script>
-</body>
+  window.addEventListener("scroll", updateVisibility, { passive: true });
+  window.addEventListener("load", updateVisibility);
+})();
+</script>
+  </body>
 </html>
