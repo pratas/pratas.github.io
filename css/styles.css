@@ -2,6 +2,8 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   line-height: 1.4;
+  background: #ffffff;
+  color: #111;
 }
 
 header {
@@ -21,12 +23,14 @@ nav ul {
   margin: 0;
   padding: 0.5rem;
   list-style: none;
+  flex-wrap: wrap;
 }
 
 nav a {
   color: #fff;
   padding: 0.5rem 1rem;
   text-decoration: none;
+  border-radius: 6px;
 }
 
 nav a:hover {
@@ -34,48 +38,203 @@ nav a:hover {
 }
 
 main {
-  width: 80%;        
-  max-width: 900px;  /* max width to avoid too wide on large screens */
-  margin: 0 auto;    /* center horizontally */
+  width: 80%;
+  max-width: 900px;
+  margin: 0 auto;
   padding: 2rem;
-  text-align: left; /* to justify text */
+  text-align: left;
 }
 
 a {
-  color: #0b3ba7;              /* Same as headings and buttons */
-  text-decoration: none;       /* Clean look */
-  /*border-bottom: 1px dashed #00796b;*/  /* Subtle cue it's a link */
-  /*transition: color 0.3s ease, border-bottom 0.3s ease;*/
+  color: #0b3ba7;
+  text-decoration: none;
 }
 
 a:hover {
-  /* color: #004d40; */             /* Darker shade on hover */
   font-weight: bold;
-  /*border-bottom: 1px solid #004d40;*/  /* Stronger underline on hover */
 }
 
 h2 {
   color: #0b3ba7;
+  margin-top: 0;
 }
 
-/* Golden-star bullets for Research list */
+h3 {
+  color: #0b3ba7;
+}
+
+/* ---------- About section ---------- */
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 24px;
+  align-items: stretch;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.about-links-box {
+  grid-column: 1;
+  grid-row: 1;
+  background: #ffffff;
+  border: 1px solid #d6e0f5;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.about-right {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.about-main,
+.glance-box,
+.biography-box {
+  background: #ffffff;
+  border: 1px solid #d6e0f5;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.about-lead {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-top: 0;
+}
+
+.about-links-box h3,
+.glance-box h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.05rem;
+}
+
+.profile-links,
+.glance-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-links {
+  flex: 1;
+}
+
+.profile-links li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e8eefb;
+}
+
+.profile-links li:last-child {
+  border-bottom: none;
+}
+
+.glance-list li:last-child {
+  border-bottom: none;
+}
+
+.profile-links a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #0b3ba7;
+}
+
+.profile-links a:hover {
+  color: #1852d4;
+}
+
+.profile-links a i {
+  margin-right: 8px;
+  width: 20px;
+  text-align: center;
+}
+
+.profile-links span {
+  font-size: 0.92rem;
+  color: #555;
+  padding-left: 28px;
+}
+
+.glance-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #e8eefb;
+  line-height: 1.4;
+}
+
+.about-bio-toggle {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid #e8eefb;
+  text-align: center;
+}
+
+.bio-btn {
+  display: inline-block;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.biography-box-full {
+  margin-top: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about-links-box,
+  .about-right {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .about-links-box {
+    height: auto;
+  }
+
+  .about-bio-toggle {
+    margin-top: 18px;
+  }
+}
+
+/* ---------- Golden-star bullets for Research list ---------- */
+
 .research-list {
-  list-style: none;          /* remove default dots */
-  padding-left: 0;           /* reset default indent */
+  list-style: none;
+  padding-left: 0;
   margin-left: 1.2em;
 }
 
 .research-list li {
   position: relative;
-  padding-left: 1.2em;       /* space for the star */
+  padding-left: 1.2em;
 }
 
 .research-list li::before {
-  content: "★";              /* star character */
+  content: "★";
   position: absolute;
   left: 0;
-  top: 0.1em;               /* tweak vertical alignment */
-  color: #d4af37;            /* “gold” */
+  top: 0.1em;
+  color: #d4af37;
   font-size: 1em;
   line-height: 1;
 }
@@ -93,11 +252,11 @@ h2 {
 }
 
 .students-list li::before {
-  content: "👤";         /* person icon */
+  content: "👤";
   position: absolute;
   left: 0;
   top: 0.1em;
-  font-size: 1em;        /* match text size */
+  font-size: 1em;
   line-height: 1;
 }
 
@@ -122,7 +281,8 @@ h2 {
   line-height: 1;
 }
 
-/* Grid para os cards */
+/* ---------- Software / outreach cards ---------- */
+
 .software-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -159,7 +319,10 @@ h2 {
   margin-top: 0;
   margin-bottom: 0.5rem;
   font-size: 1.2rem;
+  color: #fff;
 }
+
+/* ---------- Legacy social icons block ---------- */
 
 .social-icons {
   text-align: center;
@@ -176,103 +339,102 @@ h2 {
 .social-icons a:hover {
   color: #1852d4;
   transform: scale(1.2);
+  font-weight: normal;
 }
 
-.ait-container { display: flow-root; }
+/* ---------- AIT / challenge floated image blocks ---------- */
+
+.ait-container {
+  display: flow-root;
+}
 
 .ait-container__img {
   float: right;
   width: min(32%, 320px);
   height: auto;
-  margin: 0 0 0rem 1.25rem; /* space between image and text */
-  border-radius: 8px;       /* optional */
+  margin: 0 0 0rem 1.25rem;
+  border-radius: 8px;
   object-fit: cover;
 }
 
-@media (max-width: 700px) {
-  .ait-container__img {
-    float: none;
-    display: block;
-    margin: 0 auto 1rem;
-    width: min(100%, 420px);
-  }
+.cha-container {
+  display: flow-root;
 }
-
-.ua-contact-grid {
-    --ua-gap: 1.2rem;
-    --ua-pad: 1.25rem;
-    --ua-radius: 12px;
-    --ua-border: 1px solid rgba(0,0,0,.12);
-    --ua-card-bg: linear-gradient(180deg, #ededed 0%, #ededed 100%);
-    --ua-muted: #555;
-
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--ua-gap);
-
-    /* equal-height columns: stretch items to row height */
-    align-items: stretch;
-}
-
-@media (min-width: 720px) {
-    .ua-contact-grid { grid-template-columns: 1fr 1fr; }
-}
-
-.ua-card {
-    background: var(--ua-card-bg);
-    border: var(--ua-border);
-    border-radius: var(--ua-radius);
-    padding: var(--ua-pad);
-
-    /* fill the grid track height without affecting subsequent content */
-    height: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-}
-
-.ua-card h3 {
-    margin: 0 0 .6rem;
-    font-size: 1.15rem;
-}
-.ua-card h4 {
-    margin: 1rem 0 .35rem;
-    font-size: .95rem;
-    color: var(--ua-muted);
-    letter-spacing: .02em;
-    text-transform: uppercase;
-}
-.ua-card address {
-    font-style: normal;
-    line-height: 1.45;
-}
-.ua-card a {
-    text-decoration: none;
-    border-bottom: 1px dotted currentColor;
-}
-.ua-card a:hover { border-bottom-style: solid; }
-.ua-list { margin: .2rem 0 0; padding-left: 1.1rem; }
-.ua-list li { margin: .35rem 0; }
-
-.cha-container { display: flow-root; }
 
 .cha-container__img {
   float: right;
   width: min(32%, 320px);
   height: auto;
-  margin: 0 0 0rem 1.25rem; /* space between image and text */
-  border-radius: 8px;       /* optional */
+  margin: 0 0 0rem 1.25rem;
+  border-radius: 8px;
   object-fit: cover;
 }
 
-@media (max-width: 700px) {
-  .cha-container__img {
-    float: none;
-    display: block;
-    margin: 0 auto 1rem;
-    width: min(100%, 420px);
-  }
+/* ---------- Contact cards ---------- */
+
+.ua-contact-grid {
+  --ua-gap: 1.2rem;
+  --ua-pad: 1.25rem;
+  --ua-radius: 12px;
+  --ua-border: 1px solid rgba(0,0,0,.12);
+  --ua-card-bg: linear-gradient(180deg, #ededed 0%, #ededed 100%);
+  --ua-muted: #555;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ua-gap);
+  align-items: stretch;
 }
+
+.ua-card {
+  background: var(--ua-card-bg);
+  border: var(--ua-border);
+  border-radius: var(--ua-radius);
+  padding: var(--ua-pad);
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.ua-card h3 {
+  margin: 0 0 .6rem;
+  font-size: 1.15rem;
+}
+
+.ua-card h4 {
+  margin: 1rem 0 .35rem;
+  font-size: .95rem;
+  color: var(--ua-muted);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+.ua-card address {
+  font-style: normal;
+  line-height: 1.45;
+}
+
+.ua-card a {
+  text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+}
+
+.ua-card a:hover {
+  border-bottom-style: solid;
+  font-weight: normal;
+}
+
+.ua-list {
+  margin: .2rem 0 0;
+  padding-left: 1.1rem;
+}
+
+.ua-list li {
+  margin: .35rem 0;
+}
+
+/* ---------- Buttons ---------- */
 
 button {
   background: #0b3ba7;
@@ -280,6 +442,7 @@ button {
   border: none;
   padding: 0.5rem 1rem;
   cursor: pointer;
+  border-radius: 6px;
 }
 
 button:hover {
@@ -290,6 +453,8 @@ button:hover {
   display: none;
 }
 
+/* ---------- Footer ---------- */
+
 footer {
   background: #0b3ba7;
   color: #fff;
@@ -297,16 +462,7 @@ footer {
   padding: 1rem;
 }
 
-@media (max-width: 600px) {
-  nav ul {
-    flex-direction: column;
-  }
-  
-  main {
-    width: 92%;      /* full width on small screens */
-    padding: 1rem;    /* reduced padding for mobile */
-  }
-}
+/* ---------- Back to top ---------- */
 
 #topBtn {
   position: fixed;
@@ -324,5 +480,46 @@ footer {
 }
 
 #topBtn:hover {
-  background-color: #246EFF
+  background-color: #246EFF;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (min-width: 720px) {
+  .ua-contact-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about-links-box,
+  .about-right {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .ait-container__img,
+  .cha-container__img {
+    float: none;
+    display: block;
+    margin: 0 auto 1rem;
+    width: min(100%, 420px);
+  }
+}
+
+@media (max-width: 600px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  main {
+    width: 92%;
+    padding: 1rem;
+  }
 }
