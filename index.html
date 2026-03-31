@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>D. Pratas @ Interdisciplinary Informatics</title>
+  <title>Diogo Pratas Homepage</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
@@ -10,12 +10,12 @@
 <body>
 
   <header>
-    <h1>D. Pratas @ Interdisciplinary Informatics</h1>
+    <h1>Diogo Pratas</h1>
   </header>
 
   <nav>
     <ul>
-      <li><a href="#About">About</a></li>
+      <!--<li><a href="#About">About</a></li>-->
       <li><a href="#Research">Research</a></li>
       <li><a href="#Students">Students</a></li>
       <li><a href="#Publications">Publications</a></li>
@@ -28,57 +28,179 @@
   </nav>
 
   <main>
-    <section id="About">
-      <h2>About</h2>
+
+<section id="About">
+  <!--<h2>About</h2>-->
+
+  <div class="about-layout">
+    <aside class="about-links-box">
+      <!--<h3>Profiles & Links</h3>-->
+      <ul class="profile-links">
+        <li>
+          <a href="https://orcid.org/0000-0003-1176-552X" target="_blank" rel="noopener">
+            <i class="fab fa-orcid"></i> ORCID
+          </a>
+          <span>0000-0003-1176-552X</span>
+        </li>
+
+        <li>
+          <a href="https://scholar.google.com/citations?user=HasPwO0AAAAJ" target="_blank" rel="noopener">
+            <i class="fas fa-graduation-cap"></i> Google Scholar
+          </a>
+          <span>Article and Citation profile</span>
+        </li>
+
+        <li>
+          <a href="https://www.scopus.com/authid/detail.uri?authorId=49361962700" target="_blank" rel="noopener">
+            <i class="fas fa-book"></i> Scopus
+          </a>
+          <span>Author ID: 49361962700</span>
+        </li>
+
+        <li>
+          <a href="https://www.researchgate.net/profile/Diogo-Pratas" target="_blank" rel="noopener">
+            <i class="fab fa-researchgate"></i> ResearchGate
+          </a>
+          <span>Research profile</span>
+        </li>
+
+        <li>
+          <a href="https://www.cienciavitae.pt/portal/pt/5A1C-F0F0-7E62" target="_blank" rel="noopener">
+            <i class="fas fa-id-badge"></i> Ciência Vitae
+          </a>
+          <span>National academic CV</span>
+        </li>
+
+        <li>
+          <a href="https://www.ua.pt/pt/p/80334736" target="_blank" rel="noopener">
+            <i class="fas fa-building-columns"></i> University of Aveiro
+          </a>
+          <span>Institutional profile</span>
+        </li>
+
+        <li>
+          <a href="https://github.com/pratas" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+          <span>github.com/pratas</span>
+        </li>
+
+        <li>
+          <a href="https://www.linkedin.com/in/diogo-pratas" target="_blank" rel="noopener">
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
+          <span>Professional profile</span>
+        </li>
+
+        <li>
+          <a href="https://twitter.com/dgpratas" target="_blank" rel="noopener">
+            <i class="fab fa-x-twitter"></i> X Social Network
+          </a>
+          <span>@dgpratas</span>
+        </li>
+
+        <li>
+          <a href="https://bsky.app/profile/dgpratas.bsky.social" target="_blank" rel="noopener">
+            <i class="fas fa-cloud"></i> Bluesky Network
+          </a>
+          <span>@dgpratas.bsky.social</span>
+        </li>
+      </ul>
+
+      <div class="about-bio-toggle">
+        <button id="toggleBiography" class="bio-btn">Show Biography</button>
+      </div>
+    </aside>
+
+    <div class="about-right">
+      <div class="about-main">
         <p align="justify">
-          Diogo Pratas is a researcher in interdisciplinary informatics, dedicated to developing computational methods that bridge informatics with biomedical, anthropological, and historical research. His work focuses on analyzing and interpreting complex data. Current projects include efficient compression of biological data, reconstruction and analysis of viral genomes, metagenomic studies of ancient DNA, and the application of machine learning to date and localize ancient artifacts such as metals, texts, and genetic material.
+          <strong>Diogo Pratas</strong> is an <strong>Assistant Researcher in Informatics</strong>
+          at the <strong>University of Aveiro</strong> and a <strong>Visiting Researcher</strong>
+          at the <strong>University of Helsinki</strong>.
         </p>
 
-        <div class="social-icons">
-          <a href="https://www.researchgate.net/profile/Diogo-Pratas" target="_blank" title="ResearchGate">
-          <i class="fab fa-researchgate fa-2x"></i>
-          </a>
-          <a href="https://scholar.google.com/citations?user=HasPwO0AAAAJ" target="_blank" title="Google Scholar">
-          <i class="fas fa-graduation-cap fa-2x"></i>
-          </a>
-          <a href="https://orcid.org/0000-0003-1176-552X" target="_blank" title="ORCID">
-          <i class="fab fa-orcid fa-2x"></i>
-          </a>
-          <a href="https://www.scopus.com/authid/detail.uri?authorId=49361962700" target="_blank" title="Scopus">
-          <i class="fas fa-book fa-2x"></i>
-          </a>
-          <a href="https://www.linkedin.com/in/diogo-pratas" target="_blank" title="LinkedIn">
-          <i class="fab fa-linkedin fa-2x"></i>
-          </a>
-          <a href="https://github.com/pratas" target="_blank" title="GitHub">
-          <i class="fab fa-github fa-2x"></i>
-          </a>
-          <a href="https://twitter.com/dgpratas" target="_blank" title="X">
-          <i class="fab fa-x-twitter fa-2x"></i>
-          </a>
-          <a href="https://bsky.app/profile/dgpratas.bsky.social" target="_blank" title="Bluesky">
-          <i class="fas fa-cloud fa-2x"></i>
-          </a>
-          <br><br>
-          <button id="toggleBiography">Show Biography</button>
-          <ul id="biography" class="hidden">
-            <p align="justify">
-            Diogo Pratas was born in Aveiro, in 1986.
-            He graduated in Information and Communication Technologies at the University of Aveiro, in 2008. During his degree, he participated in the Erasmus program in Computer Engineering at the Pontifical University of Salamanca, Spain. He worked in the private sector from 2008 to 2010 in the areas of ​​networks and IT security and in the development of Linux systems. In 2016, he obtained his PhD in Informatics at the University of Aveiro with a thesis on compression and analysis of genomic sequences. He did a post-doctorate in Computer Science from 2016 to 2019 at the University of Aveiro.
-            In 2019, he was a Staff Bioinformatician at the University of Helsinki, Finland.
-            Since the end of 2019, he has been an Investigador Auxiliar at the University of Aveiro in the area of Interdisciplinary Informatics. Since 2022, he has been a visiting researcher at the Department of Virology at the University of Helsinki, Finland. Since 2019, he teaches Algorithmic Information Theory at the Department of Electronics, Telecommunications, and Informatics at the University of Aveiro.
-            He has organized several scientific conferences, workshops, and competitions, including the International Conference on Algorithms for Computational Biology, the Workshop on Genomics for Physicians, and the Portuguese League of Bioinformatics.
-            He is member of several scientific associations, including the European Society for Clinical Virology (ESCV) and the Portuguese Association for Pattern Recognition (APRP).
-            His main areas of interest and research are Bioinformatics, Computational virology, Cultural Heritage, Artificial Inteligence, and Information Theory. 
-            He has participated as an invited speaker at various international conferences and scientific meetings and is the author of more than one hundred publications in the areas of  Medicine, Biology, and Informatics.
-            </p>
-          </ul>
-        </div>
-    </section>
+        <p align="justify">
+          His main research focus is the <strong>computational analysis, reconstruction, and interpretation of data</strong>.
+          His work combines <strong>bioinformatics</strong>,
+          <strong>computational virology</strong>, <strong>algorithmic information theory</strong>,
+          <strong>data compression</strong>, <strong>machine learning</strong>, and <strong>Cultural Heritage</strong>, with particular emphasis on
+          developing computational methods for genome reconstruction, biological sequence analysis,
+          ancient DNA, and the dating and localization of historical artifacts.
+        </p>
+
+        <p align="justify">
+          His research spans <strong>core computer science methods</strong> with interdisciplinary
+          applications in biomedicine, anthropology, and cultural heritage. In particular, he develops
+          algorithmic and statistical approaches for biological data compression, metagenomic analysis,
+          viral genomics, and machine learning methods for the analysis of complex historical,
+          biomedical, and biological data.
+        </p>
+      </div>
+
+      <div class="glance-box">
+        <h3>At a Glance</h3>
+        <ul class="glance-list">
+          <li><strong>Position:</strong> Assistant Researcher in Informatics</li>
+          <li><strong>Institution:</strong> University of Aveiro</li>
+          <li><strong>Visiting:</strong> University of Helsinki</li>
+          <li><strong>PhD:</strong> Informatics, University of Aveiro</li>
+          <li><strong>Main focus:</strong> Analysis, reconstruction, and interpretation of "complex" data</li>
+          <li><strong>Publications:</strong> 100+ scientific publications</li>
+          <li><strong>Areas:</strong> Bioinformatics, Computational Virology, Data Compression, Artificial Intelligence, Machine Learning, Information Theory, Cultural Heritage</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="biography" class="hidden biography-box biography-box-full">
+    <p align="justify">
+      Diogo Pratas was born in Aveiro, Portugal, in 1986. He graduated in Information and
+      Communication Technologies from the University of Aveiro in 2008. During his undergraduate
+      studies, he participated in the Erasmus programme in Computer Engineering at the Pontifical
+      University of Salamanca, Spain.
+    </p>
+
+    <p align="justify">
+      From 2008 to 2010, he worked in the private sector in the areas of networks, IT security,
+      and Linux systems development. In 2016, he obtained his PhD in Informatics at the University
+      of Aveiro with a thesis on compression and analysis of genomic sequences. He then carried out
+      postdoctoral research in Computer Science at the University of Aveiro between 2016 and 2019.
+    </p>
+
+    <p align="justify">
+      In 2019, he worked as a Staff Bioinformatician at the University of Helsinki, Finland. Since
+      late 2019, he has been an Investigador Auxiliar (Assistant Researcher) at the University of
+      Aveiro in the area of Interdisciplinary Informatics. Since 2022, he has also been a Visiting
+      Researcher at the Department of Virology of the University of Helsinki. Since 2019, he has
+      been teaching Algorithmic Information Theory at the Department of Electronics,
+      Telecommunications and Informatics of the University of Aveiro.
+    </p>
+
+    <p align="justify">
+      He has organized several scientific conferences, workshops, and competitions, including the
+      International Conference on Algorithms for Computational Biology, the Workshop on Genomics for
+      Physicians, and the Portuguese League of Bioinformatics. He is a member of several scientific
+      associations, including the European Society for Clinical Virology (ESCV) and the Portuguese
+      Association for Pattern Recognition (APRP).
+    </p>
+
+    <p align="justify">
+      His main research interests include the analysis, reconstruction, and interpretation of data,
+      with applications in Bioinformatics, Computational Virology, Cultural Heritage, Artificial
+      Intelligence, and Information Theory. He has participated as an invited speaker at several
+      international conferences and scientific meetings and is the author of more than one hundred
+      publications in the areas of Informatics, Biology, and Medicine.
+    </p>
+  </div>
+  <br>
+</section>
+
+
 
     <section id="Research">
       <h2>Research</h2>
-      <p><strong>Computational analysis, reconstruction, and interpretation of &quot;complex&quot; data</strong>, with focus on the following areas:</p>
+      <p><strong>Computational analysis, reconstruction, and interpretation of data</strong>, with focus on the following areas:</p>
       <ul class="research-list">
         <li><p align="justify"><strong>Algorithmic Information Theory:</strong> Development of methodologies for generating and analyzing pseudo-random Turing Machines to identify those that produce statistically complex tape behaviors, along with the development of computational approaches to discover short Turing Machines that describe exact or approximate digital objects and to compute approximations of their logical depth.</p></li>    
         <li><p align="justify"><strong>Bioinformatics:</strong> Advanced genetic and structural analysis through the development of efficient computational tools. This includes genome classification, identification of patterns in biological sequences, and the reconstruction of ancient and modern genomes (mostly viruses and mitogenomes).</p></li>
