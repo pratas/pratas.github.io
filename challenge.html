@@ -358,13 +358,31 @@
     }
 
     .badge{
-      display:inline-block;
-      padding: 2px 6px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.08);
-      font-size: 0.95em;
+      font-size: 13px;
+      line-height: 1;
       color:rgba(255,255,255,.85);
+      box-sizing:border-box;
+    }
+
+    .badge.info{
+      min-width: 22px;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      background: rgba(255, 165, 0, 0.22);
+      border-color: rgba(255, 165, 0, 0.70);
+      color: #ffbf47;
+      font-weight: 800;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
 
     .swatch{
@@ -509,6 +527,12 @@
       border-color:#000;
       background:#fff;
       color:#000;
+    }
+
+    html.dp-light .badge.info{
+      background: #fff3e0;
+      border-color: #cc8400;
+      color: #a85a00;
     }
 
     html.dp-light #scaleToggleBtn,
@@ -783,7 +807,7 @@
   <button id="backToTopBtn" type="button" aria-label="Go to top">↑ Top</button>
 
   <script id="csv-data" type="text/plain">
-dataset,group,orig_bytes,comp_bytes,t_comp_s,t_decomp_s,ok,color
+  dataset,group,orig_bytes,comp_bytes,t_comp_s,t_decomp_s,ok,color
 A,gzip,1308765,765497,0.050,0.010,1,#99004C
 B,gzip,1168767,267569,0.030,0.000,1,#99004C
 C,gzip,2000000,651482,0.070,0.010,1,#99004C
@@ -3266,6 +3290,7 @@ N,paq8px-1,4194304,3194160,1045.080,1045.940,1,#444444
 O,paq8px-1,2607090,742792,469.570,471.770,1,#444444
 P,paq8px-1,2910138,2884659,716.400,714.830,1,#444444
 overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444  
+
   </script>
 
   <script>
@@ -3303,9 +3328,11 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
     return Number.isFinite(n) ? n : NaN;
   }
 
-  function toBool(x){
+  function parseOkStatus(x){
     const v = String(x).trim().toLowerCase();
-    return (v === "1" || v === "true" || v === "yes" || v === "ok" || v === "pass");
+    if (v === "2" || v === "info" || v === "warn" || v === "warning") return 2;
+    if (v === "1" || v === "true" || v === "yes" || v === "ok" || v === "pass") return 1;
+    return 0;
   }
 
   function fmt(n, d=3){
@@ -3354,7 +3381,7 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
       const comp = toNum(r.comp_bytes);
       const tc = toNum(r.t_comp_s);
       const td = toNum(r.t_decomp_s);
-      const ok = toBool(r.ok);
+      const ok = parseOkStatus(r.ok);
       const color = (r.color ?? "").trim();
 
       const ratio = (Number.isFinite(orig) && orig > 0 && Number.isFinite(comp)) ? (comp / orig) : NaN;
@@ -3396,7 +3423,7 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
           comp_bytes: 0,
           t_comp_s: 0,
           t_decomp_s: 0,
-          ok: true,
+          ok: 1,
           color: r.color || ""
         });
       }
@@ -3406,7 +3433,12 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
       acc.comp_bytes += Number.isFinite(r.comp_bytes) ? r.comp_bytes : 0;
       acc.t_comp_s += Number.isFinite(r.t_comp_s) ? r.t_comp_s : 0;
       acc.t_decomp_s += Number.isFinite(r.t_decomp_s) ? r.t_decomp_s : 0;
-      acc.ok = acc.ok && !!r.ok;
+
+      if (acc.ok !== 0) {
+        if (r.ok === 0) acc.ok = 0;
+        else if (r.ok === 2) acc.ok = 2;
+      }
+
       if(!acc.color && r.color) acc.color = r.color;
     }
 
@@ -3447,7 +3479,10 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
     const key = sortKey;
 
     out.sort((a, b) => {
-      if (key !== "rank" && a.ok !== b.ok) return a.ok ? -1 : 1;
+      if (key !== "rank" && a.ok !== b.ok) {
+        const priority = v => v === 1 ? 0 : v === 2 ? 1 : 2;
+        return priority(a.ok) - priority(b.ok);
+      }
 
       const va = a[key];
       const vb = b[key];
@@ -3470,8 +3505,10 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
   }
 
   function rankRows(rows){
+    const okPriority = v => v === 1 ? 0 : v === 2 ? 1 : 2;
+
     const rankedBase = [...rows].sort((a,b) =>
-      (a.ok===b.ok ? 0 : (a.ok ? -1 : 1)) ||
+      (okPriority(a.ok) - okPriority(b.ok)) ||
       (a.comp_bytes - b.comp_bytes) ||
       (a.t_total - b.t_total) ||
       a.group.localeCompare(b.group, undefined, { numeric:true, sensitivity:"base" })
@@ -3495,7 +3532,7 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
   }
 
   function getBaselineForDataset(datasetRows){
-    return datasetRows.find(x => x.group === WEISSMAN_BASELINE && x.ok) || null;
+    return datasetRows.find(x => x.group === WEISSMAN_BASELINE && x.ok === 1) || null;
   }
 
   function getWeissmanScore(r, baseline){
@@ -3540,7 +3577,7 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
     const baseline = getBaselineForDataset(getDatasetRows(selectedDataset));
 
     const top50 = filteredDatasetRows
-      .filter(r => r.ok)
+      .filter(r => r.ok === 1)
       .map(r => ({ ...r, weissman: getWeissmanScore(r, baseline) }))
       .filter(r => Number.isFinite(r.weissman))
       .sort((a, b) => b.weissman - a.weissman)
@@ -3557,7 +3594,10 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
       const r = top50[i];
       const tr = document.createElement("tr");
       const ratioPct = Number.isFinite(r.ratio) ? (100 * r.ratio).toFixed(1) + "%" : "—";
-      const badge = r.ok ? `<span class="badge">✅</span>` : `<span class="badge">❌</span>`;
+      const badge =
+        r.ok === 1 ? `<span class="badge">✅</span>` :
+        r.ok === 2 ? `<span class="badge info" title="Informational status">i</span>` :
+        `<span class="badge">❌</span>`;
       const swatch = r.color ? `<span class="swatch" style="background:${escapeHtml(r.color)}"></span>` : "";
 
       tr.innerHTML = `
@@ -3612,7 +3652,10 @@ overall,paq8px-1,38289319,21359591,7636.610,7643.130,1,#444444
     for(const r of filtered){
       const tr = document.createElement("tr");
       const ratioPct = Number.isFinite(r.ratio) ? (100 * r.ratio).toFixed(1) + "%" : "—";
-      const badge = r.ok ? `<span class="badge">✅</span>` : `<span class="badge">❌</span>`;
+      const badge =
+        r.ok === 1 ? `<span class="badge">✅</span>` :
+        r.ok === 2 ? `<span class="badge info" title="Informational status">i</span>` :
+        `<span class="badge">❌</span>`;
       const swatch = r.color ? `<span class="swatch" style="background:${escapeHtml(r.color)}"></span>` : "";
 
       tr.innerHTML = `
