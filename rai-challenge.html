@@ -1,0 +1,1728 @@
+<!doctype html>
+<html lang="en" class="dp-dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAI Data Compression Challenge — Raw Astronomical Image Compression Benchmark</title>
+  <meta name="color-scheme" content="light dark">
+
+  <script>
+  (() => {
+    const KEY = "dp-theme";
+    const saved = localStorage.getItem(KEY);
+    const theme = (saved === "light" || saved === "dark") ? saved : "dark";
+    const root = document.documentElement;
+    root.classList.toggle("dp-dark", theme === "dark");
+    root.classList.toggle("dp-light", theme === "light");
+  })();
+  </script>
+
+  <style id="dp-theme-toggle-style">
+    #dpThemeToggle{
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 999999;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 2px solid rgba(0,0,0,.35);
+      background: rgba(255,255,255,.98);
+      color: #000;
+      font: 800 14px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      cursor: pointer;
+    }
+    #dpThemeToggle:focus,
+    #backToTopBtn:focus{
+      outline: 3px solid currentColor;
+      outline-offset: 2px;
+    }
+    html.dp-dark #dpThemeToggle{
+      background: rgba(15,18,23,.92);
+      color: #e9edf1;
+      border-color: rgba(255,255,255,.25);
+    }
+    @media print{
+      #dpThemeToggle,
+      #backToTopBtn{ display:none; }
+    }
+  </style>
+
+  <style>
+    :root{
+      --bg:#050814;
+      --card:rgba(255,255,255,.06);
+      --card-strong:rgba(255,255,255,.08);
+      --border:rgba(255,255,255,.12);
+      --text:#f3f4f6;
+      --muted:rgba(255,255,255,.68);
+      --chart-text: rgba(255,255,255,.92);
+      --chart-grid: rgba(255,255,255,.18);
+      --chart-point: #3b82f6;
+      --tbl-font: clamp(9.5px, 2.05vw, 13px);
+      --tbl-pad-y: clamp(6px, 1.15vw, 10px);
+      --tbl-pad-x: clamp(4px, 0.90vw, 8px);
+      --tbl-radius: 16px;
+      --nav-offset: 28px;
+      --accent: #7dd3fc;
+    }
+
+    html{ scroll-behavior:smooth; }
+
+    .special-link { color: #FFFFFF; }
+    .special-link:visited { color: #FFFFFF; }
+    .special-link:hover { color: #CEBD27; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 12% 0%, rgba(67,56,202,.28), transparent 60%),
+        radial-gradient(900px 600px at 85% 8%, rgba(59,130,246,.20), transparent 55%),
+        radial-gradient(700px 500px at 50% 100%, rgba(168,85,247,.14), transparent 60%),
+        var(--bg);
+      min-height:100vh;
+    }
+
+    .filters-inputs{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      margin-top:12px;
+      width:100%;
+    }
+
+    .filters-inputs input{
+      width:100%;
+      box-sizing:border-box;
+    }
+
+    .wrap{max-width:1100px; margin:0 auto; padding:28px 18px 44px;}
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+      padding:16px 18px 18px;
+    }
+
+    .banner{
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 10px 26px rgba(0,0,0,.35);
+      margin-bottom:18px;
+    }
+    .banner svg{display:block; width:100%; height:auto;}
+
+    .muted{color:var(--muted); font-size:13px; line-height:1.5;}
+
+    .section-block{
+      margin-top: 18px;
+    }
+
+    .section-block h2{
+      margin:0 0 10px;
+      text-align:center;
+      font-size: clamp(20px, 2.2vw, 28px);
+    }
+
+    .rules-box{
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: var(--card-strong);
+      border: 1px solid var(--border);
+    }
+
+    .row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+      margin-top:12px;
+    }
+
+    input{
+      width:min(360px, 100%);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      outline:none;
+    }
+
+    .menu-wrap{
+      margin: 18px 0 14px;
+    }
+
+    .top-menu,
+    .dataset-menu{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(11,16,32,.84);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.28);
+    }
+
+    .top-menu a,
+    .dataset-menu button{
+      display:inline-block;
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      font:700 14px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      text-decoration:none;
+      transition:background .15s ease, transform .08s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .dataset-menu button{
+      cursor:pointer;
+    }
+
+    .top-menu a:hover,
+    .top-menu a:focus,
+    .dataset-menu button:hover,
+    .dataset-menu button:focus{
+      background:rgba(255,255,255,.14);
+      border-color:rgba(255,255,255,.28);
+      transform:translateY(-1px);
+      outline:none;
+    }
+
+    .dataset-menu button.active{
+      background:rgba(125,211,252,.18);
+      border-color:rgba(125,211,252,.70);
+      box-shadow: inset 0 0 0 1px rgba(125,211,252,.30);
+      color:#eaf8ff;
+    }
+
+    .dataset-menu button.training-group{
+      background: rgba(120, 200, 140, 0.16);
+      border-color: rgba(120, 200, 140, 0.42);
+    }
+
+    .dataset-menu button.training-group:hover,
+    .dataset-menu button.training-group:focus{
+      background: rgba(120, 200, 140, 0.24);
+      border-color: rgba(120, 200, 140, 0.58);
+    }
+
+    .dataset-menu button.training-group.active{
+      background: rgba(120, 200, 140, 0.34);
+      border-color: rgba(120, 200, 140, 0.82);
+      box-shadow: inset 0 0 0 1px rgba(120, 200, 140, 0.35);
+      color:#f3fff6;
+    }
+
+    .dataset-menu button.testing-group{
+      background: rgba(255, 196, 120, 0.14);
+      border-color: rgba(255, 196, 120, 0.38);
+    }
+
+    .dataset-menu button.testing-group:hover,
+    .dataset-menu button.testing-group:focus{
+      background: rgba(255, 196, 120, 0.22);
+      border-color: rgba(255, 196, 120, 0.54);
+    }
+
+    .dataset-menu button.testing-group.active{
+      background: rgba(255, 196, 120, 0.30);
+      border-color: rgba(255, 196, 120, 0.76);
+      box-shadow: inset 0 0 0 1px rgba(255, 196, 120, 0.30);
+      color:#fffaf0;
+    }
+
+    .section-anchor{
+      scroll-margin-top:var(--nav-offset);
+    }
+
+    .section-subtitle{
+      margin: 0 0 10px;
+      text-align:center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .chart-controls{
+      display:flex;
+      justify-content:center;
+      margin-top:14px;
+    }
+
+    #scaleToggleBtn,
+    #backToTopBtn{
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      font:700 14px/1 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      cursor:pointer;
+      transition: background .15s ease, transform .08s ease, opacity .2s ease, visibility .2s ease;
+    }
+    #scaleToggleBtn:hover,
+    #backToTopBtn:hover{
+      background:rgba(255,255,255,.12);
+    }
+    #scaleToggleBtn:active,
+    #backToTopBtn:active{
+      transform:translateY(1px);
+    }
+
+    #backToTopBtn{
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 999998;
+      box-shadow: 0 12px 24px rgba(0,0,0,.30);
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    #backToTopBtn.show{
+      opacity: 1;
+      visibility: visible;
+    }
+
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      margin-top:14px;
+      border:1px solid var(--border);
+      background:var(--card);
+      font-size: var(--tbl-font);
+      table-layout: fixed;
+      border-radius: var(--tbl-radius);
+      overflow:hidden;
+    }
+
+    col.rank { width: 6%; }
+    col.name { width: 18%; }
+    col.comp { width: 14%; }
+    col.ratio{ width: 10%; }
+    col.bpb  { width: 10%; }
+    col.tc   { width: 12%; }
+    col.td   { width: 12%; }
+    col.tt   { width: 12%; }
+    col.ok   { width: 6%; }
+
+    thead th{
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background:rgba(11,16,32,.96);
+      text-align:left;
+      letter-spacing:.02em;
+      color:rgba(255,255,255,.80);
+      padding: var(--tbl-pad-y) var(--tbl-pad-x);
+      border-bottom:1px solid rgba(255,255,255,.10);
+      cursor:pointer;
+      user-select:none;
+      white-space: normal;
+      line-height: 1.1;
+    }
+
+    thead th:first-child { border-top-left-radius: var(--tbl-radius); }
+    thead th:last-child  { border-top-right-radius: var(--tbl-radius); }
+
+    tbody td{
+      padding: var(--tbl-pad-y) var(--tbl-pad-x);
+      border-bottom:1px solid rgba(255,255,255,.08);
+      line-height: 1.15;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    tbody tr:hover{background:rgba(255,255,255,.05);}
+
+    tbody tr:last-child td:first-child { border-bottom-left-radius: var(--tbl-radius); }
+    tbody tr:last-child td:last-child  { border-bottom-right-radius: var(--tbl-radius); }
+
+    .right{text-align:right;}
+    .center{text-align:center;}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    .num{white-space: nowrap;}
+    .nameCell{
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.08);
+      font-size: 13px;
+      line-height: 1;
+      color:rgba(255,255,255,.85);
+      box-sizing:border-box;
+    }
+
+    .badge.info{
+      min-width: 22px;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      background: rgba(255, 165, 0, 0.22);
+      border-color: rgba(255, 165, 0, 0.70);
+      color: #ffbf47;
+      font-weight: 800;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    .swatch{
+      display:inline-block;
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      margin-right:8px;
+      vertical-align:middle;
+      border:1px solid rgba(255,255,255,.45);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.18);
+    }
+
+    .empty-state{
+      padding: 18px 14px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    html.dp-light{
+      --bg:#ffffff;
+      --card:#ffffff;
+      --card-strong:#ffffff;
+      --border: rgba(0,0,0,.40);
+      --text:#000000;
+      --muted: rgba(0,0,0,.80);
+      --chart-text:#000000;
+      --chart-grid: rgba(0,0,0,.22);
+      --chart-point: #3b82f6;
+    }
+
+    html.dp-light body{ background:#ffffff !important; }
+
+    html.dp-light .card{
+      background:#ffffff !important;
+      border:2px solid #000 !important;
+      backdrop-filter:none !important;
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+    }
+
+    html.dp-light .banner{
+      border-color: rgba(0,0,0,.25);
+      box-shadow: 0 10px 18px rgba(0,0,0,.18);
+    }
+
+    html.dp-light .rules-box{
+      background:#fff;
+      border:2px solid #000;
+    }
+
+    html.dp-light .special-link{ color:#0033cc; }
+    html.dp-light .special-link:visited{ color:#551A8B; }
+    html.dp-light .special-link:hover{ color:#000; text-decoration: underline; }
+
+    html.dp-light input{
+      background:#fff;
+      border:2px solid #000;
+      color:#000;
+    }
+
+    html.dp-light .top-menu,
+    html.dp-light .dataset-menu{
+      background:rgba(255,255,255,.96);
+      border:2px solid #000;
+      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+      backdrop-filter:none;
+    }
+
+    html.dp-light .top-menu a,
+    html.dp-light .dataset-menu button{
+      background:#fff;
+      border:2px solid #000;
+      color:#000;
+    }
+
+    html.dp-light .top-menu a:hover,
+    html.dp-light .top-menu a:focus,
+    html.dp-light .dataset-menu button:hover,
+    html.dp-light .dataset-menu button:focus{
+      background:#f0f0f0;
+      border-color:#000;
+    }
+
+    html.dp-light .dataset-menu button.active{
+      background:#dff4ff;
+      border-color:#000;
+      color:#000;
+      box-shadow:none;
+    }
+
+    html.dp-light .dataset-menu button.training-group{
+      background:#eaf7ee;
+      border-color:#6faa7a;
+      color:#000;
+    }
+
+    html.dp-light .dataset-menu button.training-group:hover,
+    html.dp-light .dataset-menu button.training-group:focus{
+      background:#dff0e5;
+      border-color:#5f9b6b;
+    }
+
+    html.dp-light .dataset-menu button.training-group.active{
+      background:#cfe8d6;
+      border-color:#4f885b;
+      color:#000;
+      box-shadow:none;
+    }
+
+    html.dp-light .dataset-menu button.testing-group{
+      background:#fff2df;
+      border-color:#d3a35c;
+      color:#000;
+    }
+
+    html.dp-light .dataset-menu button.testing-group:hover,
+    html.dp-light .dataset-menu button.testing-group:focus{
+      background:#ffe8c7;
+      border-color:#be914f;
+    }
+
+    html.dp-light .dataset-menu button.testing-group.active{
+      background:#ffdca8;
+      border-color:#a97d3f;
+      color:#000;
+      box-shadow:none;
+    }
+
+    html.dp-light table{
+      border:2px solid #000;
+      background:#fff;
+    }
+    html.dp-light thead th{
+      background:#000 !important;
+      color:#fff !important;
+      border-bottom:2px solid #000;
+    }
+    html.dp-light tbody td{ border-bottom:1px solid rgba(0,0,0,.25); }
+    html.dp-light tbody tr:hover{ background:#f0f0f0; }
+
+    html.dp-light .badge{
+      border-color:#000;
+      background:#fff;
+      color:#000;
+    }
+
+    html.dp-light .badge.info{
+      background: #fff3e0;
+      border-color: #cc8400;
+      color: #a85a00;
+    }
+
+    html.dp-light #scaleToggleBtn,
+    html.dp-light #backToTopBtn{
+      background:#fff;
+      border:2px solid #000;
+      color:#000;
+    }
+    html.dp-light #scaleToggleBtn:hover,
+    html.dp-light #backToTopBtn:hover{
+      background:#f0f0f0;
+    }
+
+    @media (max-width: 680px){
+      .wrap{ padding:18px 12px 32px; }
+      .card{ padding:14px 14px 16px; }
+      input{ width:100%; }
+      .top-menu a,
+      .dataset-menu button{ width:100%; text-align:center; }
+      #backToTopBtn{ right: 12px; bottom: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <script id="dp-theme-toggle-script">
+  (() => {
+    const KEY = "dp-theme";
+    const root = document.documentElement;
+
+    function getInitialTheme(){
+      const saved = localStorage.getItem(KEY);
+      return (saved === "light" || saved === "dark") ? saved : "dark";
+    }
+
+    function apply(theme){
+      root.classList.toggle("dp-dark", theme === "dark");
+      root.classList.toggle("dp-light", theme === "light");
+      btn.textContent = theme === "dark" ? "🌙 Dark Mode" : "☀ Light Mode";
+      btn.setAttribute("aria-pressed", String(theme === "dark"));
+      window.dispatchEvent(new Event("dp-theme-change"));
+    }
+
+    const btn = document.createElement("button");
+    btn.id = "dpThemeToggle";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Toggle light/dark theme");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.appendChild(btn);
+      apply(getInitialTheme());
+      btn.addEventListener("click", () => {
+        const next = root.classList.contains("dp-dark") ? "light" : "dark";
+        localStorage.setItem(KEY, next);
+        apply(next);
+      });
+    });
+  })();
+  </script>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="banner" aria-label="RAI Data Compression Challenge banner">
+        <svg viewBox="0 0 1200 280" role="img" aria-label="RAI Data Compression Challenge — Raw Astronomical Image Compression Benchmark">
+          <defs>
+            <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#020617"/>
+              <stop offset="0.45" stop-color="#10204d"/>
+              <stop offset="1" stop-color="#3b1d6b"/>
+            </linearGradient>
+
+            <radialGradient id="nebula1" cx="18%" cy="28%" r="45%">
+              <stop offset="0" stop-color="rgba(96,165,250,0.42)"/>
+              <stop offset="1" stop-color="rgba(96,165,250,0)"/>
+            </radialGradient>
+
+            <radialGradient id="nebula2" cx="78%" cy="38%" r="42%">
+              <stop offset="0" stop-color="rgba(168,85,247,0.34)"/>
+              <stop offset="1" stop-color="rgba(168,85,247,0)"/>
+            </radialGradient>
+
+            <radialGradient id="sensorGlow" cx="50%" cy="50%" r="65%">
+              <stop offset="0" stop-color="rgba(125,211,252,0.28)"/>
+              <stop offset="1" stop-color="rgba(125,211,252,0.02)"/>
+            </radialGradient>
+
+            <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="rgba(0,0,0,0.45)"/>
+            </filter>
+
+            <clipPath id="clipBanner">
+              <rect x="0" y="0" width="1200" height="280" rx="18" ry="18"></rect>
+            </clipPath>
+          </defs>
+
+          <g clip-path="url(#clipBanner)">
+            <rect x="0" y="0" width="1200" height="280" fill="url(#bg)"/>
+            <rect x="0" y="0" width="1200" height="280" fill="url(#nebula1)"/>
+            <rect x="0" y="0" width="1200" height="280" fill="url(#nebula2)"/>
+
+            <g opacity="0.9">
+              <circle cx="70" cy="36" r="1.1" fill="#fff"/>
+              <circle cx="120" cy="90" r="1.4" fill="#fff"/>
+              <circle cx="210" cy="42" r="1.0" fill="#fff"/>
+              <circle cx="320" cy="65" r="1.2" fill="#fff"/>
+              <circle cx="390" cy="28" r="1.0" fill="#fff"/>
+              <circle cx="480" cy="92" r="1.5" fill="#fff"/>
+              <circle cx="555" cy="40" r="1.0" fill="#fff"/>
+              <circle cx="650" cy="58" r="1.3" fill="#fff"/>
+              <circle cx="740" cy="34" r="1.1" fill="#fff"/>
+              <circle cx="812" cy="82" r="1.4" fill="#fff"/>
+              <circle cx="902" cy="48" r="1.0" fill="#fff"/>
+              <circle cx="1012" cy="36" r="1.4" fill="#fff"/>
+              <circle cx="1108" cy="72" r="1.1" fill="#fff"/>
+              <circle cx="1145" cy="28" r="1.6" fill="#fff"/>
+              <circle cx="88" cy="148" r="1.0" fill="#dbeafe"/>
+              <circle cx="156" cy="188" r="1.4" fill="#fff"/>
+              <circle cx="256" cy="168" r="1.1" fill="#fff"/>
+              <circle cx="348" cy="212" r="1.0" fill="#dbeafe"/>
+              <circle cx="970" cy="174" r="1.2" fill="#fff"/>
+              <circle cx="1060" cy="152" r="1.0" fill="#fff"/>
+              <circle cx="1130" cy="200" r="1.4" fill="#dbeafe"/>
+            </g>
+
+            <g transform="translate(56,56)" filter="url(#softShadow)">
+              <rect x="0" y="0" width="176" height="168" rx="18" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.20)"/>
+              <rect x="16" y="16" width="144" height="136" rx="12" fill="rgba(9,14,32,0.84)" stroke="rgba(255,255,255,0.16)"/>
+              <rect x="16" y="16" width="144" height="136" rx="12" fill="url(#sensorGlow)"/>
+
+              <circle cx="53" cy="48" r="2.4" fill="rgba(255,255,255,0.96)"/>
+              <circle cx="78" cy="62" r="1.7" fill="rgba(219,234,254,0.96)"/>
+              <circle cx="97" cy="44" r="1.6" fill="rgba(255,255,255,0.96)"/>
+              <circle cx="124" cy="72" r="2.2" fill="rgba(191,219,254,0.96)"/>
+              <circle cx="67" cy="94" r="1.8" fill="rgba(255,255,255,0.96)"/>
+              <circle cx="103" cy="103" r="2.6" fill="rgba(186,230,253,0.96)"/>
+              <circle cx="132" cy="48" r="1.5" fill="rgba(255,255,255,0.96)"/>
+              <circle cx="45" cy="118" r="1.5" fill="rgba(255,255,255,0.96)"/>
+              <circle cx="87" cy="126" r="1.7" fill="rgba(219,234,254,0.96)"/>
+
+              <path d="M34 111 C 52 97, 74 90, 92 82 S 124 66, 142 54" fill="none" stroke="rgba(125,211,252,0.55)" stroke-width="2"/>
+              <path d="M28 57 C 48 72, 72 85, 91 96 S 122 116, 146 132" fill="none" stroke="rgba(167,139,250,0.35)" stroke-width="2"/>
+
+              <text x="28" y="146" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="14" fill="rgba(186,230,253,0.95)">u16be</text>
+              <text x="84" y="146" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace" font-size="14" fill="rgba(191,219,254,0.86)">1500×1500</text>
+            </g>
+
+            <g transform="translate(930,50)" filter="url(#softShadow)">
+              <circle cx="110" cy="94" r="80" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)"/>
+              <circle cx="110" cy="94" r="57" fill="rgba(10,14,28,0.62)" stroke="rgba(255,255,255,0.16)"/>
+              <circle cx="110" cy="94" r="30" fill="rgba(56,189,248,0.18)" stroke="rgba(125,211,252,0.28)"/>
+              <path d="M110 14 L110 36 M190 94 L168 94 M110 174 L110 152 M30 94 L52 94" stroke="rgba(255,255,255,0.28)" stroke-width="3" stroke-linecap="round"/>
+              <path d="M56 40 L71 55 M164 55 L149 70 M164 133 L149 118 M56 148 L71 133" stroke="rgba(255,255,255,0.24)" stroke-width="3" stroke-linecap="round"/>
+              <path d="M110 94 L150 70" stroke="rgba(125,211,252,0.88)" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="110" cy="94" r="7" fill="rgba(255,255,255,0.78)"/>
+              <circle cx="110" cy="94" r="88" fill="none" stroke="rgba(125,211,252,0.12)" stroke-width="2"/>
+            </g>
+
+            <g transform="translate(772,88)" opacity="0.72">
+              <rect x="0" y="108" width="16" height="44" fill="rgba(147,197,253,0.35)"/>
+              <rect x="22" y="92" width="16" height="60" fill="rgba(96,165,250,0.35)"/>
+              <rect x="44" y="68" width="16" height="84" fill="rgba(167,139,250,0.36)"/>
+              <rect x="66" y="48" width="16" height="104" fill="rgba(196,181,253,0.34)"/>
+              <rect x="88" y="76" width="16" height="76" fill="rgba(244,114,182,0.24)"/>
+              <rect x="110" y="30" width="16" height="122" fill="rgba(125,211,252,0.30)"/>
+              <rect x="132" y="56" width="16" height="96" fill="rgba(147,197,253,0.26)"/>
+            </g>
+
+            <text x="250" y="112" font-size="44" font-weight="800" fill="rgba(255,255,255,0.97)" font-family="system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', Arial, sans-serif">RAI Data Compression Challenge</text>
+            <text x="250" y="160" font-size="24" font-weight="600" fill="rgba(186,230,253,0.96)" font-family="system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Noto Sans', Arial, sans-serif">— Raw Astronomical Image Compression Benchmark —</text>
+
+            <path d="M244 198 C 300 182, 356 226, 420 206 S 542 188, 612 210 S 748 238, 822 214 S 932 178, 1030 206" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="2"/>
+            <path d="M244 198 C 300 182, 356 226, 420 206 S 542 188, 612 210 S 748 238, 822 214 S 932 178, 1030 206" fill="none" stroke="rgba(125,211,252,0.14)" stroke-width="5" opacity="0.55"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="menu-wrap">
+        <nav class="top-menu" aria-label="Section navigation">
+          <a href="#challenge-overview">Challenge Overview</a>
+          <a href="#filters">Filters</a>
+          <a href="#evaluation-plot">Evaluation Plot</a>
+          <a href="#ranking-table">Ranking Table</a>
+          <a href="#weissman-score">Weissman Score</a>
+          <a href="../data/data2.zip" download>Download data</a>
+          <a href="challenge.html">AIT Challenge</a>
+          <a href="../index.html">Home page</a>
+        </nav>
+      </div>
+
+      <section id="challenge-overview" class="section-block section-anchor">
+        <h2>Challenge Overview</h2>
+        <div class="rules-box muted">
+          <p align="justify">
+  The RAI Data Compression Challenge focuses on the design and evaluation of fully lossless compressors for raw astronomical image data. The input consists of raw spatial images stored as unsigned 16-bit integers in big-endian format, with fixed resolution 1500&times;1500. A set of training files (<a href="../data/data2.zip" download>Download</a>) is provided for development, tuning, and preliminary benchmarking, while a separate testing set is reserved for the final evaluation and is not disclosed to submitters in advance.
+</p>
+
+<p align="justify">
+  After the submission deadline of 26 May 2026, the submitted binaries will be executed on the hidden testing files under the same evaluation framework used for the public benchmark. This makes it possible to assess not only compression performance on known data, but also the robustness and generalization ability of each method when applied to previously unseen files of the same modality.
+</p>
+
+<p align="justify">
+  This page summarizes benchmark results for reference compressors and submitted solutions. Participation is open, and the benchmark is intended to support comparisons between general-purpose compressors and data-adapted approaches specifically designed for raw astronomical imagery. All submitted implementations must run under Linux, reconstruct the original data exactly after decompression, and comply with the project constraints.
+</p>
+
+<p align="justify">
+  The decompression binary must not exceed 1 MB and the compression binary must not exceed 5 MB. The implementation must operate within the defined resource limits, including a maximum of 8 GB of RAM and a maximum of 8 threads. The main metrics reported here are compressed size, compression ratio, bits per byte, compression time, decompression time, and total execution time. Results may be viewed per file, per subset, or as an overall aggregate.
+</p>
+
+<p align="justify">
+  Submissions must be sent to <a href="mailto:pratas@ua.pt">pratas@ua.pt</a>. The executables must follow the command-line conventions:<br>
+  <code>CompressorName input_file output_file</code><br>
+  and<br>
+  <code>DecompressorName input_file output_file</code>
+</p>
+
+<p align="justify">
+  In the ranking table, click the column headers to sort. Search and exclusion filters may be combined.
+</p>
+        </div>
+      </section>
+
+      <section id="filters" class="section-block section-anchor">
+        <h2>Filters</h2>
+        <div class="menu-wrap">
+          <nav class="dataset-menu" aria-label="Dataset selector" id="datasetMenu">
+            <button type="button" data-dataset="overall" class="active">Overall</button>
+            <button type="button" data-dataset="training" class="training-group">Training</button>
+            <button type="button" data-dataset="testing" class="testing-group">Testing</button>
+            <button type="button" data-dataset="A" class="training-group">A</button>
+            <button type="button" data-dataset="B" class="training-group">B</button>
+            <button type="button" data-dataset="C" class="training-group">C</button>
+            <button type="button" data-dataset="D" class="training-group">D</button>
+            <button type="button" data-dataset="E" class="training-group">E</button>
+            <button type="button" data-dataset="F" class="training-group">F</button>
+            <button type="button" data-dataset="G" class="training-group">G</button>
+            <button type="button" data-dataset="H" class="training-group">H</button>
+            <button type="button" data-dataset="I" class="testing-group">I</button>
+            <button type="button" data-dataset="J" class="testing-group">J</button>
+            <button type="button" data-dataset="K" class="testing-group">K</button>
+            <button type="button" data-dataset="L" class="testing-group">L</button>
+            <button type="button" data-dataset="M" class="testing-group">M</button>
+            <button type="button" data-dataset="N" class="testing-group">N</button>
+            <button type="button" data-dataset="O" class="testing-group">O</button>
+            <button type="button" data-dataset="P" class="testing-group">P</button>
+          </nav>
+        </div>
+        <div class="filters-inputs">
+          <input id="search" placeholder="Search compressors or group names... (use ',' for multiple names)" />
+          <input id="exclude" placeholder="Exclude compressors or group names... (use ',' for multiple names)" />
+        </div>
+      </section>
+
+      <section id="evaluation-plot" class="section-block section-anchor">
+        <h2>Evaluation Plot</h2>
+        <p class="section-subtitle" id="plotDatasetStatus">Showing results for Overall</p>
+
+        <div style="max-width: 1000px;">
+          <canvas id="bitsByteTimeChart" height="420"></canvas>
+        </div>
+
+        <div class="chart-controls">
+          <button id="scaleToggleBtn" type="button" aria-pressed="false">Use logarithmic scale</button>
+        </div>
+      </section>
+
+      <section id="ranking-table" class="section-block section-anchor">
+        <h2>Ranking Table</h2>
+        <p class="section-subtitle" id="datasetStatus">Showing results for Overall</p>
+
+        <table aria-label="Benchmark leaderboard">
+          <colgroup>
+            <col class="rank"><col class="name"><col class="comp"><col class="ratio"><col class="bpb">
+            <col class="tc"><col class="td"><col class="tt"><col class="ok">
+          </colgroup>
+          <thead>
+            <tr>
+              <th data-key="rank">Rank</th>
+              <th data-key="group">Compressor</th>
+              <th class="right" data-key="comp_bytes">Compressed (Bytes)</th>
+              <th class="right" data-key="ratio">Ratio</th>
+              <th class="right" data-key="bpb">bits/byte</th>
+              <th class="right" data-key="t_comp_s">t_comp (s)</th>
+              <th class="right" data-key="t_decomp_s">t_decomp (s)</th>
+              <th class="right" data-key="t_total">t_total (s)</th>
+              <th class="center" data-key="ok">Lossless</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </section>
+
+      <section id="weissman-score" class="section-block section-anchor">
+        <h2>Top-50 Weissman Score</h2>
+        <p class="section-subtitle" id="weissmanStatus">Computed with gzip as reference for Overall</p>
+
+        <table id="weissmanTop50Table" aria-label="Top 50 Weissman Score">
+          <colgroup>
+            <col class="rank"><col class="name"><col class="ratio"><col class="ratio"><col class="tt"><col class="ok">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Compressor</th>
+              <th class="right">Weissman Score</th>
+              <th class="right">Ratio</th>
+              <th class="right">t_total (s)</th>
+              <th class="center">Lossless</th>
+            </tr>
+          </thead>
+          <tbody id="weissmanTop50Body"></tbody>
+        </table>
+      </section>
+    </div>
+  </div>
+
+  <button id="backToTopBtn" type="button" aria-label="Go to top">↑ Top</button>
+
+  <script id="csv-data" type="text/plain">
+dataset,group,orig_bytes,comp_bytes,t_comp_s,t_decomp_s,ok,color
+A,gzip,4500000,3346901,0.230,0.040,1,#99004C
+B,gzip,4500000,2404566,0.390,0.030,1,#99004C
+C,gzip,4500000,1811304,0.420,0.030,1,#99004C
+D,gzip,4500000,2056374,0.460,0.030,1,#99004C
+E,gzip,4500000,1921418,0.400,0.030,1,#99004C
+F,gzip,4500000,3945453,0.170,0.030,1,#99004C
+G,gzip,4500000,1781890,0.440,0.030,1,#99004C
+overall,gzip,31500000,17267906,2.510,0.220,1,#99004C
+A,bzip2,4500000,2601297,0.740,0.320,1,#4C0099
+B,bzip2,4500000,1912079,0.590,0.260,1,#4C0099
+C,bzip2,4500000,1454312,0.740,0.240,1,#4C0099
+D,bzip2,4500000,1627099,0.610,0.240,1,#4C0099
+E,bzip2,4500000,1524199,0.650,0.330,1,#4C0099
+F,bzip2,4500000,3637646,0.840,0.430,1,#4C0099
+G,bzip2,4500000,1430023,0.650,0.400,1,#4C0099
+overall,bzip2,31500000,14186655,4.820,2.220,1,#4C0099
+A,zstd-1,4500000,3351743,0.010,0.010,1,#007A99
+B,zstd-1,4500000,2511038,0.020,0.000,1,#007A99
+C,zstd-1,4500000,1840392,0.020,0.010,1,#007A99
+D,zstd-1,4500000,2126494,0.020,0.010,1,#007A99
+E,zstd-1,4500000,1940344,0.020,0.010,1,#007A99
+F,zstd-1,4500000,3935146,0.010,0.000,1,#007A99
+G,zstd-1,4500000,1837601,0.010,0.010,1,#007A99
+overall,zstd-1,31500000,17542758,0.110,0.050,1,#007A99
+A,zstd-5,4500000,3161334,0.110,0.010,1,#007A99
+B,zstd-5,4500000,2309556,0.090,0.020,1,#007A99
+C,zstd-5,4500000,1691954,0.080,0.010,1,#007A99
+D,zstd-5,4500000,1941866,0.090,0.010,1,#007A99
+E,zstd-5,4500000,1778044,0.070,0.010,1,#007A99
+F,zstd-5,4500000,3935100,0.020,0.010,1,#007A99
+G,zstd-5,4500000,1678185,0.110,0.010,1,#007A99
+overall,zstd-5,31500000,16496039,0.570,0.080,1,#007A99
+A,zstd-10,4500000,3090519,0.350,0.020,1,#007A99
+B,zstd-10,4500000,2269501,0.280,0.030,1,#007A99
+C,zstd-10,4500000,1706923,0.530,0.020,1,#007A99
+D,zstd-10,4500000,1926796,0.550,0.020,1,#007A99
+E,zstd-10,4500000,1796085,0.310,0.010,1,#007A99
+F,zstd-10,4500000,3935100,0.030,0.000,1,#007A99
+G,zstd-10,4500000,1686538,0.230,0.010,1,#007A99
+overall,zstd-10,31500000,16411462,2.280,0.110,1,#007A99
+A,zstd-18,4500000,3077662,1.730,0.010,1,#007A99
+B,zstd-18,4500000,2123460,3.420,0.030,1,#007A99
+C,zstd-18,4500000,1541388,5.500,0.030,1,#007A99
+D,zstd-18,4500000,1780186,5.370,0.020,1,#007A99
+E,zstd-18,4500000,1637502,4.270,0.020,1,#007A99
+F,zstd-18,4500000,3971401,1.380,0.020,1,#007A99
+G,zstd-18,4500000,1526233,3.470,0.020,1,#007A99
+overall,zstd-18,31500000,15657832,25.140,0.150,1,#007A99
+A,ox,4500000,3401609,0.060,0.220,1,#FFFFFF
+B,ox,4500000,2480041,0.060,0.170,1,#FFFFFF
+C,ox,4500000,1936826,0.060,0.160,1,#FFFFFF
+D,ox,4500000,2128593,0.070,0.170,1,#FFFFFF
+E,ox,4500000,2005131,0.060,0.160,1,#FFFFFF
+F,ox,4500000,3935262,0.060,0.260,1,#FFFFFF
+G,ox,4500000,2174630,0.050,0.150,1,#FFFFFF
+overall,ox,31500000,18062092,0.420,1.290,1,#FFFFFF
+A,lzma-9,4500000,2773213,2.900,0.180,1,#996600
+B,lzma-9,4500000,1995095,4.140,0.120,1,#996600
+C,lzma-9,4500000,1466362,4.540,0.080,1,#996600
+D,lzma-9,4500000,1664658,4.920,0.110,1,#996600
+E,lzma-9,4500000,1550908,4.710,0.110,1,#996600
+F,lzma-9,4500000,3688666,1.960,0.160,1,#996600
+G,lzma-9,4500000,1439491,3.890,0.100,1,#996600
+overall,lzma-9,31500000,14578393,27.060,0.860,1,#996600
+A,lzma-5,4500000,2772874,2.860,0.170,1,#996600
+B,lzma-5,4500000,1974823,4.150,0.130,1,#996600
+C,lzma-5,4500000,1466546,4.520,0.110,1,#996600
+D,lzma-5,4500000,1664263,4.650,0.120,1,#996600
+E,lzma-5,4500000,1549935,4.610,0.110,1,#996600
+F,lzma-5,4500000,3689957,2.150,0.170,1,#996600
+G,lzma-5,4500000,1438721,3.850,0.110,1,#996600
+overall,lzma-5,31500000,14557119,26.790,0.920,1,#996600
+A,lzma-1,4500000,2918603,1.800,0.160,1,#996600
+B,lzma-1,4500000,2088191,1.150,0.110,1,#996600
+C,lzma-1,4500000,1602001,0.560,0.090,1,#996600
+D,lzma-1,4500000,1824771,0.710,0.100,1,#996600
+E,lzma-1,4500000,1680335,0.580,0.100,1,#996600
+F,lzma-1,4500000,3812603,2.160,0.180,1,#996600
+G,lzma-1,4500000,1587778,0.540,0.090,1,#996600
+overall,lzma-1,31500000,15514282,7.500,0.830,1,#996600
+A,ARVIS,4500000,4500535,0.060,0.010,1,#FFFFFF
+B,ARVIS,4500000,4500535,0.040,0.010,1,#FFFFFF
+C,ARVIS,4500000,3375629,0.040,0.060,1,#FFFFFF
+D,ARVIS,4500000,4500535,0.050,0.010,1,#FFFFFF
+E,ARVIS,4500000,4219363,0.050,0.060,1,#FFFFFF
+F,ARVIS,4500000,4500535,0.050,0.010,1,#FFFFFF
+G,ARVIS,4500000,2843590,0.030,0.050,1,#FFFFFF
+overall,ARVIS,31500000,28440722,0.320,0.210,1,#FFFFFF
+A,fse2,4500000,4501538,0.050,0.000,1,#FFFFFF
+B,fse2,4500000,3122606,0.040,0.050,1,#FFFFFF
+C,fse2,4500000,2081399,0.050,0.050,1,#FFFFFF
+D,fse2,4500000,2875255,0.040,0.050,1,#FFFFFF
+E,fse2,4500000,2196064,0.040,0.050,1,#FFFFFF
+F,fse2,4500000,4501538,0.040,0.000,1,#FFFFFF
+G,fse2,4500000,2009302,0.050,0.060,1,#FFFFFF
+overall,fse2,31500000,21287702,0.310,0.260,1,#FFFFFF
+A,fseo1,4500000,4465923,0.160,0.020,1,#FFFFFF
+B,fseo1,4500000,2256161,0.090,0.070,1,#FFFFFF
+C,fseo1,4500000,1472837,0.080,0.060,1,#FFFFFF
+D,fseo1,4500000,1881457,0.090,0.070,1,#FFFFFF
+E,fseo1,4500000,1566372,0.070,0.060,1,#FFFFFF
+F,fseo1,4500000,4501952,0.200,0.000,1,#FFFFFF
+G,fseo1,4500000,1409364,0.070,0.070,1,#FFFFFF
+overall,fseo1,31500000,17554066,0.760,0.350,1,#FFFFFF
+A,rc32,4500000,3335613,0.510,0.590,1,#FFFFFF
+B,rc32,4500000,2475437,0.400,0.480,1,#FFFFFF
+C,rc32,4500000,1924504,0.350,0.420,1,#FFFFFF
+D,rc32,4500000,2131739,0.400,0.460,1,#FFFFFF
+E,rc32,4500000,2007537,0.360,0.480,1,#FFFFFF
+F,rc32,4500000,3924859,0.620,0.680,1,#FFFFFF
+G,rc32,4500000,1930355,0.370,0.450,1,#FFFFFF
+overall,rc32,31500000,17730044,3.010,3.560,1,#FFFFFF
+A,rcox1,4500000,3114543,0.560,0.670,1,#FFFFFF
+B,rcox1,4500000,2072768,0.420,0.550,1,#FFFFFF
+C,rcox1,4500000,1434935,0.320,0.380,1,#FFFFFF
+D,rcox1,4500000,1673648,0.310,0.410,1,#FFFFFF
+E,rcox1,4500000,1526851,0.280,0.400,1,#FFFFFF
+F,rcox1,4500000,3773918,0.620,0.820,1,#FFFFFF
+G,rcox1,4500000,1446691,0.360,0.460,1,#FFFFFF
+overall,rcox1,31500000,15043354,2.870,3.690,1,#FFFFFF
+A,rcox1b,4500000,3307552,0.990,1.200,1,#FFFFFF
+B,rcox1b,4500000,2190517,0.480,0.600,1,#FFFFFF
+C,rcox1b,4500000,1511419,0.390,0.480,1,#FFFFFF
+D,rcox1b,4500000,1755562,0.400,0.540,1,#FFFFFF
+E,rcox1b,4500000,1602751,0.380,0.500,1,#FFFFFF
+F,rcox1b,4500000,3926705,1.690,2.210,1,#FFFFFF
+G,rcox1b,4500000,1647733,0.370,0.460,1,#FFFFFF
+overall,rcox1b,31500000,15942239,4.700,5.990,1,#FFFFFF
+A,rcox2,4500000,2976180,0.520,0.630,1,#FFFFFF
+B,rcox2,4500000,1943073,0.370,0.530,1,#FFFFFF
+C,rcox2,4500000,1370843,0.320,0.430,1,#FFFFFF
+D,rcox2,4500000,1606648,0.360,0.470,1,#FFFFFF
+E,rcox2,4500000,1456190,0.320,0.430,1,#FFFFFF
+F,rcox2,4500000,3658176,0.590,0.750,1,#FFFFFF
+G,rcox2,4500000,1344072,0.330,0.440,1,#FFFFFF
+overall,rcox2,31500000,14355182,2.810,3.680,1,#FFFFFF
+A,rcmix,4500000,3026807,1.250,1.800,1,#FFFFFF
+B,rcmix,4500000,2023000,0.640,0.910,1,#FFFFFF
+C,rcmix,4500000,1453019,0.510,0.870,1,#FFFFFF
+D,rcmix,4500000,1647277,0.560,0.880,1,#FFFFFF
+E,rcmix,4500000,1536336,0.550,0.800,1,#FFFFFF
+F,rcmix,4500000,3766347,1.990,2.950,1,#FFFFFF
+G,rcmix,4500000,1454034,0.570,0.900,1,#FFFFFF
+overall,rcmix,31500000,14906820,6.070,9.110,1,#FFFFFF
+A,xEnc,4500000,2547846,58.140,53.560,1,#FFFFFF
+B,xEnc,4500000,1825887,42.930,42.330,1,#FFFFFF
+C,xEnc,4500000,1361188,26.890,31.290,1,#FFFFFF
+D,xEnc,4500000,1386980,28.360,19.900,1,#FFFFFF
+E,xEnc,4500000,1438873,17.980,16.500,1,#FFFFFF
+F,xEnc,4500000,3488978,47.890,45.880,1,#FFFFFF
+G,xEnc,4500000,1345965,15.900,16.540,1,#FFFFFF
+overall,xEnc,31500000,13395717,238.090,226.000,1,#FFFFFF
+A,xEnc2,4500000,2553593,25.950,27.100,1,#FFFFFF
+B,xEnc2,4500000,1822159,18.850,19.000,1,#FFFFFF
+C,xEnc2,4500000,1362886,11.480,12.190,1,#FFFFFF
+D,xEnc2,4500000,1372012,12.780,12.900,1,#FFFFFF
+E,xEnc2,4500000,1440511,10.540,10.720,1,#FFFFFF
+F,xEnc2,4500000,3484196,34.630,34.670,1,#FFFFFF
+G,xEnc2,4500000,1346250,11.830,12.100,1,#FFFFFF
+overall,xEnc2,31500000,13381607,126.060,128.680,1,#FFFFFF
+A,xEnc3,4500000,2483174,62.140,65.770,1,#FFFFFF
+B,xEnc3,4500000,1797771,45.460,47.670,1,#FFFFFF
+C,xEnc3,4500000,1359507,33.230,35.220,1,#FFFFFF
+D,xEnc3,4500000,1290856,36.910,38.370,1,#FFFFFF
+E,xEnc3,4500000,1438451,36.530,35.590,1,#FFFFFF
+F,xEnc3,4500000,3453492,67.100,65.310,1,#FFFFFF
+G,xEnc3,4500000,1334362,32.060,32.810,1,#FFFFFF
+overall,xEnc3,31500000,13157613,313.430,320.740,1,#FFFFFF
+A,brotli-1,4500000,3352046,0.010,0.030,1,#00994C
+B,brotli-1,4500000,2474375,0.020,0.020,1,#00994C
+C,brotli-1,4500000,1815856,0.030,0.020,1,#00994C
+D,brotli-1,4500000,2103911,0.030,0.020,1,#00994C
+E,brotli-1,4500000,1907553,0.030,0.020,1,#00994C
+F,brotli-1,4500000,3935082,0.010,0.030,1,#00994C
+G,brotli-1,4500000,1818331,0.020,0.020,1,#00994C
+overall,brotli-1,31500000,17407154,0.150,0.160,1,#00994C
+A,brotli-5,4500000,3141501,0.360,0.030,1,#00994C
+B,brotli-5,4500000,2220500,0.340,0.020,1,#00994C
+C,brotli-5,4500000,1662577,0.280,0.010,1,#00994C
+D,brotli-5,4500000,1908730,0.310,0.020,1,#00994C
+E,brotli-5,4500000,1747094,0.300,0.010,1,#00994C
+F,brotli-5,4500000,3933321,0.050,0.020,1,#00994C
+G,brotli-5,4500000,1654707,0.280,0.010,1,#00994C
+overall,brotli-5,31500000,16268430,1.920,0.120,1,#00994C
+A,brotli-9,4500000,3115432,1.320,0.030,1,#00994C
+B,brotli-9,4500000,2166706,0.930,0.020,1,#00994C
+C,brotli-9,4500000,1626728,0.890,0.010,1,#00994C
+D,brotli-9,4500000,1869185,0.960,0.010,1,#00994C
+E,brotli-9,4500000,1712210,0.890,0.010,1,#00994C
+F,brotli-9,4500000,3933679,0.160,0.020,1,#00994C
+G,brotli-9,4500000,1618454,0.810,0.010,1,#00994C
+overall,brotli-9,31500000,16042394,5.960,0.110,1,#00994C
+  </script>
+
+  <script>
+  const INDIVIDUAL_DATASETS = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"];
+  const TRAINING_DATASETS = ["A","B","C","D","E","F","G","H"];
+  const TESTING_DATASETS  = ["I","J","K","L","M","N","O","P"];
+
+  function detectSep(headerLine){
+    const commas = (headerLine.match(/,/g)||[]).length;
+    const semis  = (headerLine.match(/;/g)||[]).length;
+    return semis > commas ? ";" : ",";
+  }
+
+  function parseCSV(text){
+    const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    if(!lines.length) return [];
+    const sep = detectSep(lines[0]);
+    const header = lines[0].split(sep).map(h => h.trim().toLowerCase());
+    const rows = [];
+    for(let i=1;i<lines.length;i++){
+      const line = lines[i];
+      if(line.startsWith("<!--") || line.startsWith("-->")) continue;
+      const parts = line.split(sep).map(p => p.trim());
+      if(parts.length !== header.length) continue;
+      const obj = {};
+      for(let j=0;j<header.length;j++) obj[header[j]] = parts[j];
+      rows.push(obj);
+    }
+    return rows;
+  }
+
+  function toNum(x){
+    const n = Number(String(x).replace(",", "."));
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  function parseOkStatus(x){
+    const v = String(x).trim().toLowerCase();
+    if (v === "2" || v === "info" || v === "warn" || v === "warning") return 2;
+    if (v === "1" || v === "true" || v === "yes" || v === "ok" || v === "pass") return 1;
+    return 0;
+  }
+
+  function fmt(n, d=3){
+    return Number.isFinite(n) ? n.toFixed(d) : "—";
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function datasetDisplayName(dataset){
+    if(dataset === "overall") return "Overall";
+    if(dataset === "training") return "Training";
+    if(dataset === "testing") return "Testing";
+    return dataset;
+  }
+
+  function splitPatterns(text){
+    return String(text || "")
+      .split(/[,\n;]+/)
+      .map(s => s.trim().toLowerCase())
+      .filter(Boolean);
+  }
+
+  const WEISSMAN_BASELINE = "gzip";
+
+  let allData = [];
+  let currentData = [];
+  let sortKey = "comp_bytes";
+  let sortAsc = true;
+  let selectedDataset = "overall";
+
+  function recompute(){
+    const csvText = document.getElementById("csv-data").textContent.trim();
+    const rows = parseCSV(csvText);
+
+    allData = rows.map(r => {
+      const dataset = (r.dataset ?? "").trim();
+      const group = (r.group ?? "").trim();
+      const orig = toNum(r.orig_bytes);
+      const comp = toNum(r.comp_bytes);
+      const tc = toNum(r.t_comp_s);
+      const td = toNum(r.t_decomp_s);
+      const ok = parseOkStatus(r.ok);
+      const color = (r.color ?? "").trim();
+
+      const ratio = (Number.isFinite(orig) && orig > 0 && Number.isFinite(comp)) ? (comp / orig) : NaN;
+      const bpb   = (Number.isFinite(orig) && orig > 0 && Number.isFinite(comp)) ? (8 * comp / orig) : NaN;
+      const ttot  = (Number.isFinite(tc) ? tc : 0) + (Number.isFinite(td) ? td : 0);
+
+      return {
+        dataset,
+        group,
+        orig_bytes: orig,
+        comp_bytes: comp,
+        comp_mb: comp / 1024 / 1024,
+        ratio,
+        bpb,
+        t_comp_s: tc,
+        t_decomp_s: td,
+        t_total: ttot,
+        ok,
+        color
+      };
+    }).filter(r => r.dataset && r.group);
+  }
+
+  function getExplicitRows(dataset){
+    return allData.filter(r => r.dataset === dataset);
+  }
+
+  function buildAggregateRows(sourceDatasets){
+    const sourceRows = allData.filter(r => INDIVIDUAL_DATASETS.includes(r.dataset) && sourceDatasets.includes(r.dataset));
+    const byGroup = new Map();
+
+    for(const r of sourceRows){
+      const key = r.group;
+      if(!byGroup.has(key)){
+        byGroup.set(key, {
+          dataset: selectedDataset,
+          group: r.group,
+          orig_bytes: 0,
+          comp_bytes: 0,
+          t_comp_s: 0,
+          t_decomp_s: 0,
+          ok: 1,
+          color: r.color || ""
+        });
+      }
+
+      const acc = byGroup.get(key);
+      acc.orig_bytes += Number.isFinite(r.orig_bytes) ? r.orig_bytes : 0;
+      acc.comp_bytes += Number.isFinite(r.comp_bytes) ? r.comp_bytes : 0;
+      acc.t_comp_s += Number.isFinite(r.t_comp_s) ? r.t_comp_s : 0;
+      acc.t_decomp_s += Number.isFinite(r.t_decomp_s) ? r.t_decomp_s : 0;
+
+      if (acc.ok !== 0) {
+        if (r.ok === 0) acc.ok = 0;
+        else if (r.ok === 2) acc.ok = 2;
+      }
+
+      if(!acc.color && r.color) acc.color = r.color;
+    }
+
+    return [...byGroup.values()].map(r => {
+      const ratio = (r.orig_bytes > 0) ? (r.comp_bytes / r.orig_bytes) : NaN;
+      const bpb = (r.orig_bytes > 0) ? (8 * r.comp_bytes / r.orig_bytes) : NaN;
+      const t_total = r.t_comp_s + r.t_decomp_s;
+      return {
+        ...r,
+        comp_mb: r.comp_bytes / 1024 / 1024,
+        ratio,
+        bpb,
+        t_total
+      };
+    });
+  }
+
+  function getDatasetRows(dataset){
+    if(dataset === "training"){
+      return buildAggregateRows(TRAINING_DATASETS);
+    }
+
+    if(dataset === "testing"){
+      return buildAggregateRows(TESTING_DATASETS);
+    }
+
+    if(dataset === "overall"){
+      const explicitOverall = getExplicitRows("overall");
+      if(explicitOverall.length) return explicitOverall;
+      return buildAggregateRows(INDIVIDUAL_DATASETS);
+    }
+
+    return getExplicitRows(dataset);
+  }
+
+  function applySort(rows){
+    const out = [...rows];
+    const key = sortKey;
+
+    out.sort((a, b) => {
+      if (key !== "rank" && a.ok !== b.ok) {
+        const priority = v => v === 1 ? 0 : v === 2 ? 1 : 2;
+        return priority(a.ok) - priority(b.ok);
+      }
+
+      const va = a[key];
+      const vb = b[key];
+
+      const aNan = (typeof va === "number") && !Number.isFinite(va);
+      const bNan = (typeof vb === "number") && !Number.isFinite(vb);
+      if(aNan && !bNan) return 1;
+      if(!aNan && bNan) return -1;
+
+      if(typeof va === "string" || typeof vb === "string"){
+        const cmp = String(va ?? "").localeCompare(String(vb ?? ""), undefined, { numeric: true, sensitivity: "base" });
+        return sortAsc ? cmp : -cmp;
+      }
+
+      const cmp = (va ?? 0) - (vb ?? 0);
+      return sortAsc ? cmp : -cmp;
+    });
+
+    return out;
+  }
+
+  function rankRows(rows){
+    const okPriority = v => v === 1 ? 0 : v === 2 ? 1 : 2;
+
+    const rankedBase = [...rows].sort((a,b) =>
+      (okPriority(a.ok) - okPriority(b.ok)) ||
+      (a.comp_bytes - b.comp_bytes) ||
+      (a.t_total - b.t_total) ||
+      a.group.localeCompare(b.group, undefined, { numeric:true, sensitivity:"base" })
+    );
+
+    let rank = 0;
+    let lastKey = "";
+    const rankMap = new Map();
+
+    for(const r of rankedBase){
+      const k = `${r.ok}|${r.comp_bytes}|${r.t_total}`;
+      if(k !== lastKey) rank++;
+      rankMap.set(`${r.group}`, rank);
+      lastKey = k;
+    }
+
+    return rows.map(r => ({
+      ...r,
+      rank: rankMap.get(`${r.group}`) ?? "—"
+    }));
+  }
+
+  function getBaselineForDataset(datasetRows){
+    return datasetRows.find(x => x.group === WEISSMAN_BASELINE && x.ok === 1) || null;
+  }
+
+  function getWeissmanScore(r, baseline){
+    if(!baseline) return NaN;
+
+    const ratioBase = Number.isFinite(baseline.ratio) && baseline.ratio > 0 ? (1 / baseline.ratio) : NaN;
+    const ratioHere = Number.isFinite(r.ratio) && r.ratio > 0 ? (1 / r.ratio) : NaN;
+    const tBase = Number.isFinite(baseline.t_total) ? baseline.t_total + 1 : NaN;
+    const tHere = Number.isFinite(r.t_total) ? r.t_total + 1 : NaN;
+
+    if(!Number.isFinite(ratioBase) || !Number.isFinite(ratioHere) ||
+       !Number.isFinite(tBase) || !Number.isFinite(tHere) ||
+       tBase <= 1 || tHere <= 1){
+      return NaN;
+    }
+
+    return (ratioHere / ratioBase) * (Math.log(tBase) / Math.log(tHere));
+  }
+
+  function updateDatasetMenu(){
+    document.querySelectorAll("#datasetMenu button").forEach(btn => {
+      const active = btn.dataset.dataset === selectedDataset;
+      btn.classList.toggle("active", active);
+      btn.setAttribute("aria-pressed", String(active));
+    });
+
+    const label = datasetDisplayName(selectedDataset);
+    const datasetStatus = document.getElementById("datasetStatus");
+    const plotDatasetStatus = document.getElementById("plotDatasetStatus");
+    const weissmanStatus = document.getElementById("weissmanStatus");
+
+    if(datasetStatus) datasetStatus.textContent = `Showing results for ${label}`;
+    if(plotDatasetStatus) plotDatasetStatus.textContent = `Showing results for ${label}`;
+    if(weissmanStatus) weissmanStatus.textContent = `Computed with gzip as reference for ${label}`;
+  }
+
+  function renderWeissmanTop50(filteredDatasetRows){
+    const tbody = document.getElementById("weissmanTop50Body");
+    if(!tbody) return;
+    tbody.innerHTML = "";
+
+    const baseline = getBaselineForDataset(getDatasetRows(selectedDataset));
+
+    const top50 = filteredDatasetRows
+      .filter(r => r.ok === 1)
+      .map(r => ({ ...r, weissman: getWeissmanScore(r, baseline) }))
+      .filter(r => Number.isFinite(r.weissman))
+      .sort((a, b) => b.weissman - a.weissman)
+      .slice(0, 50);
+
+    if(!top50.length){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="6" class="empty-state">No Weissman scores available for the current dataset.</td>`;
+      tbody.appendChild(tr);
+      return;
+    }
+
+    for(let i = 0; i < top50.length; i++){
+      const r = top50[i];
+      const tr = document.createElement("tr");
+      const ratioPct = Number.isFinite(r.ratio) ? (100 * r.ratio).toFixed(1) + "%" : "—";
+      const badge =
+        r.ok === 1 ? `<span class="badge">✅</span>` :
+        r.ok === 2 ? `<span class="badge info" title="Informational status">i</span>` :
+        `<span class="badge">❌</span>`;
+      const swatch = r.color ? `<span class="swatch" style="background:${escapeHtml(r.color)}"></span>` : "";
+
+      tr.innerHTML = `
+        <td class="mono num">${i + 1}</td>
+        <td class="mono nameCell">${swatch}${escapeHtml(r.group)}</td>
+        <td class="right mono num">${fmt(r.weissman, 6)}</td>
+        <td class="right mono num">${ratioPct}</td>
+        <td class="right mono num">${fmt(r.t_total, 3)}</td>
+        <td class="center">${badge}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  function render(){
+    const searchPatterns = splitPatterns(document.getElementById("search").value);
+    const excludePatterns = splitPatterns(document.getElementById("exclude").value);
+
+    const datasetRows = getDatasetRows(selectedDataset);
+
+    let filtered = datasetRows.filter(r => {
+      const name = r.group.toLowerCase();
+
+      const matchesSearch =
+        searchPatterns.length === 0 ||
+        searchPatterns.some(p => name.includes(p));
+
+      const matchesExclude =
+        excludePatterns.length === 0 ||
+        !excludePatterns.some(p => name.includes(p));
+
+      return matchesSearch && matchesExclude;
+    });
+
+    filtered = rankRows(filtered);
+    filtered = applySort(filtered);
+    currentData = filtered;
+
+    const tbody = document.getElementById("tbody");
+    tbody.innerHTML = "";
+
+    if(!filtered.length){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="9" class="empty-state">No rows match the current dataset and filters.</td>`;
+      tbody.appendChild(tr);
+      renderWeissmanTop50(filtered);
+      updateDatasetMenu();
+      window.dispatchEvent(new Event("leaderboard-rendered"));
+      return;
+    }
+
+    for(const r of filtered){
+      const tr = document.createElement("tr");
+      const ratioPct = Number.isFinite(r.ratio) ? (100 * r.ratio).toFixed(1) + "%" : "—";
+      const badge =
+        r.ok === 1 ? `<span class="badge">✅</span>` :
+        r.ok === 2 ? `<span class="badge info" title="Informational status">i</span>` :
+        `<span class="badge">❌</span>`;
+      const swatch = r.color ? `<span class="swatch" style="background:${escapeHtml(r.color)}"></span>` : "";
+
+      tr.innerHTML = `
+        <td class="mono num">${r.rank}</td>
+        <td class="mono nameCell">${swatch}${escapeHtml(r.group)}</td>
+        <td class="right mono num">${Number.isFinite(r.comp_bytes) ? r.comp_bytes.toLocaleString("en-US") : "—"}</td>
+        <td class="right mono num">${ratioPct}</td>
+        <td class="right mono num">${fmt(r.bpb, 3)}</td>
+        <td class="right mono num">${fmt(r.t_comp_s, 3)}</td>
+        <td class="right mono num">${fmt(r.t_decomp_s, 3)}</td>
+        <td class="right mono num">${fmt(r.t_total, 3)}</td>
+        <td class="center">${badge}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    renderWeissmanTop50(filtered);
+    updateDatasetMenu();
+    window.dispatchEvent(new Event("leaderboard-rendered"));
+  }
+
+  document.querySelectorAll("thead th").forEach(th => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      if(!key) return;
+      if(sortKey === key) sortAsc = !sortAsc;
+      else { sortKey = key; sortAsc = true; }
+      render();
+    });
+  });
+
+  document.getElementById("search").addEventListener("input", render);
+  document.getElementById("exclude").addEventListener("input", render);
+
+  document.querySelectorAll("#datasetMenu button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedDataset = btn.dataset.dataset || "overall";
+      render();
+    });
+  });
+
+  recompute();
+  render();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <script>
+  (() => {
+    const CANVAS_ID = "bitsByteTimeChart";
+    const SCALE_KEY = "bitsByteTimeChart-scale";
+    const SCALE_TOGGLE_ID = "scaleToggleBtn";
+
+    let chart = null;
+    let debounceTimer = null;
+    let useLogScale = localStorage.getItem(SCALE_KEY) === "log";
+
+    const norm = (s) => (s || "").toString().trim().toLowerCase();
+    const toNum = (s) => {
+      const cleaned = (s || "")
+        .toString()
+        .replace(",", ".")
+        .replace(/[^0-9.+-eE]/g, "");
+      const v = Number.parseFloat(cleaned);
+      return Number.isFinite(v) ? v : null;
+    };
+
+    function findResultsTable() {
+      const tables = Array.from(document.querySelectorAll("table"));
+      return tables.find(t => {
+        const headerText = norm(t.querySelector("thead")?.innerText || t.querySelector("tr")?.innerText);
+        return headerText.includes("t_comp") && headerText.includes("t_decomp") && headerText.includes("rank");
+      }) || null;
+    }
+
+    function getColumnIndexMap(table) {
+      const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
+      if (!headerRow) return null;
+      const headerCells = Array.from(headerRow.querySelectorAll("th,td"));
+      const map = new Map();
+      headerCells.forEach((cell, idx) => map.set(norm(cell.textContent), idx));
+      return map;
+    }
+
+    function pickCol(map, candidates) {
+      for (const c of candidates) {
+        const key = norm(c);
+        for (const [k, idx] of map.entries()) {
+          if (k === key || k.includes(key)) return idx;
+        }
+      }
+      return null;
+    }
+
+    function visibleRows(table) {
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from((tbody || table).querySelectorAll("tr"));
+      return rows.filter(r => {
+        const style = window.getComputedStyle(r);
+        return style.display !== "none" && style.visibility !== "hidden";
+      });
+    }
+
+    function extractPoints(table) {
+      const colMap = getColumnIndexMap(table);
+      if (!colMap) return [];
+
+      const iName  = pickCol(colMap, ["compressor", "name", "method"]);
+      const iBits  = pickCol(colMap, ["bits/byte", "bits per byte", "bits-byte"]);
+      const iTotal = pickCol(colMap, ["t_total", "t_total (s)", "total"]);
+      if (iBits == null || iTotal == null) return [];
+
+      const rows = visibleRows(table);
+      const points = [];
+      for (const r of rows) {
+        const cells = Array.from(r.querySelectorAll("td,th"));
+        const need = Math.max(iBits, iTotal, (iName ?? 0)) + 1;
+        if (cells.length < need) continue;
+
+        const bitsByte = toNum(cells[iBits]?.textContent);
+        const ttot = toNum(cells[iTotal]?.textContent);
+        if (bitsByte == null || ttot == null) continue;
+        if (!(ttot > 0) || !(bitsByte > 0)) continue;
+
+        const name = iName != null ? (cells[iName]?.textContent || "").trim() : "";
+        points.push({ x: ttot, y: bitsByte, name });
+      }
+      return points;
+    }
+
+    function themeChartColors(){
+      const css = getComputedStyle(document.documentElement);
+      const textColor = (css.getPropertyValue("--chart-text") || "").trim() || "#000";
+      const gridColor = (css.getPropertyValue("--chart-grid") || "").trim() || "rgba(0,0,0,.2)";
+      const pointColor = (css.getPropertyValue("--chart-point") || "").trim() || textColor;
+      return { textColor, gridColor, pointColor };
+    }
+
+    function buildColorMapFromData(){
+      const m = new Map();
+      try{
+        if (typeof currentData !== "undefined" && Array.isArray(currentData)){
+          for (const r of currentData){
+            const name = (r.group || "").trim();
+            const c = (r.color || "").trim();
+            if (name && c) m.set(norm(name), c);
+          }
+        }
+      }catch(_){}
+      return m;
+    }
+
+    function upperL(x, a, b, k, s){
+      if (x <= b) return null;
+      return a + k / Math.log(1 + (x - b) / s);
+    }
+
+    const L = { a: 4.00, b: 0.02, k: 1.20, s: 1.00 };
+
+    function updateScaleButton(){
+      const btn = document.getElementById(SCALE_TOGGLE_ID);
+      if (!btn) return;
+      btn.textContent = useLogScale ? "Use normal scale" : "Use logarithmic scale";
+      btn.setAttribute("aria-pressed", String(useLogScale));
+    }
+
+    function renderPlot(points) {
+      const canvas = document.getElementById(CANVAS_ID);
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      if (chart) chart.destroy();
+
+      const { textColor, gridColor, pointColor } = themeChartColors();
+      const colorMap = buildColorMapFromData();
+      const colors = points.map(p => colorMap.get(norm(p.name)) || pointColor);
+
+      const xs = points.map(p => p.x);
+      const ys = points.map(p => p.y);
+
+      const minX = xs.length ? Math.min(...xs) : (L.b + 0.1);
+      const maxX = xs.length ? Math.max(...xs) : (L.b + 10);
+      const yMax = ys.length ? (Math.max(...ys) * 1.05) : (L.a * 2);
+
+      const N = 260;
+      const xStart = Math.max(L.b + 1e-6, minX);
+      const xEnd   = Math.max(xStart * 1.001, maxX * 1.05);
+      const dxMin = Math.max(1e-6, xStart - L.b);
+      const dxMax = Math.max(dxMin * 1.0001, xEnd - L.b);
+      const ratio = dxMax / dxMin;
+
+      const lcurve = [];
+      for (let i = 0; i < N; i++){
+        const dx = dxMin * Math.pow(ratio, i / (N - 1));
+        const x  = L.b + dx;
+        const y  = upperL(x, L.a, L.b, L.k, L.s);
+        if (y != null && Number.isFinite(y) && y > 0 && y <= yMax){
+          lcurve.push({ x, y });
+        }
+      }
+
+      chart = new Chart(ctx, {
+        data: {
+          datasets: [
+            {
+              type: "line",
+              data: lcurve,
+              borderColor: textColor,
+              borderWidth: 2,
+              pointRadius: 0,
+              tension: 0,
+              fill: false
+            },
+            {
+              type: "scatter",
+              label: "Compressor",
+              data: points.map(p => ({ x: p.x, y: p.y, name: p.name })),
+              pointRadius: 6,
+              pointHoverRadius: 8,
+              pointBackgroundColor: colors,
+              pointBorderColor: "#000000",
+              pointBorderWidth: 1.5,
+              pointHoverBorderWidth: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          parsing: false,
+          scales: {
+            x: {
+              type: useLogScale ? "logarithmic" : "linear",
+              min: useLogScale ? undefined : 0,
+              title: { display: true, text: "t_total (seconds)", color: textColor },
+              ticks: { color: textColor },
+              grid: { color: gridColor }
+            },
+            y: {
+              type: useLogScale ? "logarithmic" : "linear",
+              title: { display: true, text: "bits/byte", color: textColor },
+              ticks: { color: textColor },
+              grid: { color: gridColor }
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const r = ctx.raw;
+                  const name = r.name ? `${r.name}: ` : "";
+                  return `${name}bits/byte=${r.y}, total=${r.x}s`;
+                }
+              }
+            },
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    function updatePlot() {
+      const table = findResultsTable();
+      if (!table) return;
+      const points = extractPoints(table);
+      renderPlot(points);
+      updateScaleButton();
+    }
+
+    function scheduleUpdate() {
+      window.clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(updatePlot, 150);
+    }
+
+    window.addEventListener("load", () => {
+      updateScaleButton();
+
+      const scaleBtn = document.getElementById(SCALE_TOGGLE_ID);
+      if (scaleBtn) {
+        scaleBtn.addEventListener("click", () => {
+          useLogScale = !useLogScale;
+          localStorage.setItem(SCALE_KEY, useLogScale ? "log" : "linear");
+          updatePlot();
+        });
+      }
+
+      updatePlot();
+      const table = findResultsTable();
+      if (!table) return;
+      const obs = new MutationObserver(scheduleUpdate);
+      obs.observe(table, { childList: true, subtree: true, characterData: true });
+    });
+
+    window.addEventListener("dp-theme-change", updatePlot);
+    window.addEventListener("leaderboard-rendered", updatePlot);
+  })();
+  </script>
+
+  <script>
+  (() => {
+    const btn = document.getElementById("backToTopBtn");
+    if (!btn) return;
+
+    function updateVisibility(){
+      btn.classList.toggle("show", window.scrollY > 280);
+    }
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    window.addEventListener("load", updateVisibility);
+  })();
+  </script>
+</body>
+</html>
