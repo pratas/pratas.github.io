@@ -726,31 +726,29 @@
         <h2>Challenge Overview</h2>
         <div class="rules-box muted">
           <p align="justify">
-  The RAI Data Compression Challenge focuses on the design and evaluation of fully lossless compressors for raw astronomical image data. The input consists of raw spatial images stored as unsigned 16-bit integers in big-endian format, with fixed resolution 1500&times;1500. A set of training files (<a href="../data/data2.zip" download>Download</a>) is provided for development, tuning, and preliminary benchmarking, while a separate testing set is reserved for the final evaluation and is not disclosed to submitters in advance.
-</p>
-
-<p align="justify">
-  After the submission deadline of 26 May 2026, the submitted binaries will be executed on the hidden testing files under the same evaluation framework used for the public benchmark. This makes it possible to assess not only compression performance on known data, but also the robustness and generalization ability of each method when applied to previously unseen files of the same modality.
-</p>
-
-<p align="justify">
-  This page summarizes benchmark results for reference compressors and submitted solutions. Participation is open, and the benchmark is intended to support comparisons between general-purpose compressors and data-adapted approaches specifically designed for raw astronomical imagery. All submitted implementations must run under Linux, reconstruct the original data exactly after decompression, and comply with the project constraints.
-</p>
-
-<p align="justify">
-  The decompression binary must not exceed 1 MB and the compression binary must not exceed 5 MB. The implementation must operate within the defined resource limits, including a maximum of 8 GB of RAM and a maximum of 8 threads. The main metrics reported here are compressed size, compression ratio, bits per byte, compression time, decompression time, and total execution time. Results may be viewed per file, per subset, or as an overall aggregate.
-</p>
-
-<p align="justify">
-  Submissions must be sent to <a href="mailto:pratas@ua.pt">pratas@ua.pt</a>. The executables must follow the command-line conventions:<br>
-  <code>CompressorName input_file output_file</code><br>
-  and<br>
-  <code>DecompressorName input_file output_file</code>
-</p>
-
-<p align="justify">
-  In the ranking table, click the column headers to sort. Search and exclusion filters may be combined.
-</p>
+          The RAI Data Compression Challenge focuses on the design and evaluation of fully lossless compressors for raw astronomical image data. The input consists of raw spatial images stored as unsigned 16-bit integers in big-endian format. The image dimensions are provided explicitly to the encoder through the command line as the number of rows and columns. A set of training files (<a href="../data/data2.zip" download>Download</a>) is provided for development, tuning, and preliminary benchmarking, while a separate testing set is reserved for the final evaluation and is not disclosed to submitters in advance.
+          </p>
+          <p align="justify">
+          After the submission deadline of 26 May 2026, the submitted binaries will be executed on the hidden testing files under the same evaluation framework used for the public benchmark. This makes it possible to assess not only compression performance on known data, but also the robustness and generalization ability of each method when applied to previously unseen files of the same modality.
+          </p>
+          <p align="justify">
+          This page summarizes benchmark results for reference compressors and submitted solutions. Participation is open, and the benchmark is intended to support comparisons between general-purpose compressors and data-adapted approaches specifically designed for raw astronomical imagery. All submitted implementations must run under Linux, reconstruct the original data exactly after decompression, and comply with the project constraints.
+          </p>
+          <p align="justify">
+          The decompression binary must not exceed 1 MB and the compression binary must not exceed 5 MB. The implementation must operate within the defined resource limits, including a maximum of 8 GB of RAM and a maximum of 8 threads. The main metrics reported here are compressed size, compression ratio, bits per byte, compression time, decompression time, and total execution time. Results may be viewed per file, per subset, or as an overall aggregate.
+          </p>
+          <p align="justify">
+          Submissions must be sent to <a href="mailto:pratas@ua.pt">pratas@ua.pt</a>. The executables must follow the command-line conventions:<br>
+          <code>CompressorName n_rows n_cols input_file output_file</code><br>
+          and<br>
+          <code>DecompressorName input_file output_file</code><br><br>
+          where <code>n_rows</code> and <code>n_cols</code> specify the number of rows and columns of the original image, respectively. For example:<br>
+          <code>CompressorName 1000 3500 x x.enc</code><br>
+          <code>DecompressorName x.enc x.dec</code>
+          </p>
+          <p align="justify">
+          In the ranking table, click the column headers to sort. Search and exclusion filters may be combined.
+          </p>
         </div>
       </section>
 
