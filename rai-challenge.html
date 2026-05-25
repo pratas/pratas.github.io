@@ -12,6 +12,10 @@
     const saved = localStorage.getItem(KEY);
     const theme = (saved === "light" || saved === "dark") ? saved : "dark";
     const root = document.documentElement;
+    root.classList.toggle("dp-dark", theme === "dark");
+    root.classList.toggle("dp-light", theme === "light");
+  })();
+  </script>
 
   <style id="dp-theme-toggle-style">
     #dpThemeToggle{
