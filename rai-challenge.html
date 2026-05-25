@@ -12,10 +12,6 @@
     const saved = localStorage.getItem(KEY);
     const theme = (saved === "light" || saved === "dark") ? saved : "dark";
     const root = document.documentElement;
-    root.classList.toggle("dp-dark", theme === "dark");
-    root.classList.toggle("dp-light", theme === "light");
-  })();
-  </script>
 
   <style id="dp-theme-toggle-style">
     #dpThemeToggle{
@@ -738,7 +734,7 @@
           The decompression binary must not exceed 1 MB and the compression binary must not exceed 5 MB. The implementation must operate within the defined resource limits, including a maximum of 8 GB of RAM and a maximum of 8 threads. The main metrics reported here are compressed size, compression ratio, bits per byte, compression time, decompression time, and total execution time. Results may be viewed per file, per subset, or as an overall aggregate.
           </p>
           <p align="justify">
-          Submissions must be sent to <a href="mailto:pratas@ua.pt">pratas@ua.pt</a>. <br>
+          Submissions must be sent to <a href="mailto:pratas@ua.pt">pratas@ua.pt</a>. <br><br>
           The executables must follow the command-line conventions:<br>
           <code>CompressorName n_rows n_cols input_file output_file</code><br>
           and<br>
